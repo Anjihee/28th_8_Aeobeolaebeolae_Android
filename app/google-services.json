@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1063771588438",
+    "project_id": "surround2023",
+    "storage_bucket": "surround2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063771588438:android:9c63302e3e41149c39f8f7",
+        "android_client_info": {
+          "package_name": "com.surround2023.surround2023"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1063771588438-05phe46tp54s3clfqppritc7sl1ku6f0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.surround2023.surround2023",
+            "certificate_hash": "0364b62986aedb82022de7d8a21821fdb2a74d8c"
+          }
+        },
+        {
+          "client_id": "1063771588438-50mno2aiu3dkgfh22qta7nhcqkoluf0m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKKtJyQp6EaTpbhdz_paiAh4Oe6E2Na0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063771588438-50mno2aiu3dkgfh22qta7nhcqkoluf0m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

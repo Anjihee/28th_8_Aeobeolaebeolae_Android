@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10sp"
+    app:layout_constraintCircleRadius="10dp">
+
+    <!--    게시글 대표이미지-->
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/postImgContainer"
+        android:layout_width="80sp"
+        android:layout_height="80sp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/postImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/cutecute_dog" />
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/postTitle"
+        android:layout_width="290sp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16sp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="저희집 강아지 자랑합니다"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/postImgContainer"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

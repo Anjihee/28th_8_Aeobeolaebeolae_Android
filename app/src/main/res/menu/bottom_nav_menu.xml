@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_home"
+        android:title="홈"
+        android:icon="@drawable/ic_home"
+        app:showAsAction="always"
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/menu_favorite"
+        android:title="즐겨찾기"
+        android:icon="@drawable/ic_favorite"
+        app:showAsAction="always"
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/menu_addPost"
+        android:title="글쓰기"
+        android:icon="@drawable/ic_add_post"
+        app:showAsAction="always"
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/menu_chat"
+        android:title="대화"
+        android:icon="@drawable/ic_chat"
+        app:showAsAction="always"
+        android:enabled="true"/>
+
+    <item
+        android:id="@+id/menu_mypage"
+        android:title="마이페이지"
+        android:icon="@drawable/ic_mypage"
+        app:showAsAction="always"
+        android:enabled="true"/>
+
+</menu>
