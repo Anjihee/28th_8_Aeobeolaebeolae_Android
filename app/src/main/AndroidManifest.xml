@@ -63,6 +63,30 @@
             android:theme="@style/AppTheme"
             android:parentActivityName=".set_location.SetLocationActivity"/>
 
+        <activity android:name=".community_post.CommunityPostActivity"
+            android:label="community post"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".posting.CommunityPostingActivity"
+            android:label="posting on community"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".market_post.MarketPostActivity"
+            android:label="market post"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".posting.MarketPostingActivity"
+            android:label="posting on market"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".posting.MarketOptionSettingActivity"
+            android:label="setting market option during posting on market"
+            android:theme="@style/AppTheme"/>
+
+        <activity android:name=".market_post.JoinMarketActivity"
+            android:label="join at market post"
+            android:theme="@style/AppTheme" />
+
 <!--        <activity android:name=".marekt.MarketActivity"-->
 <!--            android:label="Marekt"-->
 <!--            android:theme="@style/AppTheme" />-->

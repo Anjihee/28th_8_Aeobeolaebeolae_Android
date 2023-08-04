@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar" >
+    <style name="AppTheme" parent="Theme.AppCompat.Light" >
         <item name="android:windowFullscreen">true</item>   <!--  상단 상태바 안보이게-->
     </style>
     <!--  splash theme  -->
