@@ -1,0 +1,201 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".category.BuyCategoryActivity">
+
+<TextView
+    android:id="@+id/textView"
+    android:layout_width="116dp"
+    android:layout_height="37dp"
+    android:text="카테고리"
+    android:textColor="#000000"
+    android:textSize="17sp"
+    android:textStyle="bold"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.574"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.02" />
+
+<ImageButton
+    android:id="@+id/back"
+    android:layout_width="55dp"
+    android:layout_height="55dp"
+    android:background="#00ff0000"
+    android:contentDescription="뒤로가기 버튼"
+    android:src="@drawable/arrow_left"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="0.0" />
+
+<LinearLayout
+    android:layout_width="415dp"
+    android:layout_height="801dp"
+    android:background="@drawable/round_shpae"
+    android:orientation="vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.428"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintVertical_bias="1.0">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageButton
+            android:id="@+id/imageButton16"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:background="#00ff0000"
+            android:contentDescription="인테리어 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/hobby"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.884"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
+
+        <ImageButton
+            android:id="@+id/imageButton11"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:background="#00ff0000"
+            android:contentDescription="키즈 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/kids"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.884"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.049" />
+
+        <ImageButton
+            android:id="@+id/imageButton12"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:background="#00ff0000"
+            android:contentDescription="식료품 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/grocery"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.115"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.348" />
+
+        <ImageButton
+            android:id="@+id/imageButton13"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:background="#00ff0000"
+            android:contentDescription="뷰티 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/beauty"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.884"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.348" />
+
+        <ImageButton
+            android:id="@+id/imageButton15"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:background="#00ff0000"
+            android:contentDescription="의류 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/clothes"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.115"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.65" />
+
+        <ImageButton
+            android:id="@+id/imageButton17"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:background="#00ff0000"
+            android:contentDescription="반려동물 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/pet"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.115"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.948" />
+
+        <ImageButton
+            android:id="@+id/imageButton18"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:background="#00ff0000"
+            android:contentDescription="인테리어 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/interior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.884"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.948" />
+
+        <ImageButton
+            android:id="@+id/imageButton10"
+            android:layout_width="155dp"
+            android:layout_height="155dp"
+            android:background="#00ff0000"
+            android:contentDescription="최신순 버튼"
+            android:scaleType="fitXY"
+            android:src="@drawable/newest"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.115"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.049" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
