@@ -1,6 +1,7 @@
 package com.surround2023.surround2023.user_login_join
 
 import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -23,9 +24,6 @@ class JoinActivity : ComponentActivity() {
     object FirebaseID { //파이어베이스 회원가입 정보
         const val email = "email"
         const val password = "password"
-        const val nickname = "nickname"
-        const val gender = "gender"
-        // 여기에 다른 필드 이름들을 추가할 수 있습니다.
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,36 +88,49 @@ class JoinActivity : ComponentActivity() {
         mAuth.createUserWithEmailAndPassword(
             binding.Email.text.toString(),
             binding.PW.text.toString()
-        )
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    val user = mAuth.currentUser
-                    var gender = ""
-                    if (binding.Female.isChecked()) {
-                        gender = "Female"
-                    } else if (binding.Male.isChecked()) {
-                        gender = "Male"
-                    }
-                    val userMap = hashMapOf(
-                        FirebaseID.email to user?.email,
-                        FirebaseID.password to binding.PW,
-                        FirebaseID.nickname to binding.Nickname,
-                        FirebaseID.gender to gender
-                    )
-                    db.collection(FirebaseID.email).document(user?.uid ?: "")
-                        .set(userMap, SetOptions.merge())
-                    val intent = Intent(this@JoinActivity, LoginActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                } else {
-                    Toast.makeText(
-                        this@JoinActivity,
-                        "회원가입에 실패하였습니다. 다시 시도해 주세요.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+        ).addOnCompleteListener(this) { task ->
+            if (task.isSuccessful) {
+                // Sign in success, update UI with the signed-in user's information
+                val user = mAuth.currentUser
+                var gender = ""
+                if (binding.Female.isChecked()) {
+                    gender = "Female"
+                } else if (binding.Male.isChecked()) {
+                    gender = "Male"
                 }
-            }
-    }
 
+                val email = user?.email
+                val uid = user?.uid
+                val userName = binding.Nickname.text.toString()
+
+                // Firestore 데이터 모델에 사용자 정보 저장
+                val userToSave = User(email, uid, userName, gender)
+
+                // Firestore에 데이터 저장
+                val db = FirebaseFirestore.getInstance()
+                db.collection("User")
+                    .document(email!!)
+                    .set(userToSave)
+                    .addOnSuccessListener {
+                        // 저장 성공
+                        Log.d(ContentValues.TAG, "사용자 정보가 Firestore에 저장되었습니다.")
+                    }
+                    .addOnFailureListener { e ->
+                        // 저장 실패
+                        Log.w(ContentValues.TAG, "사용자 정보 저장에 실패했습니다.", e)
+                    }
+
+                val Login_intent = Intent(this@JoinActivity, LoginActivity::class.java)
+                // LoginActivity로 이동하는 코드 추가 (생략)
+                startActivity(Login_intent)
+                finish()
+            } else {
+                Toast.makeText(
+                    this@JoinActivity,
+                    "회원가입에 실패하였습니다. 다시 시도해 주세요.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 }
