@@ -39,7 +39,7 @@ class JoinMarketActivity : AppCompatActivity() {
 
         val payingBtn : Button = findViewById(R.id.payingBtn)
         payingBtn.setOnClickListener {
-            val completeDialog = CompletePaymentDialog(this) // "this"는 액티비티의 context를 나타냅니다.
+            val completeDialog = CompletePaymentDialog(this) // 결제 완료 창 Dialog 띄우기
             completeDialog.show()
         }
     }

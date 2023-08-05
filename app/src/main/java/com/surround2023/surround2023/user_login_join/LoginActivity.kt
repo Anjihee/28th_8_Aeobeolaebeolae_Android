@@ -13,7 +13,6 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.common.model.KakaoSdkError
-import com.kakao.sdk.user.UserApi
 import com.kakao.sdk.user.UserApiClient
 import com.surround2023.surround2023.databinding.ActivityLoginBinding
 import com.surround2023.surround2023.home.HomeActivity
@@ -34,7 +33,14 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
+
+        //hide navigation bar
+        window.decorView.apply{
+            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+
+        }
 
         val join_intent = Intent(this, JoinActivity::class.java) //가입 화면
         val home_intent = Intent(this, HomeActivity::class.java)

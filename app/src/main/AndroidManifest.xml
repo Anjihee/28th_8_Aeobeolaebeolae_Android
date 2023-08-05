@@ -9,9 +9,14 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
+    <!-- 외부 저장소 접근 권한 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <!-- 카카오 REST API이용을 위한 APP KEY   -->
+
     <meta-data android:name="com.kakao.sdk.AppKey" android:value="332e0c6513db0104e361758ea011774a
 "/>
+
 
     <application
         android:name=".user_login_join.GlobalApplication"
@@ -37,8 +42,10 @@
                     android:scheme= "03078ebb94144613f5c84a04ddb3a172" />
             </intent-filter>
         </activity>
+
+        <!--Splash-->
         <activity
-            android:name=".user_login_join.LoginActivity"
+            android:name=".splash.SplashScreenActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
@@ -46,6 +53,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".user_login_join.LoginActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity
@@ -57,23 +71,15 @@
         </activity>
 
         <activity
-            android:name=".community_log.CommunityLogActivity"
+            android:name=".home.HomeActivity"
             android:exported="true"
             android:label="surround-home"
             android:theme="@style/AppTheme">
         </activity>
 
-        <activity
-            android:name=".home.HomeActivity"
-            android:exported="true"
-            android:label="surround-home"
-            android:theme="@style/AppTheme"/>
 
         <!--   검색창 기능을 위함     -->
-<!--        <activity-->
-<!--            android:name=".MarketActivity"-->
-<!--            android:label="Market Activity"-->
-<!--            android:theme="@style/AppTheme" />-->
+
 
         <activity android:name=".set_location.SetLocationActivity"
             android:label="Set User Location Activity"
@@ -84,6 +90,7 @@
             android:label="Search Address"
             android:theme="@style/AppTheme"
             android:parentActivityName=".set_location.SetLocationActivity"/>
+
 
         <activity android:name=".community_post.CommunityPostActivity"
             android:label="community post"
@@ -109,26 +116,11 @@
             android:label="join at market post"
             android:theme="@style/AppTheme" />
 
-<!--        <activity android:name=".marekt.MarketActivity"-->
-<!--            android:label="Marekt"-->
-<!--            android:theme="@style/AppTheme" />-->
-
-<!--        <activity android:name=".community.CommunityActivity"-->
-<!--            android:label="Community"-->
-<!--            android:theme="@style/AppTheme" />-->
-
-<!--        <activity android:name=".mypage.FavoriteActivity"-->
-<!--            android:label="Favorite Marekt Post"-->
-<!--            android:theme="@style/AppTheme" />-->
-
-<!--        <activity android:name=".marekt.MarektPostingActivity"-->
-<!--            android:label="Create Marekt Post"-->
-<!--            android:theme="@style/AppTheme" />-->
 
 
-<!--        <activity android:name=".mypage.MypageActivity"-->
-<!--            android:label="Mypage"-->
-<!--            android:theme="@style/AppTheme" />-->
+        <activity android:name=".mypage.MypageActivity"
+            android:label="Mypage"
+            android:theme="@style/AppTheme" />
 
     </application>
 
