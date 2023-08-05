@@ -8,10 +8,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.auth.User
-import com.kakao.sdk.auth.AuthApi
 import com.kakao.sdk.auth.AuthApiClient
-import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
@@ -24,10 +21,10 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class User(
+    val Email: String? = null,
     val uid: String? = null,
-    val userEmail: String? = null,
-    val userPw: String? = null,
-    val userName: String? = null
+    val userName: String? = null,
+    val gender: String? = null
 )
 
 class LoginActivity : ComponentActivity() {
@@ -42,46 +39,42 @@ class LoginActivity : ComponentActivity() {
         val join_intent = Intent(this, JoinActivity::class.java) //가입 화면
         val home_intent = Intent(this, HomeActivity::class.java)
 
+        val db = FirebaseFirestore.getInstance()
+        val collectionRef = db.collection("User")
 
         binding.btnLogin.setOnClickListener{
-            val email = binding.Email.getText().toString()
-            val password = binding.PW.getText().toString()
+            val email = binding.Email.text.toString()
+            val password = binding.PW.text.toString()
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
-                        // 로그인에 성공한 경우
-                        val user = FirebaseAuth.getInstance().currentUser
-                        if (user != null) {
-                            val uid = user.uid
-                            val userName = user.displayName
-                            val userEmail = user.email
-
-                            // Firestore 데이터 모델에 사용자 정보 저장
-                            val userToSave = User(uid, userName, userEmail)
-
-                            // Firestore에 데이터 저장
-                            val db = FirebaseFirestore.getInstance()
-                            db.collection("users")
-                                .document(uid)
-                                .set(userToSave)
-                                .addOnSuccessListener {
-                                    // 저장 성공
-                                    Log.d(TAG, "사용자 정보가 Firestore에 저장되었습니다.")
+                        // 로그인에 성공한 경우 사용자 정보를 확인하거나 화면을 전환하는 등의 작업 수행
+                        collectionRef.document(email).get()
+                            .addOnSuccessListener { document ->
+                                if (document != null && document.exists()) {
+                                    // 문서가 존재하고 데이터를 읽어올 수 있는 경우
+                                    val data = document.data
+                                    Log.d("datasurround123", data.toString())
+                                    startActivity(home_intent)
+                                } else {
+                                    // 문서가 존재하지 않거나 데이터를 읽어오는 데에 실패한 경우
+                                    Toast.makeText(this@LoginActivity,
+                                        "로그인에 실패하였습니다. 다시 시도해 주세요.",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
-                                .addOnFailureListener { e ->
-                                    // 저장 실패
-                                    Log.w(TAG, "사용자 정보 저장에 실패했습니다.", e)
-                                }
-                        }
-
-                        // 사용자 정보를 확인하거나 화면을 전환하는 등의 작업 수행
-                        startActivity(home_intent)
+                            }
+                            .addOnFailureListener { exception ->
+                                // 데이터를 읽어오는 데에 실패한 경우
+                                Toast.makeText(this@LoginActivity,
+                                    "로그인에 실패하였습니다. 다시 시도해 주세요.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                     } else {
                         // 로그인에 실패한 경우
-                        val exception = task.exception
-                        // 에러 메시지를 확인하거나 적절한 에러 처리 수행
                         Toast.makeText(this@LoginActivity,
-                            "로그인에 실패하였습니다. 다시 시도해 주세요.",
+                            "이메일과 비밀번호를 다시 확인해 주세요.",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -91,7 +84,6 @@ class LoginActivity : ComponentActivity() {
         binding.KakaoLoginButton.setOnClickListener {
             kakaoLogin()
         }
-
 
         binding.btnJoin.setOnClickListener {
             startActivity(join_intent)

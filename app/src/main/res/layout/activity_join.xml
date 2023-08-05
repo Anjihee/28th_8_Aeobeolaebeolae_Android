@@ -62,22 +62,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textEmail" />
 
 
-
-    <TextView
-        android:id="@+id/textEmailConfirm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btnJoin"
-        android:text="인증 버튼을 눌러 이메일 인증을 진행해주세요."
-        android:textColor="@color/themeGreen"
-        android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.333"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/Email"
-        app:layout_constraintVertical_bias="0.0" />
-
     <TextView
         android:id="@+id/textPW"
         android:layout_width="wrap_content"
@@ -90,7 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.257"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textEmailConfirm" />
+        app:layout_constraintTop_toBottomOf="@id/Email" />
 
     <EditText
         android:id="@+id/PW"
