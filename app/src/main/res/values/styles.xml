@@ -4,4 +4,9 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="SquareRadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:background">@drawable/paybtn_selector</item>
+        <item name="android:button">@null</item>
+    </style>
 </resources>

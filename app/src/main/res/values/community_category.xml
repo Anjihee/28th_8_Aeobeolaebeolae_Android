@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="community_category">
+        <item>카테고리 선택</item>
+        <item>자유</item>
+        <item>광고</item>
+        <item>연애</item>
+        <item>진로</item>
+        <item>반려동물</item>
+        <item>동네소식</item>
+    </string-array>
+</resources>
