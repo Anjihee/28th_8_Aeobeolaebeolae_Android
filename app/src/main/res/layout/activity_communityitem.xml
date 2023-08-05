@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:weightSum="100">
+
+    <RelativeLayout
+        android:id="@+id/frame_18"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clipToOutline="true">
+
+        <TextView
+            android:id="@+id/category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="11dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="9dp"
+            android:text="카테고리"
+            android:textAppearance="@style/some_id2"
+            android:gravity="top"
+            />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="11dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="30dp"
+            android:text="커뮤니티 글 제목"
+            android:textAppearance="@style/some_id"
+            android:gravity="top"
+            />
+
+        <TextView
+            android:id="@+id/detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="66dp"
+            android:text="세부설명"
+            android:textAppearance="@style/some_id2"
+            android:gravity="top"
+            />
+
+        <TextView
+            android:id="@+id/comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="9dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="90dp"
+            android:text="공감 8 댓글 3"
+            android:textAppearance="@style/some_id2"
+            android:gravity="top"
+            />
+
+
+        <View
+            android:id="@+id/rectangle_1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="245dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/ic_chat"
+            />
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

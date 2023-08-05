@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:weightSum="100">
+
+    <RelativeLayout
+        android:id="@+id/frame_18"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:clipToOutline="true">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardview_member"
+            android:layout_width="114dp"
+            android:layout_height="114dp"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="8dp"
+            android:elevation="6dp"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/strawberry"
+                android:layout_width="114dp"
+                android:layout_height="114dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/strawberry" />
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/market_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="141dp"
+            android:layout_marginTop="10dp"
+            android:gravity="top"
+            android:text="딸기 공구합니다."
+            android:textAppearance="@style/some_id" />
+
+        <TextView
+            android:id="@+id/market_locate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="141dp"
+            android:layout_marginTop="49dp"
+            android:gravity="top"
+            android:text="딸기사세요"
+            android:textAppearance="@style/some_id2" />
+
+        <TextView
+            android:id="@+id/market_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="141dp"
+            android:layout_marginTop="79dp"
+            android:gravity="top"
+            android:text="1인 5,900원"
+            android:textAppearance="@style/some_id" />
+
+    </RelativeLayout>
+
+</LinearLayout>
