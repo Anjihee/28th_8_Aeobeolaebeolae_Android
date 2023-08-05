@@ -30,7 +30,7 @@
 
         <!-- 앱이 시작될 때 실행-->
         <activity
-            android:name=".community_log.CommunityLogActivity"
+            android:name=".home.HomeActivity"
             android:exported="true"
             android:label="surround-home"
             android:theme="@style/AppTheme">
@@ -41,17 +41,9 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".home.HomeActivity"
-            android:exported="true"
-            android:label="surround-home"
-            android:theme="@style/AppTheme"/>
 
         <!--   검색창 기능을 위함     -->
-<!--        <activity-->
-<!--            android:name=".MarketActivity"-->
-<!--            android:label="Market Activity"-->
-<!--            android:theme="@style/AppTheme" />-->
+
 
         <activity android:name=".set_location.SetLocationActivity"
             android:label="Set User Location Activity"
@@ -63,7 +55,7 @@
             android:theme="@style/AppTheme"
             android:parentActivityName=".set_location.SetLocationActivity"/>
 
-<!--        <activity android:name=".marekt.MarketActivity"-->
+<!--        <activity android:name=".market.MarketActivity"-->
 <!--            android:label="Marekt"-->
 <!--            android:theme="@style/AppTheme" />-->
 
@@ -75,7 +67,7 @@
 <!--            android:label="Favorite Marekt Post"-->
 <!--            android:theme="@style/AppTheme" />-->
 
-<!--        <activity android:name=".marekt.MarektPostingActivity"-->
+<!--        <activity android:name=".market.MarketPostingActivity"-->
 <!--            android:label="Create Marekt Post"-->
 <!--            android:theme="@style/AppTheme" />-->
 
