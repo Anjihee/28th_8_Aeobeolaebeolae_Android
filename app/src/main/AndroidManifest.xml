@@ -127,13 +127,10 @@
             android:theme="@style/AppTheme" />
 
 
-
-        <!--   마이페이지    -->
-
         <activity android:name=".mypage.MypageActivity"
             android:label="Mypage"
             android:theme="@style/AppTheme" />
-
+      
         <activity android:name=".market_log.MarketLogOpenActivity"
             android:label="MarketLogOpenActivity"
             android:theme="@style/AppTheme" />
@@ -145,7 +142,6 @@
         <activity android:name=".community_log.CommunityLogActivity"
             android:label="CommunityLogActivity"
             android:theme="@style/AppTheme" />
-
 
     </application>
 
