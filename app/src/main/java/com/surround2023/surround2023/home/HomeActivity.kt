@@ -2,7 +2,10 @@ package com.surround2023.surround2023.home
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -17,11 +20,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.surround2023.surround2023.R
 import com.surround2023.surround2023.databinding.ActivityHomeBinding
 import com.surround2023.surround2023.databinding.HomeCommunityItemBinding
 import com.surround2023.surround2023.databinding.HomeMarketItemBinding
+import com.surround2023.surround2023.mypage.MypageActivity
+import com.surround2023.surround2023.posting.MarketPostingActivity
 import com.surround2023.surround2023.set_location.SetLocationActivity
+import java.security.MessageDigest
 
 
 class HomeActivity : AppCompatActivity() {
@@ -42,7 +52,9 @@ class HomeActivity : AppCompatActivity() {
     private val LOCATION_REQUEST_CODE = 1001
 
     //게시글 데이터베이스
-    var firestore=FirebaseFirestore.getInstance()
+    val db=FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
+    val storage= Firebase.storage
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,11 +92,15 @@ class HomeActivity : AppCompatActivity() {
 
                 R.id.menu_addPost ->{
                     //공동구매 글쓰기로 이동
+                    val intent=Intent(this, MarketPostingActivity::class.java)
+                    startActivity(intent)
                     true
                 }
 
                 R.id.menu_mypage ->{
                     //마이페이지로 이동
+                    val intent=Intent(this, MypageActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 // 다른 메뉴 아이템에 대한 처리 추가 (필요에 따라 다른 Activity로 이동할 수 있음)
@@ -118,15 +134,14 @@ class HomeActivity : AppCompatActivity() {
         val itemSpace = resources.getDimensionPixelSize(R.dimen.home_market_item_space) // 이 부분에서 R.dimen.item_space는 간격 크기를 리소스로 정의한 값
         marketRecyclerView.addItemDecoration(HomeMarketItemDecoration(itemSpace, 2))
 
-        // Populate data
-        val marketData = getMarketData() // Replace with your data source
         //공동구매 리사이클러뷰 레이아웃매니저
         val marketLayoutManager=GridLayoutManager(this, 2, RecyclerView.HORIZONTAL, false)
         marketRecyclerView.layoutManager=marketLayoutManager
-        adapterForMarket.setData(marketData)
 
-        val communityData=getCommunityData()
-        adapterForCommunity.setData(communityData)
+        //populate data
+        getMarketData()
+        getCommunityData()
+
 
 
         //공동구매 전체보기 -> 공동구매 게시판 액티비티로 이동
@@ -135,7 +150,7 @@ class HomeActivity : AppCompatActivity() {
 //            startActivity(intent)
 //        }
 //
-//        //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동
+////        //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동
 //        binding.goCommunity.setOnClickListener {
 //            val intent = Intent(this, CommunityActivity::class.java)
 //            startActivity(intent)
@@ -215,52 +230,73 @@ class HomeActivity : AppCompatActivity() {
     }
 
     //공동구매 게시글 데이터를 가져오기 위한 메소드
-    private fun getMarketData(): List<MarketPostModel> {
+    private fun getMarketData(){
         // retrieve data for the RecyclerView
         // This method should return a list of YourData objects
-        return listOf(
-            //데이터를 담을 배열
-            //Set DummyData
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+        db.collection("Market")   //작업할 컬렉션
+            //게시일 최근순 기준으로 정렬
+            .orderBy("postDate", Query.Direction.DESCENDING)
+            .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
+                if(querySnapshot==null) return@addSnapshotListener
 
-            // Add more items as needed
-        )
+                val marketItemList = mutableListOf<MarketPostModel>()
+
+                //데이터 받아오기
+                for(snapshot in querySnapshot.documents){
+                    var item=snapshot.toObject(MarketPostModel::class.java)
+                    Log.d("TAG","${item?.postImageUrl}, ${item?.postTitle}")
+                    marketItemList.add(item!!)
+                }
+
+                //어답터에 데이터 넘겨줌
+                adapterForMarket.setData(marketItemList)
+            }
+//        return listOf(
+//            //데이터를 담을 배열
+//            //Set DummyData
+//            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+//
+//            // Add more items as needed
+//        )
+
     }
 
     //커뮤니티 게시글 데이터를 가져오기 위한 메소드
-    private fun getCommunityData(): List<CommunityPostModel> {
+    private fun getCommunityData(){
         // Replace with your own implementation to retrieve data for the RecyclerView
         // This method should return a list of YourData objects
-        return listOf(
-            //게시글 데이터를 담을 배열
-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
+        db.collection("Community")   //작업할 컬렉션
+            .orderBy("postDate", Query.Direction.DESCENDING)
+            .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
+                if(querySnapshot==null) return@addSnapshotListener
 
-            // Add more items as needed
-        )
+                val communityItemList = mutableListOf<CommunityPostModel>()
+
+                //데이터 받아오기
+                for(snapshot in querySnapshot.documents){
+                    var item=snapshot.toObject(CommunityPostModel::class.java)
+                    communityItemList.add(item!!)
+                }
+
+                //dummy data
+                communityItemList.add(CommunityPostModel(null,"dummy"))
+                communityItemList.add(CommunityPostModel(null,"dummy"))
+                communityItemList.add(CommunityPostModel(null,"dummy"))
+                communityItemList.add(CommunityPostModel(null,"dummy"))
+
+                adapterForCommunity.setData(communityItemList)
+            }
+
     }
 
     //공동구매 리사이클러뷰 어댑터
     class HomeMarketAdapter: RecyclerView.Adapter<HomeMarketViewHolder>(){
-        private val data = mutableListOf<MarketPostModel>()
+        private val data = arrayListOf<MarketPostModel>()
 
         fun setData(newData: List<MarketPostModel>) {
             data.clear()
             data.addAll(newData)
-//            notifyDataSetChanged()
+            notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeMarketViewHolder {
@@ -274,6 +310,8 @@ class HomeActivity : AppCompatActivity() {
         }
 
         override fun getItemCount(): Int = data.size
+
+
     }
 
     // 공동구매 리사이클러뷰 아이템 모델에 대한 뷰홀더
@@ -282,42 +320,36 @@ class HomeActivity : AppCompatActivity() {
 
         fun bind(item: MarketPostModel) {
             // Bind data to the views in your item layout
-            binding.productTitle.text=item.productTitle
+            binding.productTitle.text=item.postTitle
 
 
             //이미지가 있는 글이라면
-            if (item.productImg != null) {
+            if (item.postImageUrl != null) {
                 //이미지뷰와 실제 이미지 데이터를 묶음
                 Glide
                     .with(binding.productImg)
-                    .load(item.productImg)
+                    .load(item.postImageUrl)
                     .centerCrop()
-                    .placeholder(R.drawable.strawberry)
+                    .placeholder(R.color.colorLightGrey)
                     .into(binding.productImg)
             }   else {
                 //이미지가 없는 글이라면
-                //이미지 숨김
-                binding.productImgContainer.visibility=View.GONE
-                binding.productImg.visibility=View.GONE
-
-                // TextView의 constraint 재설정
-                val layoutParams = binding.productTitle.layoutParams as ConstraintLayout.LayoutParams
-                layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
-                binding.productTitle.layoutParams = layoutParams
-
+                //이미지 바인딩을 하지 않음
             }
 
         }
     }
 
+
+
     //커뮤니티 리사이클러뷰 어댑터
-    class HomeCommunityAdapter: RecyclerView.Adapter<HomeCommunityViewHolder>(){
+    class HomeCommunityAdapter(): RecyclerView.Adapter<HomeCommunityViewHolder>(){
         private val data = mutableListOf<CommunityPostModel>()
 
         fun setData(newData: List<CommunityPostModel>) {
             data.clear()
             data.addAll(newData)
-//            notifyDataSetChanged()
+            notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeCommunityViewHolder {
@@ -338,18 +370,18 @@ class HomeActivity : AppCompatActivity() {
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: CommunityPostModel) {
-            // Bind data to the views in your item layout
+            // //PostModel에 담긴 postTitle, postImg 데이터를 아이템 레이아웃에 binding
             binding.postTitle.text=item.postTitle
 
 
             //이미지가 있는 글이라면
-            if (item.postImg != null) {
+            if (item.postImageUrl != null) {
                 //이미지뷰와 실제 이미지 데이터를 묶음
                 Glide
                     .with(binding.postImg)
-                    .load(item.postImg)
+                    .load(item.postImageUrl)
                     .centerCrop()
-                    .placeholder(R.drawable.cutecute_dog)
+                    .placeholder(R.drawable.ic_logo)
                     .into(binding.postImg)
             }   else {
                 //이미지가 없는 글이라면
@@ -373,14 +405,14 @@ class HomeActivity : AppCompatActivity() {
 
 // 공동구매 게시글 데이터 모델
 data class MarketPostModel(
-    var productImg:String?=null,
-    var productTitle:String?=null)
+    var postImageUrl: String?=null,
+    var postTitle:String?=null)
 
 
 
 // 커뮤니티 게시글 데이터 모델
 data class CommunityPostModel(
-    var postImg:String?=null,
+    var postImageUrl:String?=null,
     var postTitle:String?=null
 )
 

@@ -26,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnJoin"
-        android:text="아이디"
+        android:text="이메일"
         android:textColor="@color/black"
         android:textSize="17sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,13 +37,14 @@
         app:layout_constraintVertical_bias="0.099"/>
 
     <EditText
-        android:id="@+id/ID"
+        android:id="@+id/Email"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textID" />
+        app:layout_constraintTop_toBottomOf="@+id/textID"
+        android:hint="surround@surround.com"/>
 
     <TextView
         android:id="@+id/textPW"
@@ -55,13 +56,13 @@
         android:textSize="17sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ID"
+        app:layout_constraintTop_toBottomOf="@id/Email"
         app:layout_constraintHorizontal_bias="0.16"/>
 
     <EditText
         android:id="@+id/PW"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
@@ -71,7 +72,7 @@
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/selector_green_background"
         android:text="로그인"
         android:textColor="@color/white"
@@ -86,7 +87,7 @@
     <ImageButton
         android:id="@+id/KakaoLoginButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:background="@drawable/kakao_login_btn"
         app:layout_constraintBottom_toTopOf="@+id/textJoin"
         app:layout_constraintEnd_toEndOf="parent"
