@@ -21,10 +21,15 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.surround2023.surround2023.R
 import com.surround2023.surround2023.databinding.ActivityHomeBinding
 import com.surround2023.surround2023.databinding.HomeCommunityItemBinding
 import com.surround2023.surround2023.databinding.HomeMarketItemBinding
+import com.surround2023.surround2023.mypage.MypageActivity
+import com.surround2023.surround2023.posting.MarketPostingActivity
 import com.surround2023.surround2023.set_location.SetLocationActivity
 import java.security.MessageDigest
 
@@ -48,6 +53,8 @@ class HomeActivity : AppCompatActivity() {
 
     //게시글 데이터베이스
     val db=FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
+    val storage= Firebase.storage
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,11 +92,15 @@ class HomeActivity : AppCompatActivity() {
 
                 R.id.menu_addPost ->{
                     //공동구매 글쓰기로 이동
+                    val intent=Intent(this, MarketPostingActivity::class.java)
+                    startActivity(intent)
                     true
                 }
 
                 R.id.menu_mypage ->{
                     //마이페이지로 이동
+                    val intent=Intent(this, MypageActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 // 다른 메뉴 아이템에 대한 처리 추가 (필요에 따라 다른 Activity로 이동할 수 있음)
@@ -126,9 +137,11 @@ class HomeActivity : AppCompatActivity() {
         //공동구매 리사이클러뷰 레이아웃매니저
         val marketLayoutManager=GridLayoutManager(this, 2, RecyclerView.HORIZONTAL, false)
         marketRecyclerView.layoutManager=marketLayoutManager
-        getMarketData()
 
+        //populate data
+        getMarketData()
         getCommunityData()
+
 
 
         //공동구매 전체보기 -> 공동구매 게시판 액티비티로 이동
@@ -137,7 +150,7 @@ class HomeActivity : AppCompatActivity() {
 //            startActivity(intent)
 //        }
 //
-//        //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동
+////        //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동
 //        binding.goCommunity.setOnClickListener {
 //            val intent = Intent(this, CommunityActivity::class.java)
 //            startActivity(intent)
@@ -220,7 +233,8 @@ class HomeActivity : AppCompatActivity() {
     private fun getMarketData(){
         // retrieve data for the RecyclerView
         // This method should return a list of YourData objects
-        db.collection("market_posts")   //작업할 컬렉션
+        db.collection("Market")   //작업할 컬렉션
+            //게시일 최근순 기준으로 정렬
             .orderBy("postDate", Query.Direction.DESCENDING)
             .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
                 if(querySnapshot==null) return@addSnapshotListener
@@ -230,14 +244,11 @@ class HomeActivity : AppCompatActivity() {
                 //데이터 받아오기
                 for(snapshot in querySnapshot.documents){
                     var item=snapshot.toObject(MarketPostModel::class.java)
+                    Log.d("TAG","${item?.postImageUrl}, ${item?.postTitle}")
                     marketItemList.add(item!!)
                 }
-                //add dummy
-                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
-                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
-                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
-                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
-                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
+
+                //어답터에 데이터 넘겨줌
                 adapterForMarket.setData(marketItemList)
             }
 //        return listOf(
@@ -254,7 +265,7 @@ class HomeActivity : AppCompatActivity() {
     private fun getCommunityData(){
         // Replace with your own implementation to retrieve data for the RecyclerView
         // This method should return a list of YourData objects
-        db.collection("community_posts")   //작업할 컬렉션
+        db.collection("Community")   //작업할 컬렉션
             .orderBy("postDate", Query.Direction.DESCENDING)
             .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
                 if(querySnapshot==null) return@addSnapshotListener
@@ -266,23 +277,16 @@ class HomeActivity : AppCompatActivity() {
                     var item=snapshot.toObject(CommunityPostModel::class.java)
                     communityItemList.add(item!!)
                 }
-                //add dummy data
-                communityItemList.add(CommunityPostModel(null,"저희집 강아지 자랑합니다"))
-                communityItemList.add(CommunityPostModel(null,"저희집 강아지 자랑합니다"))
-                communityItemList.add(CommunityPostModel(null,"저희집 강아지 자랑합니다"))
+
+                //dummy data
+                communityItemList.add(CommunityPostModel(null,"dummy"))
+                communityItemList.add(CommunityPostModel(null,"dummy"))
+                communityItemList.add(CommunityPostModel(null,"dummy"))
+                communityItemList.add(CommunityPostModel(null,"dummy"))
+
                 adapterForCommunity.setData(communityItemList)
             }
-//        return listOf(
-//            //게시글 데이터를 담을 배열
-//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
-//
-//            // Add more items as needed
-//        )
+
     }
 
     //공동구매 리사이클러뷰 어댑터
@@ -320,13 +324,13 @@ class HomeActivity : AppCompatActivity() {
 
 
             //이미지가 있는 글이라면
-            if (item.imageUrl != null) {
+            if (item.postImageUrl != null) {
                 //이미지뷰와 실제 이미지 데이터를 묶음
                 Glide
                     .with(binding.productImg)
-                    .load(item.imageUrl)
+                    .load(item.postImageUrl)
                     .centerCrop()
-                    .placeholder(R.drawable.ic_logo)
+                    .placeholder(R.color.colorLightGrey)
                     .into(binding.productImg)
             }   else {
                 //이미지가 없는 글이라면
@@ -371,11 +375,11 @@ class HomeActivity : AppCompatActivity() {
 
 
             //이미지가 있는 글이라면
-            if (item.imageUrl != null) {
+            if (item.postImageUrl != null) {
                 //이미지뷰와 실제 이미지 데이터를 묶음
                 Glide
                     .with(binding.postImg)
-                    .load(item.imageUrl)
+                    .load(item.postImageUrl)
                     .centerCrop()
                     .placeholder(R.drawable.ic_logo)
                     .into(binding.postImg)
@@ -401,14 +405,14 @@ class HomeActivity : AppCompatActivity() {
 
 // 공동구매 게시글 데이터 모델
 data class MarketPostModel(
-    var imageUrl: String?=null,
+    var postImageUrl: String?=null,
     var postTitle:String?=null)
 
 
 
 // 커뮤니티 게시글 데이터 모델
 data class CommunityPostModel(
-    var imageUrl:String?=null,
+    var postImageUrl:String?=null,
     var postTitle:String?=null
 )
 
