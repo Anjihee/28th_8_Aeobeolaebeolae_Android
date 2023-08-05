@@ -4,12 +4,14 @@ import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.auth.User
 import com.kakao.sdk.auth.AuthApi
+
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.common.KakaoSdk
 import com.kakao.sdk.auth.model.OAuthToken
@@ -37,7 +39,14 @@ class LoginActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+
         setContentView(binding.root)
+
+        //hide navigation bar
+        window.decorView.apply{
+            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+
+        }
 
         val join_intent = Intent(this, JoinActivity::class.java) //가입 화면
         val home_intent = Intent(this, HomeActivity::class.java)

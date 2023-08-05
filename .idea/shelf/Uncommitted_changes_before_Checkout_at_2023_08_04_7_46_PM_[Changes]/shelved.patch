@@ -1,0 +1,359 @@
+Index: app/src/main/java/com/surround2023/surround2023/home/HomeActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.surround2023.surround2023.home\n\nimport android.app.Activity\nimport android.content.Intent\nimport android.os.Bundle\nimport android.view.LayoutInflater\nimport android.view.MenuItem\nimport android.view.View\nimport android.view.ViewGroup\nimport android.view.WindowManager\nimport android.widget.PopupMenu\nimport androidx.appcompat.app.AppCompatActivity\nimport androidx.constraintlayout.widget.ConstraintLayout\nimport androidx.recyclerview.widget.GridLayoutManager\nimport androidx.recyclerview.widget.LinearLayoutManager\nimport androidx.recyclerview.widget.RecyclerView\nimport com.bumptech.glide.Glide\nimport com.google.android.material.bottomnavigation.BottomNavigationView\nimport com.google.firebase.firestore.FirebaseFirestore\nimport com.surround2023.surround2023.R\nimport com.surround2023.surround2023.databinding.ActivityHomeBinding\nimport com.surround2023.surround2023.databinding.HomeCommunityItemBinding\nimport com.surround2023.surround2023.databinding.HomeMarketItemBinding\nimport com.surround2023.surround2023.set_location.SetLocationActivity\n\n\nclass HomeActivity : AppCompatActivity() {\n\n    private lateinit var binding: ActivityHomeBinding\n\n    //하단 Nav 와 관련된 변수\n    private lateinit var bottomNavView: BottomNavigationView\n\n    //리사이클러뷰\n    private lateinit var marketRecyclerView: RecyclerView\n    private lateinit var communityRecyclerView: RecyclerView\n    private lateinit var adapterForMarket: HomeMarketAdapter\n    private lateinit var adapterForCommunity: HomeCommunityAdapter\n\n\n    //설정된 사용자 위치를 가져오기 위한 상수\n    private val LOCATION_REQUEST_CODE = 1001\n\n    //게시글 데이터베이스\n    var firestore=FirebaseFirestore.getInstance()\n\n\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n\n        binding= ActivityHomeBinding.inflate(layoutInflater)\n        setContentView(binding.root)\n\n        // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정\n        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION\n                or View.SYSTEM_UI_FLAG_FULLSCREEN\n                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)\n        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION\n                or View.SYSTEM_UI_FLAG_FULLSCREEN\n                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY\n                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION\n                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)\n\n\n        //        ---------------------BottomNavigationView에 대한 기능 ---------------\n        bottomNavView = binding.bottomNavView\n        bottomNavView.setOnItemSelectedListener { menuItem ->\n            when (menuItem.itemId) {\n                //해당 액티비티로 이동\n                R.id.menu_home -> {\n                    // \"menu_home\" 아이템 클릭 시 HomeActivity로 이동\n                    val intent = Intent(this, HomeActivity::class.java)\n                    startActivity(intent)\n                    true\n                }\n                R.id.menu_favorite ->{\n                    //즐겨찾기로 이동\n                    true\n                }\n\n                R.id.menu_addPost ->{\n                    //공동구매 글쓰기로 이동\n                    true\n                }\n\n                R.id.menu_mypage ->{\n                    //마이페이지로 이동\n                    true\n                }\n                // 다른 메뉴 아이템에 대한 처리 추가 (필요에 따라 다른 Activity로 이동할 수 있음)\n                else -> false\n            }\n        }\n\n        //        ---------------------사용자 위치 설정 기능 -------------------------------\n        binding.userLocationArea.setOnClickListener{\n            showDropdownMenu(it)\n        }\n\n\n        //-------------------------------공구/커뮤니티 리사이클러뷰-------------------------\n        // Initialize RecyclerView\n        marketRecyclerView= binding.marketRecycler\n        communityRecyclerView=binding.communityRecycler\n\n        //커뮤니티 리사이클러뷰 레이아웃매니저\n        val communityLayoutManager = LinearLayoutManager(this)\n        communityRecyclerView.layoutManager = communityLayoutManager\n\n\n        // Initialize Adapter\n        adapterForMarket = HomeMarketAdapter()\n        adapterForCommunity = HomeCommunityAdapter()\n        marketRecyclerView.adapter = adapterForMarket\n        communityRecyclerView.adapter=adapterForCommunity\n\n        // Add item decoration to the marketRecyclerView\n        val itemSpace = resources.getDimensionPixelSize(R.dimen.home_market_item_space) // 이 부분에서 R.dimen.item_space는 간격 크기를 리소스로 정의한 값\n        marketRecyclerView.addItemDecoration(HomeMarketItemDecoration(itemSpace, 2))\n\n        // Populate data\n        val marketData = getMarketData() // Replace with your data source\n        //공동구매 리사이클러뷰 레이아웃매니저\n        val marketLayoutManager=GridLayoutManager(this, 2, RecyclerView.HORIZONTAL, false)\n        marketRecyclerView.layoutManager=marketLayoutManager\n        adapterForMarket.setData(marketData)\n\n        val communityData=getCommunityData()\n        adapterForCommunity.setData(communityData)\n\n\n        //공동구매 전체보기 -> 공동구매 게시판 액티비티로 이동\n//        binding.goMarket.setOnClickListener {\n//            val intent = Intent(this, MarketActivity::class.java)\n//            startActivity(intent)\n//        }\n//\n//        //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동\n//        binding.goCommunity.setOnClickListener {\n//            val intent = Intent(this, CommunityActivity::class.java)\n//            startActivity(intent)\n//        }\n    }\n\n\n\n\n\n\n    //검색 동작 처리를 위한 메소드\n//    private fun handleSearchAction(searchText:String){\n//\n//        val intent = Intent(requireContext(), MarketActivity::class.java)\n//        //MarketPostActivity로 검색 텍스트를 전달\n//        intent.putExtra(\"searchText\", searchText)\n//        startActivity(intent)\n//    }\n\n    //사용자 위치 Dropdown 메뉴를 보여주는 함수\n    private fun showDropdownMenu(view:View){\n\n        val popupMenu = PopupMenu(this,view)\n        popupMenu.menuInflater.inflate(R.menu.location_dropdown_menu,popupMenu.menu) //menu layout\n\n        // Dropdown 메뉴의 아이템 클릭 이벤트 처리\n        popupMenu.setOnMenuItemClickListener { menuItem ->\n            when (menuItem.itemId) {\n                R.id.setUserLocation -> {\n                    goSetLocationPage()\n                    true\n                }\n\n                else -> false\n            }\n        }\n        //Dropdown 메뉴가 보여질 위치 조절\n//        popupMenu.gravity=Gravity.START\n        popupMenu.show()\n\n    }\n\n    override fun onOptionsItemSelected(item: MenuItem): Boolean {\n        when (item.itemId) {\n            R.id.setUserLocation -> {\n                // 하단 소프트키 숨기기\n                window.setFlags(\n                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,\n                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)\n\n                return true\n            }\n            // 다른 메뉴 항목에 대한 처리\n            else -> return super.onOptionsItemSelected(item)\n        }\n    }\n\n    //사용자 위치 설정 페이지로 이동하기 위한 메소드\n    fun goSetLocationPage(){\n        val intent = Intent(this, SetLocationActivity::class.java)\n        startActivityForResult(intent, LOCATION_REQUEST_CODE)// 위치 설정 액티비티 호출\n    }\n\n    //사용자 위치 설정 페이지에서 설정된 위치를 home에도 적용\n\n    // 위치 설정 액티비티로부터 결과를 받아오는 콜백 메소드\n    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {\n        super.onActivityResult(requestCode, resultCode, data)\n        if (requestCode == LOCATION_REQUEST_CODE && resultCode == Activity.RESULT_OK) {\n            val currentStreetAddress = data?.getStringExtra(\"CURRENT_ADDRESS\")\n            if (!currentStreetAddress.isNullOrEmpty()) {\n                // SetLocationActivity로부터 전달받은 주소를 화면에 업데이트\n                binding.userLocationText.text = currentStreetAddress\n            }\n        }\n    }\n\n    //공동구매 게시글 데이터를 가져오기 위한 메소드\n    private fun getMarketData(): List<MarketPostModel> {\n        // retrieve data for the RecyclerView\n        // This method should return a list of YourData objects\n        return listOf(\n            //데이터를 담을 배열\n            //Set DummyData\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n            MarketPostModel(\"@drawable/strawberry\",\"딸기 1키로 공구하실 분 구합니다\"),\n\n            // Add more items as needed\n        )\n    }\n\n    //커뮤니티 게시글 데이터를 가져오기 위한 메소드\n    private fun getCommunityData(): List<CommunityPostModel> {\n        // Replace with your own implementation to retrieve data for the RecyclerView\n        // This method should return a list of YourData objects\n        return listOf(\n            //게시글 데이터를 담을 배열\n            CommunityPostModel(\"@drawable/cutecute_dog\",\"저희집 강아지 자랑합니다\"),\n            CommunityPostModel(\"@drawable/cutecute_dog\",\"저희집 강아지 자랑합니다\"),\n            CommunityPostModel(\"@drawable/cutecute_dog\",\"저희집 강아지 자랑합니다\"),\n            CommunityPostModel(\"@drawable/cutecute_dog\",\"저희집 강아지 자랑합니다\"),\n            CommunityPostModel(\"@drawable/cutecute_dog\",\"저희집 강아지 자랑합니다\"),\n            CommunityPostModel(\"@drawable/cutecute_dog\",\"저희집 강아지 자랑합니다\"),\n\n            // Add more items as needed\n        )\n    }\n\n    //공동구매 리사이클러뷰 어댑터\n    class HomeMarketAdapter: RecyclerView.Adapter<HomeMarketViewHolder>(){\n        private val data = mutableListOf<MarketPostModel>()\n\n        fun setData(newData: List<MarketPostModel>) {\n            data.clear()\n            data.addAll(newData)\n//            notifyDataSetChanged()\n        }\n\n        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeMarketViewHolder {\n            val inflater = LayoutInflater.from(parent.context)\n            val binding = HomeMarketItemBinding.inflate(inflater, parent, false)\n            return HomeMarketViewHolder(binding)\n        }\n\n        override fun onBindViewHolder(holder: HomeMarketViewHolder, position: Int) {\n            holder.bind(data[position])\n        }\n\n        override fun getItemCount(): Int = data.size\n    }\n\n    // 공동구매 리사이클러뷰 아이템 모델에 대한 뷰홀더\n    class HomeMarketViewHolder(private val binding: HomeMarketItemBinding) :\n        RecyclerView.ViewHolder(binding.root) {\n\n        fun bind(item: MarketPostModel) {\n            // Bind data to the views in your item layout\n            binding.productTitle.text=item.productTitle\n\n\n            //이미지가 있는 글이라면\n            if (item.productImg != null) {\n                //이미지뷰와 실제 이미지 데이터를 묶음\n                Glide\n                    .with(binding.productImg)\n                    .load(item.productImg)\n                    .centerCrop()\n                    .placeholder(R.drawable.strawberry)\n                    .into(binding.productImg)\n            }   else {\n                //이미지가 없는 글이라면\n                //이미지 숨김\n                binding.productImgContainer.visibility=View.GONE\n                binding.productImg.visibility=View.GONE\n\n                // TextView의 constraint 재설정\n                val layoutParams = binding.productTitle.layoutParams as ConstraintLayout.LayoutParams\n                layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID\n                binding.productTitle.layoutParams = layoutParams\n\n            }\n\n        }\n    }\n\n    //커뮤니티 리사이클러뷰 어댑터\n    class HomeCommunityAdapter: RecyclerView.Adapter<HomeCommunityViewHolder>(){\n        private val data = mutableListOf<CommunityPostModel>()\n\n        fun setData(newData: List<CommunityPostModel>) {\n            data.clear()\n            data.addAll(newData)\n//            notifyDataSetChanged()\n        }\n\n        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeCommunityViewHolder {\n            val inflater = LayoutInflater.from(parent.context)\n            val binding = HomeCommunityItemBinding.inflate(inflater, parent, false)\n            return HomeCommunityViewHolder(binding)\n        }\n\n        override fun onBindViewHolder(holder: HomeCommunityViewHolder, position: Int) {\n            holder.bind(data[position])\n        }\n\n        override fun getItemCount(): Int = data.size\n    }\n\n    // 커뮤니티 리사이클러뷰 아이템 모델에 대한 뷰홀더\n    class HomeCommunityViewHolder(private val binding: HomeCommunityItemBinding) :\n        RecyclerView.ViewHolder(binding.root) {\n\n        fun bind(item: CommunityPostModel) {\n            // Bind data to the views in your item layout\n            binding.postTitle.text=item.postTitle\n\n\n            //이미지가 있는 글이라면\n            if (item.postImg != null) {\n                //이미지뷰와 실제 이미지 데이터를 묶음\n                Glide\n                    .with(binding.postImg)\n                    .load(item.postImg)\n                    .centerCrop()\n                    .placeholder(R.drawable.cutecute_dog)\n                    .into(binding.postImg)\n            }   else {\n                //이미지가 없는 글이라면\n                //이미지 숨김\n                binding.postImgContainer.visibility=View.GONE\n                binding.postImg.visibility=View.GONE\n\n                // TextView의 constraint 재설정\n                val layoutParams = binding.postTitle.layoutParams as ConstraintLayout.LayoutParams\n                layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID\n                binding.postTitle.layoutParams = layoutParams\n\n            }\n\n        }\n    }\n\n\n}\n\n\n// 공동구매 게시글 데이터 모델\ndata class MarketPostModel(\n    var productImg:String?=null,\n    var productTitle:String?=null)\n\n\n\n// 커뮤니티 게시글 데이터 모델\ndata class CommunityPostModel(\n    var postImg:String?=null,\n    var postTitle:String?=null\n)\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/surround2023/surround2023/home/HomeActivity.kt b/app/src/main/java/com/surround2023/surround2023/home/HomeActivity.kt
+--- a/app/src/main/java/com/surround2023/surround2023/home/HomeActivity.kt	(revision da898f959bf5fde1a905e698e5941a68fb485ee6)
++++ b/app/src/main/java/com/surround2023/surround2023/home/HomeActivity.kt	(date 1691145975940)
+@@ -2,7 +2,10 @@
+ 
+ import android.app.Activity
+ import android.content.Intent
++import android.content.pm.PackageManager
+ import android.os.Bundle
++import android.util.Base64
++import android.util.Log
+ import android.view.LayoutInflater
+ import android.view.MenuItem
+ import android.view.View
+@@ -17,11 +20,13 @@
+ import com.bumptech.glide.Glide
+ import com.google.android.material.bottomnavigation.BottomNavigationView
+ import com.google.firebase.firestore.FirebaseFirestore
++import com.google.firebase.firestore.Query
+ import com.surround2023.surround2023.R
+ import com.surround2023.surround2023.databinding.ActivityHomeBinding
+ import com.surround2023.surround2023.databinding.HomeCommunityItemBinding
+ import com.surround2023.surround2023.databinding.HomeMarketItemBinding
+ import com.surround2023.surround2023.set_location.SetLocationActivity
++import java.security.MessageDigest
+ 
+ 
+ class HomeActivity : AppCompatActivity() {
+@@ -42,7 +47,7 @@
+     private val LOCATION_REQUEST_CODE = 1001
+ 
+     //게시글 데이터베이스
+-    var firestore=FirebaseFirestore.getInstance()
++    val db=FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
+ 
+ 
+     override fun onCreate(savedInstanceState: Bundle?) {
+@@ -118,15 +123,12 @@
+         val itemSpace = resources.getDimensionPixelSize(R.dimen.home_market_item_space) // 이 부분에서 R.dimen.item_space는 간격 크기를 리소스로 정의한 값
+         marketRecyclerView.addItemDecoration(HomeMarketItemDecoration(itemSpace, 2))
+ 
+-        // Populate data
+-        val marketData = getMarketData() // Replace with your data source
+         //공동구매 리사이클러뷰 레이아웃매니저
+         val marketLayoutManager=GridLayoutManager(this, 2, RecyclerView.HORIZONTAL, false)
+         marketRecyclerView.layoutManager=marketLayoutManager
+-        adapterForMarket.setData(marketData)
++        getMarketData()
+ 
+-        val communityData=getCommunityData()
+-        adapterForCommunity.setData(communityData)
++        getCommunityData()
+ 
+ 
+         //공동구매 전체보기 -> 공동구매 게시판 액티비티로 이동
+@@ -215,52 +217,82 @@
+     }
+ 
+     //공동구매 게시글 데이터를 가져오기 위한 메소드
+-    private fun getMarketData(): List<MarketPostModel> {
++    private fun getMarketData(){
+         // retrieve data for the RecyclerView
+         // This method should return a list of YourData objects
+-        return listOf(
+-            //데이터를 담을 배열
+-            //Set DummyData
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
+-            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
++        db.collection("market_posts")   //작업할 컬렉션
++            .orderBy("postDate", Query.Direction.DESCENDING)
++            .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
++                if(querySnapshot==null) return@addSnapshotListener
++
++                val marketItemList = mutableListOf<MarketPostModel>()
+ 
+-            // Add more items as needed
+-        )
++                //데이터 받아오기
++                for(snapshot in querySnapshot.documents){
++                    var item=snapshot.toObject(MarketPostModel::class.java)
++                    marketItemList.add(item!!)
++                }
++                //add dummy
++                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
++                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
++                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
++                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
++                marketItemList.add(MarketPostModel(null,"딸기 팔아요"))
++                adapterForMarket.setData(marketItemList)
++            }
++//        return listOf(
++//            //데이터를 담을 배열
++//            //Set DummyData
++//            MarketPostModel("@drawable/strawberry","딸기 1키로 공구하실 분 구합니다"),
++//
++//            // Add more items as needed
++//        )
++
+     }
+ 
+     //커뮤니티 게시글 데이터를 가져오기 위한 메소드
+-    private fun getCommunityData(): List<CommunityPostModel> {
++    private fun getCommunityData(){
+         // Replace with your own implementation to retrieve data for the RecyclerView
+         // This method should return a list of YourData objects
+-        return listOf(
+-            //게시글 데이터를 담을 배열
+-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
+-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
+-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
+-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
+-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
+-            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
++        db.collection("community_posts")   //작업할 컬렉션
++            .orderBy("postDate", Query.Direction.DESCENDING)
++            .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
++                if(querySnapshot==null) return@addSnapshotListener
+ 
+-            // Add more items as needed
+-        )
++                val communityItemList = mutableListOf<CommunityPostModel>()
++
++                //데이터 받아오기
++                for(snapshot in querySnapshot.documents){
++                    var item=snapshot.toObject(CommunityPostModel::class.java)
++                    communityItemList.add(item!!)
++                }
++                //add dummy data
++                communityItemList.add(CommunityPostModel(null,"저희집 강아지 자랑합니다"))
++                communityItemList.add(CommunityPostModel(null,"저희집 강아지 자랑합니다"))
++                communityItemList.add(CommunityPostModel(null,"저희집 강아지 자랑합니다"))
++                adapterForCommunity.setData(communityItemList)
++            }
++//        return listOf(
++//            //게시글 데이터를 담을 배열
++//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
++//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
++//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
++//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
++//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
++//            CommunityPostModel("@drawable/cutecute_dog","저희집 강아지 자랑합니다"),
++//
++//            // Add more items as needed
++//        )
+     }
+ 
+     //공동구매 리사이클러뷰 어댑터
+     class HomeMarketAdapter: RecyclerView.Adapter<HomeMarketViewHolder>(){
+-        private val data = mutableListOf<MarketPostModel>()
++        private val data = arrayListOf<MarketPostModel>()
+ 
+         fun setData(newData: List<MarketPostModel>) {
+             data.clear()
+             data.addAll(newData)
+-//            notifyDataSetChanged()
++            notifyDataSetChanged()
+         }
+ 
+         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeMarketViewHolder {
+@@ -274,6 +306,8 @@
+         }
+ 
+         override fun getItemCount(): Int = data.size
++
++
+     }
+ 
+     // 공동구매 리사이클러뷰 아이템 모델에 대한 뷰홀더
+@@ -282,42 +316,36 @@
+ 
+         fun bind(item: MarketPostModel) {
+             // Bind data to the views in your item layout
+-            binding.productTitle.text=item.productTitle
++            binding.productTitle.text=item.postTitle
+ 
+ 
+             //이미지가 있는 글이라면
+-            if (item.productImg != null) {
++            if (item.imageUrl != null) {
+                 //이미지뷰와 실제 이미지 데이터를 묶음
+                 Glide
+                     .with(binding.productImg)
+-                    .load(item.productImg)
++                    .load(item.imageUrl)
+                     .centerCrop()
+-                    .placeholder(R.drawable.strawberry)
++                    .placeholder(R.drawable.ic_logo)
+                     .into(binding.productImg)
+             }   else {
+                 //이미지가 없는 글이라면
+-                //이미지 숨김
+-                binding.productImgContainer.visibility=View.GONE
+-                binding.productImg.visibility=View.GONE
+-
+-                // TextView의 constraint 재설정
+-                val layoutParams = binding.productTitle.layoutParams as ConstraintLayout.LayoutParams
+-                layoutParams.startToStart = ConstraintLayout.LayoutParams.PARENT_ID
+-                binding.productTitle.layoutParams = layoutParams
+-
++                //이미지 바인딩을 하지 않음
+             }
+ 
+         }
+     }
++
++
+ 
+     //커뮤니티 리사이클러뷰 어댑터
+-    class HomeCommunityAdapter: RecyclerView.Adapter<HomeCommunityViewHolder>(){
++    class HomeCommunityAdapter(): RecyclerView.Adapter<HomeCommunityViewHolder>(){
+         private val data = mutableListOf<CommunityPostModel>()
+ 
+         fun setData(newData: List<CommunityPostModel>) {
+             data.clear()
+             data.addAll(newData)
+-//            notifyDataSetChanged()
++            notifyDataSetChanged()
+         }
+ 
+         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeCommunityViewHolder {
+@@ -338,18 +366,18 @@
+         RecyclerView.ViewHolder(binding.root) {
+ 
+         fun bind(item: CommunityPostModel) {
+-            // Bind data to the views in your item layout
++            // //PostModel에 담긴 postTitle, postImg 데이터를 아이템 레이아웃에 binding
+             binding.postTitle.text=item.postTitle
+ 
+ 
+             //이미지가 있는 글이라면
+-            if (item.postImg != null) {
++            if (item.imageUrl != null) {
+                 //이미지뷰와 실제 이미지 데이터를 묶음
+                 Glide
+                     .with(binding.postImg)
+-                    .load(item.postImg)
++                    .load(item.imageUrl)
+                     .centerCrop()
+-                    .placeholder(R.drawable.cutecute_dog)
++                    .placeholder(R.drawable.ic_logo)
+                     .into(binding.postImg)
+             }   else {
+                 //이미지가 없는 글이라면
+@@ -373,14 +401,14 @@
+ 
+ // 공동구매 게시글 데이터 모델
+ data class MarketPostModel(
+-    var productImg:String?=null,
+-    var productTitle:String?=null)
++    var imageUrl: String?=null,
++    var postTitle:String?=null)
+ 
+ 
+ 
+ // 커뮤니티 게시글 데이터 모델
+ data class CommunityPostModel(
+-    var postImg:String?=null,
++    var imageUrl:String?=null,
+     var postTitle:String?=null
+ )
+ 
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\">\n\n    <uses-permission android:name=\"android.permission.INTERNET\">\n    </uses-permission>\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n\n    <uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>\n    <uses-permission android:name=\"android.permission.ACCESS_COARSE_LOCATION\"/>\n\n    <!-- 카카오 REST API이용을 위한 APP KEY   -->\n    <meta-data android:name=\"com.kakao.sdk.AppKey\" android:value=\"332e0c6513db0104e361758ea011774a\n\"/>\n\n\n\n\n    <application\n        android:allowBackup=\"true\"\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\n        android:fullBackupContent=\"@xml/backup_rules\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/AppTheme\"\n        tools:targetApi=\"31\"\n        android:networkSecurityConfig=\"@xml/network_security_config\">\n\n        <!-- 앱이 시작될 때 실행-->\n        <activity\n            android:name=\".community_log.CommunityLogActivity\"\n            android:exported=\"true\"\n            android:label=\"surround-home\"\n            android:theme=\"@style/AppTheme\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n\n        <activity\n            android:name=\".home.HomeActivity\"\n            android:exported=\"true\"\n            android:label=\"surround-home\"\n            android:theme=\"@style/AppTheme\"/>\n\n        <!--   검색창 기능을 위함     -->\n<!--        <activity-->\n<!--            android:name=\".MarketActivity\"-->\n<!--            android:label=\"Market Activity\"-->\n<!--            android:theme=\"@style/AppTheme\" />-->\n\n        <activity android:name=\".set_location.SetLocationActivity\"\n            android:label=\"Set User Location Activity\"\n            android:theme=\"@style/AppTheme\"\n            android:parentActivityName=\".home.HomeActivity\"/>\n\n        <activity android:name=\".set_location.SearchAddressActivity\"\n            android:label=\"Search Address\"\n            android:theme=\"@style/AppTheme\"\n            android:parentActivityName=\".set_location.SetLocationActivity\"/>\n\n        <activity android:name=\".community_post.CommunityPostActivity\"\n            android:label=\"community post\"\n            android:theme=\"@style/AppTheme\"/>\n\n        <activity android:name=\".posting.CommunityPostingActivity\"\n            android:label=\"posting on community\"\n            android:theme=\"@style/AppTheme\"/>\n\n        <activity android:name=\".market_post.MarketPostActivity\"\n            android:label=\"market post\"\n            android:theme=\"@style/AppTheme\"/>\n\n        <activity android:name=\".posting.MarketPostingActivity\"\n            android:label=\"posting on market\"\n            android:theme=\"@style/AppTheme\"/>\n\n        <activity android:name=\".posting.MarketOptionSettingActivity\"\n            android:label=\"setting market option during posting on market\"\n            android:theme=\"@style/AppTheme\"/>\n\n        <activity android:name=\".market_post.JoinMarketActivity\"\n            android:label=\"join at market post\"\n            android:theme=\"@style/AppTheme\" />\n\n<!--        <activity android:name=\".marekt.MarketActivity\"-->\n<!--            android:label=\"Marekt\"-->\n<!--            android:theme=\"@style/AppTheme\" />-->\n\n<!--        <activity android:name=\".community.CommunityActivity\"-->\n<!--            android:label=\"Community\"-->\n<!--            android:theme=\"@style/AppTheme\" />-->\n\n<!--        <activity android:name=\".mypage.FavoriteActivity\"-->\n<!--            android:label=\"Favorite Marekt Post\"-->\n<!--            android:theme=\"@style/AppTheme\" />-->\n\n<!--        <activity android:name=\".marekt.MarektPostingActivity\"-->\n<!--            android:label=\"Create Marekt Post\"-->\n<!--            android:theme=\"@style/AppTheme\" />-->\n\n\n<!--        <activity android:name=\".mypage.MypageActivity\"-->\n<!--            android:label=\"Mypage\"-->\n<!--            android:theme=\"@style/AppTheme\" />-->\n\n    </application>\n\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision da898f959bf5fde1a905e698e5941a68fb485ee6)
++++ b/app/src/main/AndroidManifest.xml	(date 1691145975937)
+@@ -30,7 +30,7 @@
+ 
+         <!-- 앱이 시작될 때 실행-->
+         <activity
+-            android:name=".community_log.CommunityLogActivity"
++            android:name=".home.HomeActivity"
+             android:exported="true"
+             android:label="surround-home"
+             android:theme="@style/AppTheme">
+@@ -41,11 +41,6 @@
+             </intent-filter>
+         </activity>
+ 
+-        <activity
+-            android:name=".home.HomeActivity"
+-            android:exported="true"
+-            android:label="surround-home"
+-            android:theme="@style/AppTheme"/>
+ 
+         <!--   검색창 기능을 위함     -->
+ <!--        <activity-->
+Index: app/google-services.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{\n  \"project_info\": {\n    \"project_number\": \"1063771588438\",\n    \"project_id\": \"surround2023\",\n    \"storage_bucket\": \"surround2023.appspot.com\"\n  },\n  \"client\": [\n    {\n      \"client_info\": {\n        \"mobilesdk_app_id\": \"1:1063771588438:android:9c63302e3e41149c39f8f7\",\n        \"android_client_info\": {\n          \"package_name\": \"com.surround2023.surround2023\"\n        }\n      },\n      \"oauth_client\": [\n        {\n          \"client_id\": \"1063771588438-05phe46tp54s3clfqppritc7sl1ku6f0.apps.googleusercontent.com\",\n          \"client_type\": 1,\n          \"android_info\": {\n            \"package_name\": \"com.surround2023.surround2023\",\n            \"certificate_hash\": \"0364b62986aedb82022de7d8a21821fdb2a74d8c\"\n          }\n        },\n        {\n          \"client_id\": \"1063771588438-50mno2aiu3dkgfh22qta7nhcqkoluf0m.apps.googleusercontent.com\",\n          \"client_type\": 3\n        }\n      ],\n      \"api_key\": [\n        {\n          \"current_key\": \"AIzaSyDKKtJyQp6EaTpbhdz_paiAh4Oe6E2Na0I\"\n        }\n      ],\n      \"services\": {\n        \"appinvite_service\": {\n          \"other_platform_oauth_client\": [\n            {\n              \"client_id\": \"1063771588438-50mno2aiu3dkgfh22qta7nhcqkoluf0m.apps.googleusercontent.com\",\n              \"client_type\": 3\n            }\n          ]\n        }\n      }\n    }\n  ],\n  \"configuration_version\": \"1\"\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/google-services.json b/app/google-services.json
+--- a/app/google-services.json	(revision da898f959bf5fde1a905e698e5941a68fb485ee6)
++++ b/app/google-services.json	(date 1691145975939)
+@@ -1,20 +1,21 @@
+ {
+   "project_info": {
+     "project_number": "1063771588438",
+-    "project_id": "surround2023",
+-    "storage_bucket": "surround2023.appspot.com"
++    "firebase_url": "https://solux-surround-default-rtdb.firebaseio.com",
++    "project_id": "solux-surround",
++    "storage_bucket": "solux-surround.appspot.com"
+   },
+   "client": [
+     {
+       "client_info": {
+-        "mobilesdk_app_id": "1:1063771588438:android:9c63302e3e41149c39f8f7",
++        "mobilesdk_app_id": "1:1063771588438:android:e7f5f76273ea3b8d39f8f7",
+         "android_client_info": {
+           "package_name": "com.surround2023.surround2023"
+         }
+       },
+       "oauth_client": [
+         {
+-          "client_id": "1063771588438-05phe46tp54s3clfqppritc7sl1ku6f0.apps.googleusercontent.com",
++          "client_id": "1063771588438-5s4l0dv22j1i29mnfrr03e5kj4uc03cn.apps.googleusercontent.com",
+           "client_type": 1,
+           "android_info": {
+             "package_name": "com.surround2023.surround2023",
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>buildscript {\n    dependencies {\n        classpath 'com.google.gms:google-services:4.3.14'\n    }\n}// Top-level build file where you can add configuration options common to all sub-projects/modules.\nplugins {\n    id 'com.android.application' version '8.0.2' apply false\n    id 'com.android.library' version '8.0.2' apply false\n    id 'org.jetbrains.kotlin.android' version '1.8.0' apply false\n    id(\"com.google.gms.google-services\") version \"4.3.15\" apply false\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/build.gradle b/build.gradle
+--- a/build.gradle	(revision da898f959bf5fde1a905e698e5941a68fb485ee6)
++++ b/build.gradle	(date 1691145975938)
+@@ -9,3 +9,5 @@
+     id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
+     id("com.google.gms.google-services") version "4.3.15" apply false
+ }
++
++

@@ -42,8 +42,10 @@
                     android:scheme= "03078ebb94144613f5c84a04ddb3a172" />
             </intent-filter>
         </activity>
+
+        <!--Splash-->
         <activity
-            android:name=".user_login_join.LoginActivity"
+            android:name=".splash.SplashScreenActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
@@ -51,6 +53,13 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".user_login_join.LoginActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
         </activity>
 
         <activity
