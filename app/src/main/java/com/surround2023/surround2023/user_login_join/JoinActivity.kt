@@ -18,7 +18,7 @@ import com.surround2023.surround2023.databinding.ActivityJoinBinding
 class JoinActivity : ComponentActivity() {
     private lateinit var binding: ActivityJoinBinding
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance() //회원가입 파이어베이스 연동
-    private val mStore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     object FirebaseID { //파이어베이스 회원가입 정보
         const val email = "email"
@@ -107,7 +107,7 @@ class JoinActivity : ComponentActivity() {
                         FirebaseID.nickname to binding.Nickname,
                         FirebaseID.gender to gender
                     )
-                    mStore.collection(FirebaseID.email).document(user?.uid ?: "")
+                    db.collection(FirebaseID.email).document(user?.uid ?: "")
                         .set(userMap, SetOptions.merge())
                     val intent = Intent(this@JoinActivity, LoginActivity::class.java)
                     startActivity(intent)
@@ -123,45 +123,3 @@ class JoinActivity : ComponentActivity() {
     }
 
 }
-//    //메일 인증 구현
-//    private fun showCodeInputDialog(email: String, password: String, verificationCode: String) {
-//        val builder = AlertDialog.Builder(this)
-//        builder.setTitle("이메일 인증 코드 입력")
-//        val input = EditText(this)
-//        builder.setView(input)
-//
-//        builder.setPositiveButton("확인") { dialog, _ ->
-//            val code = input.text.toString().trim()
-//            // 여기에서 입력받은 인증 코드를 검증하고, 회원가입 처리를 진행합니다.
-//            // 인증 코드 검증에 성공하면 회원가입 처리를 진행하면 됩니다.
-//            if (validateCode(code, verificationCode)) {
-//                // 인증 코드 검증 성공 시 회원가입 처리 진행
-//                signUpWithEmail(email, password)
-//            } else {
-//                // 인증 코드 검증 실패 시 에러 메시지를 표시하거나 재시도 유도 등의 처리
-//                Toast.makeText(applicationContext, "인증 코드가 올바르지 않습니다.", Toast.LENGTH_SHORT).show()
-//            }
-//            dialog.dismiss()
-//        }
-//
-//        builder.setNegativeButton("취소") { dialog, _ ->
-//            dialog.cancel()
-//        }
-//
-//        builder.show()
-//    }
-//}
-////    private fun generateRandomCode(): String {
-////        val charPool: List<Char> = ('0'..'9') + ('A'..'Z') + ('a'..'z')
-////        return (1..6)
-////            .map { kotlin.random.Random.nextInt(0, charPool.size) }
-////            .map(charPool::get)
-////            .joinToString("")
-////    }
-////    // 인증 코드 검증 로직을 구현합니다.
-////    private fun validateCode(code: String, verificationCode: String): Boolean {
-////        // 이메일로 보낸 인증 코드와 사용자가 입력한 코드를 비교하여 일치 여부를 반환합니다.
-////        // 일치하면 true, 일치하지 않으면 false를 반환하면 됩니다.
-////        return code == verificationCode
-////    }
-////}
