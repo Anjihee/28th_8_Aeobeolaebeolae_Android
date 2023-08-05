@@ -13,8 +13,10 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <!-- 카카오 REST API이용을 위한 APP KEY   -->
+
     <meta-data android:name="com.kakao.sdk.AppKey" android:value="332e0c6513db0104e361758ea011774a
 "/>
+
 
     <application
         android:name=".user_login_join.GlobalApplication"
@@ -134,9 +136,9 @@
 <!--            android:theme="@style/AppTheme" />-->
 
 
-<!--        <activity android:name=".mypage.MypageActivity"-->
-<!--            android:label="Mypage"-->
-<!--            android:theme="@style/AppTheme" />-->
+        <activity android:name=".mypage.MypageActivity"
+            android:label="Mypage"
+            android:theme="@style/AppTheme" />
 
     </application>
 
