@@ -13,13 +13,13 @@ class LogoutActivity : ComponentActivity(){
         setContentView(binding.root)
 
         binding.Yesbtn.setOnClickListener {
-
-
+            val loginIntent = Intent(this,LoginActivity::class.java)
+            startActivity(loginIntent)
         }
 
         binding.Nobtn.setOnClickListener {
-            val mypage_intent = Intent(this,MypageActivity::class.java)
-            startActivity(mypage_intent)
+            val mypageIntent = Intent(this,MypageActivity::class.java)
+            startActivity(mypageIntent)
         }
     }
 }
