@@ -18,9 +18,8 @@ class JoinMarketActivity : AppCompatActivity() {
         
         val btnBack : ImageButton = findViewById(R.id.btnBack)
         btnBack.setOnClickListener { // '뒤로가기' 버튼 클릭 시
-            // '뒤로가기' 버튼을 클릭하면 공구 글 페이지를 열도록 인텐트 생성
-            val intent = Intent(this@JoinMarketActivity, MarketPostActivity::class.java)
-            startActivity(intent)
+            // '뒤로가기' 버튼을 클릭하면 공구 글 페이지로 돌아가도록 인텐트 생성
+           onBackPressed()
         }
 
         radioButtons = arrayOf( // RadioGroup 대신 GridLayout을 사용했으므로 임의의 배열을 선언해 묶어줌
@@ -74,5 +73,10 @@ class JoinMarketActivity : AppCompatActivity() {
                 // '무통장입금 결제' 선택 시 처리
             }
         }
+    }
+
+    override fun onBackPressed() { // 뒤로가기
+        super.onBackPressed()
+        finish() // 현재 액티비티 종료
     }
 }
