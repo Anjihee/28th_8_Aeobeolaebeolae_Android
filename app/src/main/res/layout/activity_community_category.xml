@@ -9,8 +9,8 @@
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="116dp"
-        android:layout_height="37dp"
+        android:layout_width="116sp"
+        android:layout_height="37sp"
         android:text="카테고리"
         android:textColor="#000000"
         android:textSize="17sp"
@@ -26,8 +26,8 @@
 
     <ImageButton
         android:id="@+id/back"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="55sp"
+        android:layout_height="55sp"
         android:background="#00ff0000"
         android:contentDescription="뒤로가기 버튼"
         android:src="@drawable/arrow_left"
@@ -39,8 +39,8 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
-        android:layout_width="415dp"
-        android:layout_height="801dp"
+        android:layout_width="415sp"
+        android:layout_height="801sp"
         android:background="@drawable/round_shpae"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -59,8 +59,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton16"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="155sp"
+                android:layout_height="155sp"
                 android:background="#00ff0000"
                 android:contentDescription="진로 버튼"
                 android:scaleType="fitXY"
@@ -76,8 +76,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton11"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="155sp"
+                android:layout_height="155sp"
                 android:background="#00ff0000"
                 android:contentDescription="최신순 버튼"
                 android:scaleType="fitXY"
@@ -93,8 +93,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton12"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="155sp"
+                android:layout_height="155sp"
                 android:background="#00ff0000"
                 android:contentDescription="자유 버튼"
                 android:scaleType="fitXY"
@@ -110,8 +110,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton13"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="155sp"
+                android:layout_height="155sp"
                 android:background="#00ff0000"
                 android:contentDescription="광고 버튼"
                 android:scaleType="fitXY"
@@ -127,8 +127,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton15"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="155sp"
+                android:layout_height="155sp"
                 android:background="#00ff0000"
                 android:contentDescription="연애 버튼"
                 android:scaleType="fitXY"
@@ -144,8 +144,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton17"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="155sp"
+                android:layout_height="155sp"
                 android:background="#00ff0000"
                 android:contentDescription="반려동물 버튼"
                 android:scaleType="fitXY"
@@ -161,8 +161,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton18"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="155sp"
+                android:layout_height="155sp"
                 android:background="#00ff0000"
                 android:contentDescription="동네소식 버튼"
                 android:scaleType="fitXY"
@@ -178,8 +178,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton10"
-                android:layout_width="155dp"
-                android:layout_height="155dp"
+                android:layout_width="155sp"
+                android:layout_height="155sp"
                 android:background="#00ff0000"
                 android:contentDescription="인기순 버튼"
                 android:scaleType="fitXY"
