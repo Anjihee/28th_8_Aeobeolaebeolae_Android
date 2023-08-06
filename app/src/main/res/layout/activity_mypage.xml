@@ -405,7 +405,7 @@ android:contentDescription="스크롤"
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!-- 광고배너 -->
+    <!-- 광고배너자리-->
     <ImageView
         android:id="@+id/imageView7"
         android:layout_width="match_parent"
