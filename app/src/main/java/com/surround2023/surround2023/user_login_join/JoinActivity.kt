@@ -33,6 +33,9 @@ class JoinActivity : ComponentActivity() {
     object FirebaseID { //파이어베이스 회원가입 정보
         const val email = "email"
         const val password = "password"
+        const val nickname = "nickname"
+        const val gender = "gender"
+        // 여기에 다른 필드 이름들을 추가할 수 있습니다.
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
