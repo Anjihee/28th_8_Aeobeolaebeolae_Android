@@ -15,6 +15,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.surround2023.surround2023.databinding.ActivityJoinBinding
+import com.google.firebase.firestore.IgnoreExtraProperties
+
+@IgnoreExtraProperties
+data class User(
+    val Email: String? = null,
+    val uid: String? = null,
+    val userName: String? = null,
+    val gender: String? = null
+)
 
 class JoinActivity : ComponentActivity() {
     private lateinit var binding: ActivityJoinBinding

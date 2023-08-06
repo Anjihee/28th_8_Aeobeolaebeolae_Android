@@ -17,15 +17,6 @@ import com.kakao.sdk.common.model.KakaoSdkError
 import com.kakao.sdk.user.UserApiClient
 import com.surround2023.surround2023.databinding.ActivityLoginBinding
 import com.surround2023.surround2023.home.HomeActivity
-import com.google.firebase.firestore.IgnoreExtraProperties
-
-@IgnoreExtraProperties
-data class User(
-    val Email: String? = null,
-    val uid: String? = null,
-    val userName: String? = null,
-    val gender: String? = null
-)
 
 class LoginActivity : ComponentActivity() {
 
