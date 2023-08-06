@@ -133,15 +133,18 @@
       
         <activity android:name=".market_log.MarketLogOpenActivity"
             android:label="MarketLogOpenActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".mypage.MypageActivity"/>
 
         <activity android:name=".market_log.MarketLogJoinActivity"
             android:label="MarketLogJoinActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".mypage.MypageActivity"/>
 
         <activity android:name=".community_log.CommunityLogActivity"
             android:label="CommunityLogActivity"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme"
+            android:parentActivityName=".mypage.MypageActivity"/>
 
     </application>
 
