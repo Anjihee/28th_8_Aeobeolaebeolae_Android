@@ -87,6 +87,7 @@ class LoginActivity : ComponentActivity() {
             startActivity(join_intent)
         }
     }
+
     private fun kakaoLogin() {
         val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
@@ -115,7 +116,7 @@ class LoginActivity : ComponentActivity() {
                     Log.e(TAG, "로그인 성공 ${token.accessToken}")
                     token?.accessToken?.let {
                         Log.d("DEBUG", "카카오톡 토큰 $it")
-                        loginInFirebase()
+                        loginInKakaoFirebase()
                     }
                     val home_intent = Intent(this, HomeActivity::class.java)
                     startActivity(home_intent)
@@ -146,7 +147,7 @@ class LoginActivity : ComponentActivity() {
         }
     }
 
-    private fun loginInFirebase() {
+    private fun loginInKakaoFirebase() {
         UserApiClient.instance.me { user, error ->
             if (error != null) {
                 Log.e("DEBUG", "카카오톡 사용자 정보가져오기 에러 ${error.message}")

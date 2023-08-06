@@ -38,8 +38,8 @@
 
     <EditText
         android:id="@+id/Email"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_width="300sp"
+        android:layout_height="50sp"
         android:layout_centerHorizontal="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -71,8 +71,8 @@
 
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_width="300sp"
+        android:layout_height="50sp"
         android:background="@drawable/selector_green_background"
         android:text="로그인"
         android:textColor="@color/white"
@@ -87,7 +87,7 @@
     <ImageButton
         android:id="@+id/KakaoLoginButton"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_height="50sp"
         android:background="@drawable/kakao_login_btn"
         app:layout_constraintBottom_toTopOf="@+id/textJoin"
         app:layout_constraintEnd_toEndOf="parent"
@@ -114,7 +114,7 @@
 
     <Button
         android:id="@+id/btnJoin"
-        android:layout_width="300dp"
+        android:layout_width="300sp"
         android:layout_height="wrap_content"
         android:background="@drawable/white_background"
         android:text="계정만들기"
