@@ -1,15 +1,24 @@
 package com.surround2023.surround2023.community_post
 
+import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.surround2023.surround2023.R
 
-data class CommentData(val userName: String, val time: String, val comment: String, val profileId: Int)
+data class CommentData(val userName: String?, val time: Timestamp, val comment: String?, val profileId: String?)
 
 class CommunityPostActivity : AppCompatActivity() {
+    private val postId: String = "" // 불러 오려는 댓글의 소속 글
+
+    private val db = FirebaseFirestore.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_post)
@@ -28,15 +37,29 @@ class CommunityPostActivity : AppCompatActivity() {
         commentListView.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun createCommentList(): List<CommentData> {
-        // 더미 데이터를 생성하여 CommentData 객체를 생성하고 리스트에 담아 반환하는 메서드
-        val dummyDataList = mutableListOf<CommentData>()
+    fun createCommentList(): List<CommentData> { // 댓글 DB 받아와 리스트 생성하는 메서드
+        val commentDataList = mutableListOf<CommentData>()
 
-        // 더미 데이터 추가
-        dummyDataList.add(CommentData("강형욱", "50분 전", "아웅 커여워!!", R.drawable.person))
-        dummyDataList.add(CommentData("뽀삐누나", "20분 전", "오쪼쪼 말랑따끈강쥐", R.drawable.person))
-        // 추가적인 더미 데이터들을 생성하여 리스트에 추가할 수 있습니다.
+        val commentsCollection = db.collection("Community").document(postId).collection("comments")
 
-        return dummyDataList
+        commentsCollection
+            .orderBy("timestamp", Query.Direction.DESCENDING) // 댓글 달린 순으로 정렬
+            .get()
+            .addOnSuccessListener { result -> // 성공
+                for (document in result){ // 받아들인 정보 저장하여 CommentData 리스트에 추가
+                    val userName = document.getString("commentUserName")
+                    val time = document.getTimestamp("commentDate")
+                    val content = document.getString("commentContent")
+                    val profileId = document.getString("commentUserProfileUrl")
+
+                    val comment = time?.let { CommentData(userName, it, content, profileId) }
+                    comment?.let { commentDataList.add(it) }
+                }
+            }
+            .addOnFailureListener { e -> // 실패
+                Log.w(ContentValues.TAG, "댓글 데이터 불러오기 실패", e)
+            }
+
+        return commentDataList
     }
 }
