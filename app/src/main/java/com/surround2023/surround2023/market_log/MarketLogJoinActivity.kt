@@ -26,6 +26,13 @@ class MarketLogJoinActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        //--------------- 뒤로가기 버튼 이벤트
+        binding.prevBtn.setOnClickListener{
+            // SetLocationActivity를 종료하여 이전 화면으로 돌아감
+            Log.d(TAG, "MarketLogJoinActivity is finished")
+            finish()
+        }
+
 //        -----------------리사이클러뷰---------------------------
         Log.d(TAG, "MainActivity - onCreate() called")
         //데이터 넣기 전
