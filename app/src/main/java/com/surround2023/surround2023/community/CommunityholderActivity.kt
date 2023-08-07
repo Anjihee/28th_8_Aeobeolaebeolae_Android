@@ -1,9 +1,12 @@
 package com.surround2023.surround2023.community
 
+import android.app.Activity
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +19,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.surround2023.surround2023.R
+import com.surround2023.surround2023.category.BuyCategoryActivity
+import com.surround2023.surround2023.category.CommunityCategoryActivity
 import com.surround2023.surround2023.community_post.CommunityPostActivity
 import com.surround2023.surround2023.databinding.ActivityCommunityholderBinding
 import com.surround2023.surround2023.databinding.ActivityCommunityitemBinding
@@ -38,10 +43,13 @@ class CommunityholderActivity : AppCompatActivity() {
     //게시글 데이터베이스
     val db= FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
 
+    private val COM_CATEGORY_REQUEST_CODE = 1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCommunityholderBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
 
         // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -52,6 +60,7 @@ class CommunityholderActivity : AppCompatActivity() {
                 or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+
 
         //        ---------------------BottomNavigationView에 대한 기능 ---------------
         bottomNavView = binding.bottomNavView
@@ -107,6 +116,12 @@ class CommunityholderActivity : AppCompatActivity() {
 
         //populate data
         getCommunityData()
+
+        // Set click listener for comcategoryBtn
+        binding.comcategoryBtn.setOnClickListener {
+            val intent = Intent(this, CommunityCategoryActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 
