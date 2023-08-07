@@ -132,7 +132,9 @@
         android:layout_marginRight="28sp"
         android:background="@drawable/solid_button"
         android:text="글쓰기"
-        android:textColor="#fff"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavView"
         app:layout_constraintEnd_toEndOf="parent" />
 
