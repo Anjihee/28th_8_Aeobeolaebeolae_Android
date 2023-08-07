@@ -198,7 +198,7 @@
                         android:background="#000000" />
 
                     <EditText
-                        android:id="@+id/postTitle"
+                        android:id="@+id/marketPostingTitle"
                         android:layout_width="match_parent"
                         android:layout_height="70sp"
                         android:background="#FFFFFF"
@@ -244,7 +244,7 @@
                         android:background="#000000" />
 
                     <EditText
-                        android:id="@+id/startPrice"
+                        android:id="@+id/marketPostingPrice"
                         android:layout_width="match_parent"
                         android:layout_height="70sp"
                         android:background="#FFFFFF"
@@ -266,7 +266,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <EditText
-                android:id="@+id/postText"
+                android:id="@+id/marketPostingContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10sp"
