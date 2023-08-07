@@ -23,7 +23,8 @@ data class User(
     val uid: String? = null,
     val userName: String? = null,
     val gender: String? = null,
-    var userLocation:String?=null
+    var userLocation:String?=null,
+
 )
 
 class JoinActivity : ComponentActivity() {
