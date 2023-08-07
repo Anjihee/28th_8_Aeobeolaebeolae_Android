@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="15sp"
-        android:text="수령 방법 선택"
+        android:text="참여 방법 선택"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@android:drawable/btn_radio"
-            android:text="직거래"
+            android:text="즉시 참여하기"
             android:textColor="@color/colorGrey"
             android:textSize="21sp"
             android:textStyle="bold" />
@@ -110,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@android:drawable/btn_radio"
-            android:text="택배거래"
+            android:text="마감일에 참여하기"
             android:textColor="@color/colorGrey"
             android:textSize="21sp"
             android:textStyle="bold" />

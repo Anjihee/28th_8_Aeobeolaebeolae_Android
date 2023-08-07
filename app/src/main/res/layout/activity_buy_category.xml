@@ -75,11 +75,11 @@ tools:context=".category.BuyCategoryActivity">
 
 
         <ImageButton
-            android:id="@+id/imageButton16"
+            android:id="@+id/hobbyBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
-            android:contentDescription="인테리어 버튼"
+            android:contentDescription="취미 버튼"
             android:scaleType="fitXY"
             android:src="@drawable/hobby"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -92,7 +92,7 @@ tools:context=".category.BuyCategoryActivity">
             app:layout_constraintVertical_bias="0.65" />
 
         <ImageButton
-            android:id="@+id/imageButton11"
+            android:id="@+id/foodBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
@@ -109,7 +109,7 @@ tools:context=".category.BuyCategoryActivity">
             app:layout_constraintVertical_bias="0.049" />
 
         <ImageButton
-            android:id="@+id/imageButton12"
+            android:id="@+id/onlyWomanBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
@@ -126,7 +126,7 @@ tools:context=".category.BuyCategoryActivity">
             app:layout_constraintVertical_bias="0.348" />
 
         <ImageButton
-            android:id="@+id/imageButton13"
+            android:id="@+id/onlyManBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
@@ -143,7 +143,7 @@ tools:context=".category.BuyCategoryActivity">
             app:layout_constraintVertical_bias="0.348" />
 
         <ImageButton
-            android:id="@+id/imageButton15"
+            android:id="@+id/clothingBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
@@ -160,7 +160,7 @@ tools:context=".category.BuyCategoryActivity">
             app:layout_constraintVertical_bias="0.65" />
 
         <ImageButton
-            android:id="@+id/imageButton17"
+            android:id="@+id/petBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
@@ -177,7 +177,7 @@ tools:context=".category.BuyCategoryActivity">
             app:layout_constraintVertical_bias="0.948" />
 
         <ImageButton
-            android:id="@+id/imageButton18"
+            android:id="@+id/interiorBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
@@ -194,7 +194,7 @@ tools:context=".category.BuyCategoryActivity">
             app:layout_constraintVertical_bias="0.948" />
 
         <ImageButton
-            android:id="@+id/imageButton10"
+            android:id="@+id/updateBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
