@@ -23,9 +23,6 @@ data class User(
     val uid: String? = null,
     val userName: String? = null,
     val gender: String? = null,
-    var userLevel: String? = null,
-    var userProfileImageUrl: String? = null,
-    var userImageUrl: String? = null,
     var userLocation:String?=null
 )
 

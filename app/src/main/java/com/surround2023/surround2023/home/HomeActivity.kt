@@ -25,9 +25,11 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.core.UserData
 import com.google.firebase.ktx.Firebase
 import com.surround2023.surround2023.R
-import com.surround2023.surround2023.community.CommunityholderActivity
+//import com.surround2023.surround2023.community.CommunityholderActivity
 import com.surround2023.surround2023.community_post.CommunityPostActivity
 import com.surround2023.surround2023.databinding.ActivityHomeBinding
 import com.surround2023.surround2023.databinding.HomeCommunityItemBinding
@@ -129,10 +131,10 @@ class HomeActivity : AppCompatActivity() {
         }
 
         //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동
-        binding.goCommunity.setOnClickListener {
-            val intent = Intent(this, CommunityholderActivity::class.java)
-            startActivity(intent)
-        }
+//        binding.goCommunity.setOnClickListener {
+//            val intent = Intent(this, CommunityholderActivity::class.java)
+//            startActivity(intent)
+//        }
 
 
         //-------------------------------공구/커뮤니티 리사이클러뷰-------------------------
@@ -463,7 +465,11 @@ class HomeActivity : AppCompatActivity() {
             .addOnSuccessListener { documents ->
                 for (doc in documents){
                     // Update the document with the new userData
-                    userCollection.document(doc.id).set(userData)
+                    val documentId = doc.id
+                    val updatedData = mapOf("userLocation" to userData.userLocation)
+
+                    // Update the document with the new userData
+                    userCollection.document(documentId).set(updatedData, SetOptions.merge())
                         .addOnSuccessListener { Log.d("UserData", "${userData}") }
                         .addOnFailureListener { e ->
                             Log.w("UserData", "Error updating document", e)
