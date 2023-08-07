@@ -16,9 +16,13 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.Timestamp
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
+import com.surround2023.surround2023.user_login_join.UserSingleton
+import java.lang.ref.Reference
 import java.util.Date
 
 data class Post(
@@ -29,7 +33,8 @@ data class Post(
     var price: String? = null,
     var content: String? = null,
     var date: Timestamp? = null,
-    var due: Timestamp? = null
+    var due: Timestamp? = null,
+    var userRef: DatabaseReference? = null
 )
 class MarketPostingActivity : AppCompatActivity() {
     val postData = Post() // Post 인스턴스 생성
@@ -79,6 +84,13 @@ class MarketPostingActivity : AppCompatActivity() {
                 postData.category = null
             }
         })
+
+        var userData = UserSingleton.getInstance().getUserData() // 유저 이름 불러오기
+        userData?.let {
+            val userId = it.Email
+            val userRefPath = "User/${userId}"
+            postData.userRef = FirebaseDatabase.getInstance().getReference(userRefPath)
+        }
 
         btnClose.setOnClickListener{ // 종료 버튼
             onBackPressed()
