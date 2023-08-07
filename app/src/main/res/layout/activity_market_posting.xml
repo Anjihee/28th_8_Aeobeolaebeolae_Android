@@ -9,18 +9,24 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
             android:id="@+id/btnClose"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_marginStart="15dp"
-            android:background="@drawable/close"
+            android:layout_width="25sp"
+            android:layout_height="25sp"
+            android:layout_marginStart="10sp"
+            android:background="@android:color/transparent"
             android:contentDescription="Close"
+            android:scaleType="fitXY"
+            android:src="@drawable/close"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -29,20 +35,23 @@
             android:id="@+id/posting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="글쓰기"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/black"
+            android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8" />
 
         <TextView
             android:id="@+id/btnFinish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="10sp"
             android:clickable="true"
             android:focusable="true"
             android:text="완료"
@@ -58,7 +67,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="60sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -66,11 +75,11 @@
 
         <View
             android:id="@+id/btmBarLine"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp"
+            android:layout_width="0sp"
+            android:layout_height="1sp"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginEnd="10sp"
             android:background="#000000"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +89,7 @@
             android:id="@+id/btnSave"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="15sp"
             android:clickable="true"
             android:focusable="true"
             android:text="임시저장"
@@ -94,7 +103,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="0sp"
         app:layout_constraintBottom_toTopOf="@+id/bottomBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -108,13 +117,13 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/photoBox"
                 android:layout_width="match_parent"
-                android:layout_height="160dp">
+                android:layout_height="160sp">
 
                 <ImageButton
                     android:id="@+id/btnAddPhoto"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
+                    android:layout_marginStart="10sp"
                     android:layout_weight="1"
                     android:background="@drawable/photobox"
                     android:contentDescription="Add Photo"
@@ -128,7 +137,7 @@
                     android:id="@+id/photoNum"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="40dp"
+                    android:layout_marginTop="40sp"
                     android:text="0/10"
                     android:textColor="@color/black"
                     android:textSize="15sp"
@@ -139,7 +148,7 @@
 
                 <HorizontalScrollView
                     android:layout_width="wrap_content"
-                    android:layout_height="105dp"
+                    android:layout_height="105sp"
                     android:contentDescription="PhotoBox"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/btnAddPhoto"
@@ -152,9 +161,9 @@
 
                         <ImageView
                             android:id="@+id/photoView"
-                            android:layout_width="105dp"
-                            android:layout_height="105dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_width="105sp"
+                            android:layout_height="105sp"
+                            android:layout_marginLeft="10sp"
                             android:layout_weight="1"
                             android:scaleType="centerCrop"
                             android:adjustViewBounds="true"
@@ -173,8 +182,8 @@
                     android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginEnd="10sp"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -184,13 +193,13 @@
                     <View
                         android:id="@+id/line1"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
+                        android:layout_height="1sp"
                         android:background="#000000" />
 
                     <EditText
                         android:id="@+id/postTitle"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
+                        android:layout_height="70sp"
                         android:background="#FFFFFF"
                         android:ems="10"
                         android:hint="글 제목"
@@ -202,26 +211,26 @@
                     <View
                         android:id="@+id/line2"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
+                        android:layout_height="1sp"
                         android:background="#000000" />
 
                     <Spinner
                         android:id="@+id/postCategory"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
+                        android:layout_height="70sp"
                         android:entries="@array/market_category"
                         android:gravity="center_horizontal" />
 
                     <View
                         android:id="@+id/line3"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
+                        android:layout_height="1sp"
                         android:background="#000000" />
 
                     <Button
                         android:id="@+id/optionSettingBtn"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
+                        android:layout_height="70sp"
                         android:background="@color/white"
                         android:gravity="left|center_vertical"
                         android:text="공동구매 설정"
@@ -230,13 +239,13 @@
                     <View
                         android:id="@+id/line4"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
+                        android:layout_height="1sp"
                         android:background="#000000" />
 
                     <EditText
                         android:id="@+id/startPrice"
                         android:layout_width="match_parent"
-                        android:layout_height="70dp"
+                        android:layout_height="70sp"
                         android:background="#FFFFFF"
                         android:ems="10"
                         android:hint="공구 시작 가격"
@@ -248,7 +257,7 @@
                     <View
                         android:id="@+id/line5"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
+                        android:layout_height="1sp"
                         android:background="#000000" />
 
                 </LinearLayout>
@@ -259,11 +268,11 @@
                 android:id="@+id/postText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="25dp"
-                android:background="#FFFFFF"
+                android:layout_marginStart="10sp"
+                android:layout_marginTop="25sp"
+                android:layout_marginEnd="10sp"
+                android:layout_marginBottom="25sp"
+                android:background="@color/white"
                 android:ems="10"
                 android:gravity="top|left"
                 android:hint="게시글 내용을 작성해주세요.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"

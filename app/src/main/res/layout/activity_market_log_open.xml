@@ -14,7 +14,7 @@
         android:padding="10dp">
 
         <ImageButton
-            android:id="@+id/mainPrevPageBtn"
+            android:id="@+id/prevBtn"
             android:layout_width="21dp"
             android:layout_height="29dp"
             android:scaleType="fitXY"

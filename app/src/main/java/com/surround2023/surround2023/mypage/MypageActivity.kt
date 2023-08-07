@@ -6,6 +6,13 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
 import com.surround2023.surround2023.community_log.CommunityLogActivity
 import com.surround2023.surround2023.databinding.ActivityMypageBinding
@@ -15,11 +22,12 @@ import com.surround2023.surround2023.market_log.MarketLogOpenActivity
 import com.surround2023.surround2023.posting.MarketPostingActivity
 import com.surround2023.surround2023.set_location.SetLocationActivity
 import com.surround2023.surround2023.user_login_join.LogoutActivity
+import com.surround2023.surround2023.user_login_join.UserSingleton
 
 class MypageActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMypageBinding
 
+    private lateinit var binding: ActivityMypageBinding
     //하단 Nav 와 관련된 변수
     private lateinit var bottomNavView: BottomNavigationView
 
@@ -28,6 +36,14 @@ class MypageActivity : AppCompatActivity() {
         binding = ActivityMypageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
+        var userData = UserSingleton.getInstance().getUserData()
+        val mypageUsernameTextView: TextView = findViewById(R.id.mypageusername)
+        userData?.let {
+            val userName = it.userName
+            mypageUsernameTextView.text = userName
+        }
 
         // mypagebtn1 버튼 클릭시 내가 진행한 공구
         val mypagebtn1: Button = findViewById(R.id.mypagebtn1)
@@ -42,7 +58,6 @@ class MypageActivity : AppCompatActivity() {
             val intent = Intent(this, MarketLogJoinActivity::class.java)
             startActivity(intent)
         }
-
 
 
         //커뮤니티 활동관리로 이동
@@ -61,16 +76,12 @@ class MypageActivity : AppCompatActivity() {
         }
 
 
-//        //로그아웃으로 이동
-//        val logouttext: TextView = findViewById(R.id.logouttext)
-//        logouttext.setOnClickListener {
-//            val intent = Intent(this, LogoutActivity::class.java)
-//            startActivity(intent)
-//        }
-
-
-
-
+        //로그아웃으로 이동
+        val logouttext: TextView = findViewById(R.id.logouttext)
+        logouttext.setOnClickListener {
+            val intent = Intent(this, LogoutActivity::class.java)
+            startActivity(intent)
+        }
 
 
         //하단바 기능
@@ -105,4 +116,6 @@ class MypageActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
