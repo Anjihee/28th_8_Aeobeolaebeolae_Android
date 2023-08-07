@@ -22,6 +22,8 @@ import com.surround2023.surround2023.home.HomeActivity
 class LoginActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    val db = FirebaseFirestore.getInstance()
+    val collectionRef = db.collection("User")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +40,8 @@ class LoginActivity : ComponentActivity() {
 
         }
 
-        val db = FirebaseFirestore.getInstance()
-        val collectionRef = db.collection("User")
+//        val db = FirebaseFirestore.getInstance()
+//        val collectionRef = db.collection("User")
 
         binding.btnLogin.setOnClickListener {
             val email = binding.Email.text.toString()
@@ -48,31 +50,7 @@ class LoginActivity : ComponentActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // 로그인에 성공한 경우 사용자 정보를 확인하거나 화면을 전환하는 등의 작업 수행
-                        collectionRef.document(email).get()
-                            .addOnSuccessListener { document ->
-                                if (document != null && document.exists()) {
-                                    // 문서가 존재하고 데이터를 읽어올 수 있는 경우
-                                    val data = document.data
-                                    Log.d("datasurround123", data.toString())
-                                    val homeIntent = Intent(this, HomeActivity::class.java) //홈 화면
-                                    startActivity(homeIntent)
-                                } else {
-                                    // 문서가 존재하지 않거나 데이터를 읽어오는 데에 실패한 경우
-                                    Toast.makeText(
-                                        this@LoginActivity,
-                                        "로그인에 실패하였습니다. 다시 시도해 주세요.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                            .addOnFailureListener { exception ->
-                                // 데이터를 읽어오는 데에 실패한 경우
-                                Toast.makeText(
-                                    this@LoginActivity,
-                                    "로그인에 실패하였습니다. 다시 시도해 주세요.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                      userData(email)
                     } else {
                         // 로그인에 실패한 경우
                         Toast.makeText(
@@ -132,4 +110,40 @@ class LoginActivity : ComponentActivity() {
             UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
         }
     }
+
+    fun userData(email: String) {
+        collectionRef.document(email).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    Log.d("datasurround123", document.toString())
+                    val email = document.getString("email")
+                    val uid = document.getString("uid")
+                    val userName = document.getString("userName")
+                    val gender = document.getString("gender")
+
+                    val homeIntent = Intent(this, HomeActivity::class.java)
+                    homeIntent.putExtra("email", email)
+                    homeIntent.putExtra("uid", uid)
+                    homeIntent.putExtra("userName", userName)
+                    homeIntent.putExtra("gender", gender)
+                    startActivity(homeIntent)
+                } else {
+                    // 문서가 존재하지 않거나 데이터를 읽어오는 데에 실패한 경우
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "회원정보가 없습니다. 회원가입을 진행해주세요.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }.addOnFailureListener { exception ->
+                // 데이터를 읽어오는 데에 실패한 경우
+                Toast.makeText(
+                    this@LoginActivity,
+                    "로그인에 실패하였습니다. 다시 시도해 주세요.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
 }
+
+
