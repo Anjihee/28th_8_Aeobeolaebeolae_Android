@@ -65,11 +65,6 @@ class JoinMarketActivity : AppCompatActivity() {
                     val postImageUrl = document.getString("postImageUrl")
                     val userRef = document.getDocumentReference("userRef")
                     val title = document.getString("postTitle")
-                    val category = document.getString("category")
-                    val time = document.getTimestamp("postDate")
-                    val content = document.getString("postContent")
-                    val manOnly = document.getBoolean("isManOnly")
-                    val womanOnly = document.getBoolean("isWomanOnly")
                     val due = document.getTimestamp("postDue")
                     val price = document.getLong("price")?.toInt()
 
@@ -86,7 +81,7 @@ class JoinMarketActivity : AppCompatActivity() {
 
                     // 마감일 날짜만 추출해서 보이기
                     val dueDate = due?.toDate()
-                    val dateFormat = SimpleDateFormat("yyyy.mm.dd")
+                    val dateFormat = SimpleDateFormat("yyyy.MM.dd")
                     deadline.text = dateFormat.format(dueDate)
 
                     if (userRef != null) {
@@ -167,7 +162,7 @@ class JoinMarketActivity : AppCompatActivity() {
         payingBtn.setOnClickListener {
             if (agreeAllBtn.isChecked == true) {
                 // 결제 완료 창 Dialog 띄우기
-                val completeDialog = CompletePaymentDialog(this)
+                val completeDialog = CompletePaymentDialog(this, postId)
                 completeDialog.show()
             } else {
                 Toast.makeText(this, "이용 약관에 동의해 주세요.", Toast.LENGTH_SHORT).show()
