@@ -87,7 +87,7 @@ class CommunityPostActivity : AppCompatActivity() {
                             .addOnSuccessListener { userInfo ->
                                 val name = userInfo.getString("userName")
                                 val profileUrl = userInfo.getString("userProfileImageUrl")
-                                val address = userInfo.getString("userAddress")
+                                val address = userInfo.getString("userLocation")
 
                                 Glide.with(this)
                                     .load(profileUrl)
