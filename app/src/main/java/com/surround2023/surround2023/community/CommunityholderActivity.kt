@@ -1,7 +1,6 @@
 package com.surround2023.surround2023.community
 
 import android.os.Bundle
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.surround2023.surround2023.R
+import com.surround2023.surround2023.community.Communityadapter
 import com.surround2023.surround2023.community.Communitymemo
 
 class CommunityholderActivity : AppCompatActivity() {
@@ -17,7 +17,6 @@ class CommunityholderActivity : AppCompatActivity() {
     private lateinit var adapter: Communityadapter
     private val db = FirebaseFirestore.getInstance()
     private val postsCollectionRef = db.collection("posts")
-    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,13 +24,15 @@ class CommunityholderActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
         adapter = Communityadapter()
         recyclerView.adapter = adapter
 
+        // Firestore에서 데이터 가져오기
         fetchPostsFromFirestore()
     }
 
-    private fun fetchPostsFromFirestore() {
+   private fun fetchPostsFromFirestore() {
         postsCollectionRef.orderBy("timestamp", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
@@ -53,4 +54,6 @@ class CommunityholderActivity : AppCompatActivity() {
                 Toast.makeText(this, "데이터를 가져오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
     }
+
+
 }

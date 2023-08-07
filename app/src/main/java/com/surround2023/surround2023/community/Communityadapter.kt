@@ -30,7 +30,7 @@ class Communityadapter : RecyclerView.Adapter<Communityadapter.PostViewHolder>()
     override fun getItemCount(): Int = postList.size
 
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val ivImage: ImageView = itemView.findViewById(R.id.strawberry)
+        private val ivImage: ImageView = itemView.findViewById(R.id.rectangle_1)
         private val tvCategory: TextView = itemView.findViewById(R.id.category)
         private val tvTitle: TextView = itemView.findViewById(R.id.title)
         private val tvDetail: TextView = itemView.findViewById(R.id.detail)
@@ -40,7 +40,7 @@ class Communityadapter : RecyclerView.Adapter<Communityadapter.PostViewHolder>()
             ivImage.setImageResource(post.image)
             tvCategory.text = post.category
             tvTitle.text = post.postTitle
-            tvDetail.text = post.postContent
+            tvDetail.text = post.postDetail
             tvComment.text = post.comment
         }
     }

@@ -1,7 +1,9 @@
 package com.surround2023.surround2023.community
 
 class Communitymemo (
-    val id: Int,
-    val name: String
-
-) {}
+    val image: Int,
+    val category: String,
+    val postTitle: String,
+    val postDetail : String,
+    val comment : String
+)
