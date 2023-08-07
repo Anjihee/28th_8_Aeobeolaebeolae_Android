@@ -65,3 +65,4 @@ class BuyCategoryActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
+}
