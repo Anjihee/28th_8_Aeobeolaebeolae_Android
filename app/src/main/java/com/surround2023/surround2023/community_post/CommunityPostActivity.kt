@@ -103,7 +103,7 @@ class CommunityPostActivity : AppCompatActivity() {
 
                     postContent.text = content.toString()
 
-                    val like = document.getLong("likeNum").toString()
+                    val like = document.getLong("likeNum")?.toString()
                     val coms = document.getLong("commentNum")?.toString()
 
                     if (like != null) {
