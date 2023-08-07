@@ -1,8 +1,10 @@
 package com.surround2023.surround2023.mypage
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,8 +27,6 @@ import com.surround2023.surround2023.user_login_join.LogoutActivity
 import com.surround2023.surround2023.user_login_join.UserSingleton
 
 class MypageActivity : AppCompatActivity() {
-
-
     private lateinit var binding: ActivityMypageBinding
     //하단 Nav 와 관련된 변수
     private lateinit var bottomNavView: BottomNavigationView
@@ -37,6 +37,8 @@ class MypageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         var userData = UserSingleton.getInstance().getUserData()
+
+
         val mypageUsernameTextView: TextView = findViewById(R.id.mypageusername)
         userData?.let {
             val userName = it.userName
@@ -49,12 +51,11 @@ class MypageActivity : AppCompatActivity() {
             mypageLocationTextView.text = userLocation
         }
 
-//        val mypageLevelTextView: TextView = findViewById(R.id.mypageleveltext)
+//        val mypageLevelTextButton: Button = findViewById(R.id.mypageleveltext)
 //        userData?.let {
 //            val userLevelText = it.userLevelText
-//            mypageLevelTextView.text = userLevelText
+//            mypageLevelTextButton.text = userLevelText
 //        }
-
 
         // mypagebtn1 버튼 클릭시 내가 진행한 공구
         val mypagebtn1: Button = findViewById(R.id.mypagebtn1)
