@@ -56,7 +56,7 @@ class MarketPostActivity : AppCompatActivity() {
                     val manOnly = document.getBoolean("isManOnly")
                     val womanOnly = document.getBoolean("isWomanOnly")
                     val due = document.getTimestamp("postDue")
-                    val price = document.getString("price")
+                    val price = document.getLong("price")?.toInt()
 
                     Glide.with(this)
                         .load(goodsImageUrl) // 게시글 이미지
@@ -89,20 +89,27 @@ class MarketPostActivity : AppCompatActivity() {
                         targeting.text = "모두 거래 가능"
                     }
 
+                    val currentInstant = Instant.now() // 현재 시간
+                    val currentDateTime = LocalDateTime.ofInstant(currentInstant, ZoneId.systemDefault())
+
                     postTitle.text = title.toString()
                     postCategory.text = category.toString()
                     postTime.text = time.toString()
-                    postContent.text = content.toString()
 
-                    perPrice.text = "1인 " + price.toString()
+                    // 작성일 타임스탬프 변환
+                    val timeInstant = time?.toDate()?.toInstant()
+                    val durationPost = Duration.between(currentInstant, timeInstant)
+                    val daysPost = durationPost.toDays()
+                    postTime.text = "${daysPost}일 전"
+
+                    postContent.text = content.toString()
+                    perPrice.text = "1인 ${price}원"
 
                     // 마감일 타임스탬프 변환
                     val dueInstant = due?.toDate()?.toInstant()
-                    val currentInstant = Instant.now() // 현재 시간
-                    val currentDateTime = LocalDateTime.ofInstant(currentInstant, ZoneId.systemDefault())
-                    val duration = Duration.between(currentInstant, dueInstant)
-                    val days = duration.toDays()
-                    postDeadline.text = "${days}일 전" // 마감일 보이기
+                    val durationDeadline = Duration.between(currentInstant, dueInstant)
+                    val daysDeadline = durationDeadline.toDays()
+                    postDeadline.text = "${daysDeadline}일 전" // 마감일 보이기
                 }
             }
             .addOnFailureListener { e ->

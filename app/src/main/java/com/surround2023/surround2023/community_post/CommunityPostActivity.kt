@@ -2,6 +2,7 @@ package com.surround2023.surround2023.community_post
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,6 +18,10 @@ import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.surround2023.surround2023.R
+import java.time.Duration
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 data class CommentData(val userName: String?, val time: Timestamp, val comment: String?, val profileId: String?)
 
@@ -23,6 +29,7 @@ class CommunityPostActivity : AppCompatActivity() {
     private lateinit var postId : String
     private val db = FirebaseFirestore.getInstance()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_post)
@@ -75,9 +82,19 @@ class CommunityPostActivity : AppCompatActivity() {
                             // 사용자 정보를 불러올 수 없습니다.
                         }
 
+                        val currentInstant = Instant.now() // 현재 시간
+                        val currentDateTime = LocalDateTime.ofInstant(currentInstant, ZoneId.systemDefault())
+
                         postTitle.text = title.toString()
                         postCategory.text = category.toString()
-                        postTime.text = time.toString()
+
+                        // 작성일 타임스탬프 변환
+                        val timeInstant = time?.toDate()?.toInstant()
+                        val durationPost = Duration.between(currentInstant, timeInstant)
+                        val daysPost = durationPost.toDays()
+                        postTime.text = "${daysPost}일 전"
+
+
                         postContent.text = content.toString()
 
                         likeNum.text = document.getLong("likeNum")?.toString()
