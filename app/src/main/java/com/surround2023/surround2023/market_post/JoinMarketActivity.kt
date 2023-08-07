@@ -129,7 +129,10 @@ class JoinMarketActivity : AppCompatActivity() {
         
         val btnBack : ImageButton = findViewById(R.id.btnBack)
         btnBack.setOnClickListener { // '뒤로가기' 버튼 클릭 시
+
+
             // '뒤로가기' 버튼을 클릭하면 공구 글 페이지로 돌아가도록 인텐트 생성
+
            onBackPressed()
         }
 
