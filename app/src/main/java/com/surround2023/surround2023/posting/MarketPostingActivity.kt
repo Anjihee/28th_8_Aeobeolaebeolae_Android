@@ -72,7 +72,10 @@ class MarketPostingActivity : AppCompatActivity() {
         val postText : EditText = findViewById(R.id.marketPostingContent)
 
         postData.title = postTitle.text.toString()
-        postData.price = startPrice.text.toString().toInt()
+        val stringPrice = startPrice.text.toString()
+        if (stringPrice != "" && stringPrice != null) {
+            postData.price = stringPrice.toInt()
+        }
         postData.content = postText.text.toString()
 
         // Spinner에서 항목 선택 시 리스너 등록
