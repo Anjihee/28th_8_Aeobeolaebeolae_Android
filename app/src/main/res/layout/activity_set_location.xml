@@ -26,8 +26,8 @@
 
         <ImageButton
             android:id="@+id/prevPageBtn"
-            android:layout_width="21dp"
-            android:layout_height="29dp"
+            android:layout_width="21sp"
+            android:layout_height="29sp"
             android:background="@android:color/transparent"
             android:scaleType="fitXY"
             android:src="@drawable/ic_return_prev_page"

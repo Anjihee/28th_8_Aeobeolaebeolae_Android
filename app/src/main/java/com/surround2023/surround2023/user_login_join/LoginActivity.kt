@@ -14,73 +14,45 @@ import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.common.model.KakaoSdkError
+import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.surround2023.surround2023.databinding.ActivityLoginBinding
 import com.surround2023.surround2023.home.HomeActivity
-import com.google.firebase.firestore.IgnoreExtraProperties
-
-@IgnoreExtraProperties
-data class User(
-    val Email: String? = null,
-    val uid: String? = null,
-    val userName: String? = null,
-    val gender: String? = null
-)
 
 class LoginActivity : ComponentActivity() {
 
     private lateinit var binding: ActivityLoginBinding
-
+    val db = FirebaseFirestore.getInstance()
+    val collectionRef = db.collection("User")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val join_intent = Intent(this, JoinActivity::class.java) //가입 화면
-        val home_intent = Intent(this, HomeActivity::class.java) //홈 화면
+        val joinIntent = Intent(this, JoinActivity::class.java) //가입 화면
+
 
         //hide navigation bar
-        window.decorView.apply{
-            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
+        window.decorView.apply {
+            systemUiVisibility =
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
 
         }
 
-        val db = FirebaseFirestore.getInstance()
-        val collectionRef = db.collection("User")
 
-        binding.btnLogin.setOnClickListener{
+        binding.btnLogin.setOnClickListener {
             val email = binding.Email.text.toString()
             val password = binding.PW.text.toString()
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         // 로그인에 성공한 경우 사용자 정보를 확인하거나 화면을 전환하는 등의 작업 수행
-                        collectionRef.document(email).get()
-                            .addOnSuccessListener { document ->
-                                if (document != null && document.exists()) {
-                                    // 문서가 존재하고 데이터를 읽어올 수 있는 경우
-                                    val data = document.data
-                                    Log.d("datasurround123", data.toString())
-                                    startActivity(home_intent)
-                                } else {
-                                    // 문서가 존재하지 않거나 데이터를 읽어오는 데에 실패한 경우
-                                    Toast.makeText(this@LoginActivity,
-                                        "로그인에 실패하였습니다. 다시 시도해 주세요.",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                            .addOnFailureListener { exception ->
-                                // 데이터를 읽어오는 데에 실패한 경우
-                                Toast.makeText(this@LoginActivity,
-                                    "로그인에 실패하였습니다. 다시 시도해 주세요.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                      userData(email)
                     } else {
                         // 로그인에 실패한 경우
-                        Toast.makeText(this@LoginActivity,
+                        Toast.makeText(
+                            this@LoginActivity,
                             "이메일과 비밀번호를 다시 확인해 주세요.",
                             Toast.LENGTH_SHORT
                         ).show()
@@ -93,98 +65,80 @@ class LoginActivity : ComponentActivity() {
         }
 
         binding.btnJoin.setOnClickListener {
-            startActivity(join_intent)
+            startActivity(joinIntent)
         }
     }
+
     private fun kakaoLogin() {
-        val mCallback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+        val keyHash = Utility.getKeyHash(this)
+        Log.d("Hash", keyHash)
+        Log.d("LOGIN", "카카오계정으로 로그인 진입")
+        val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
             if (error != null) {
-                Log.e(TAG, "로그인 실패 $error")
+                Log.d("LOGIN", "카카오계정으로 로그인 실패", error)
             } else if (token != null) {
-                Log.e(TAG, "로그인 성공 ${token.accessToken}")
+                Log.d("LOGIN", "카카오계정으로 로그인 성공 ${token.accessToken}")
+                val homeIntent = Intent(this, HomeActivity::class.java) //홈 화면
+                startActivity(homeIntent)
+                finish()
             }
         }
-        // 카카오톡 설치 확인
+
+        // 카카오톡이 설치되어 있으면 카카오톡으로 로그인, 아니면 카카오계정으로 로그인
         if (UserApiClient.instance.isKakaoTalkLoginAvailable(this)) {
-            // 카카오톡 로그인
             UserApiClient.instance.loginWithKakaoTalk(this) { token, error ->
-                // 로그인 실패 부분
                 if (error != null) {
-                    Log.e(TAG, "로그인 실패 $error")
-                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled ) {
+                    Log.e("LOGIN", "카카오톡으로 로그인 실패", error)
+                    // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
+                    // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
+                    if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {
                         return@loginWithKakaoTalk
                     }
-                    // 다른 오류
-                    else {
-                        UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback) // 카카오 이메일 로그인
-                    }
-                }
-                // 로그인 성공 부분
-                else if (token != null) {
-                    Log.e(TAG, "로그인 성공 ${token.accessToken}")
-                    token?.accessToken?.let {
-                        Log.d("DEBUG", "카카오톡 토큰 $it")
-                        loginInFirebase()
-                    }
-                    val home_intent = Intent(this, HomeActivity::class.java)
-                    startActivity(home_intent)
+
+                    // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인 시도
+                    UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
+                } else if (token != null) {
+                    Log.i("LOGIN", "카카오톡으로 로그인 성공 ${token.accessToken}")
+                    val homeIntent = Intent(this, HomeActivity::class.java) //홈 화면
+                    startActivity(homeIntent)
+                    finish()
                 }
             }
-        }
-        //카카오계정 로그인(카카오톡 설치가 안 되어있을 시)
-        else {
-            UserApiClient.instance.loginWithKakaoAccount(this, callback = mCallback) // 카카오 이메일 로그인
-        }
-        if (AuthApiClient.instance.hasToken()) {
-            UserApiClient.instance.accessTokenInfo { _, error ->
-                if (error != null) {
-                    if (error is KakaoSdkError && error.isInvalidTokenError() == true) {
-                        //로그인 필요
-                    }
-                    val home_intent = Intent(this, HomeActivity::class.java)
-                    startActivity(home_intent)
-                }
-            }
-        }
-        UserApiClient.instance.me { user, error ->
-            if (error != null) {
-                Log.e(TAG, "사용자 정보 요청 실패 $error")
-            } else if (user != null) {
-                Log.e(TAG, "사용자 정보 요청 성공 : $user")
-            }
+        } else {
+            UserApiClient.instance.loginWithKakaoAccount(this, callback = callback)
         }
     }
 
-    private fun loginInFirebase() {
-        UserApiClient.instance.me { user, error ->
-            if (error != null) {
-                Log.e("DEBUG", "카카오톡 사용자 정보가져오기 에러 ${error.message}")
-            } else {
-                Log.d("DEBUG", "카카오톡 사용자 정보가져오기 success.")
-                // 파이어베이스 유저 생성 (이메일로 회원가입)
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                    user?.kakaoAccount?.email ?: "",
-                    "${user?.id}"
-                ).addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        Log.d("DEBUG", "파이어베이스 사용자 생성")
-                        // 회원가입 화면으로 이동
-                        val join_intent = Intent(this, JoinActivity::class.java) //가입 화면
-                        startActivity(join_intent)
-                        // 창닫기
-                        finish()
-                    } else {
-                        Log.e("DEBUG", "파이어베이스 사용자 생성 실패 ${task.exception?.message}")
-                        FirebaseAuth.getInstance().signInWithEmailAndPassword(
-                            user?.kakaoAccount?.email ?: "",
-                            "${user?.id}"
-                        )
-                        val join_intent = Intent(this, JoinActivity::class.java) //가입 화면
-                        startActivity(join_intent)
-                    }
-                }
-            }
-        }
-    }
+    fun userData(email: String) {
+        collectionRef.document(email).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val email = document.getString("email")
+                    val uid = document.getString("uid")
+                    val userName = document.getString("userName")
+                    val gender = document.getString("gender")
 
+                    val user = User(email, uid, userName, gender)
+                    UserSingleton.getInstance().setUserData(user)
+                    val homeIntent = Intent(this, HomeActivity::class.java)
+                    startActivity(homeIntent)
+                } else {
+                    // 문서가 존재하지 않거나 데이터를 읽어오는 데에 실패한 경우
+                    Toast.makeText(
+                        this@LoginActivity,
+                        "회원정보가 없습니다. 회원가입을 진행해주세요.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }.addOnFailureListener { exception ->
+                // 데이터를 읽어오는 데에 실패한 경우
+                Toast.makeText(
+                    this@LoginActivity,
+                    "로그인에 실패하였습니다. 다시 시도해 주세요.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+    }
 }
+
+

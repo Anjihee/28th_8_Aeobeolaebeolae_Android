@@ -41,6 +41,17 @@ class SearchAddressActivity:AppCompatActivity() {
 
         binding = ActivitySearchAddressBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+
         Log.d(TAG, "paint activity_search_address.xml")
 
         //setLocation의 검색창에서 받아온 query를 SearchAddressActivity의 검색창에도 뿌림

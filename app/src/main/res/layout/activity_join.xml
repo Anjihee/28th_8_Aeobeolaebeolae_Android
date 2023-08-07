@@ -51,8 +51,8 @@
 
     <EditText
         android:id="@+id/Email"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_width="300sp"
+        android:layout_height="40sp"
         android:layout_centerHorizontal="true"
         android:hint="surround@surround.com"
         android:textSize="13sp"
@@ -67,7 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnJoin"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="50sp"
         android:text="비밀번호 (필수, 6자리 이상)"
         android:textColor="@color/black"
         android:textSize="17sp"
@@ -78,8 +78,8 @@
 
     <EditText
         android:id="@+id/PW"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_width="300sp"
+        android:layout_height="40sp"
         android:layout_centerHorizontal="true"
         android:inputType="textPassword"
         android:textSize="13sp"
@@ -93,7 +93,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnJoin"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="10sp"
         android:text="비밀번호 확인"
         android:textColor="@color/black"
         android:textSize="17sp"
@@ -104,8 +104,8 @@
 
     <EditText
         android:id="@+id/PW2"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_width="300sp"
+        android:layout_height="40sp"
         android:layout_centerHorizontal="true"
         android:inputType="textPassword"
         android:hint="비밀번호를 한 번 더 입력해 주세요"
@@ -131,7 +131,7 @@
         android:id="@+id/textNickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="50sp"
         android:text="닉네임 (필수)"
         android:textColor="@color/black"
         android:textSize="17sp"
@@ -142,8 +142,8 @@
 
     <EditText
         android:id="@+id/Nickname"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_width="300sp"
+        android:layout_height="40sp"
         android:layout_centerHorizontal="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
@@ -154,7 +154,7 @@
 
     <Button
         android:id="@+id/btnJoin"
-        android:layout_width="300dp"
+        android:layout_width="300sp"
         android:layout_height="wrap_content"
         android:background="@drawable/selector_green_background"
         android:text="계정만들기"
@@ -196,8 +196,8 @@
 
         <RadioButton
             android:id="@+id/Female"
-            android:layout_width="60dp"
-            android:layout_height="35dp"
+            android:layout_width="60sp"
+            android:layout_height="35sp"
             android:background="@drawable/selector_radio_button"
             android:button="@null"
             android:gravity="center"
@@ -210,9 +210,9 @@
 
         <RadioButton
             android:id="@+id/Male"
-            android:layout_width="60dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="10dp"
+            android:layout_width="60sp"
+            android:layout_height="35sp"
+            android:layout_marginStart="10sp"
             android:background="@drawable/selector_radio_button"
             android:button="@null"
             android:gravity="center"

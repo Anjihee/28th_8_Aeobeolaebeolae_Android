@@ -22,14 +22,13 @@ class CommentListAdapter(private val context: Context, private val itemList: Lis
         val currentItem = itemList[position]
 
         // 커스텀 레이아웃의 요소들을 설정합니다.
-        holder.userProfile.setImageResource(currentItem.profileId)
+        holder.userProfile.setImageResource(R.drawable.person) // profileUrl 불러오기 기능 구현 못함
         holder.userName.text = currentItem.userName
-        holder.commentTime.text = currentItem.time
+        holder.commentTime.text = currentItem.time.toDate().toString()
         holder.comment.text = currentItem.comment
     }
 
     override fun getItemCount(): Int {
-        Log.d("RecyclerView", "itemList size: ${itemList.size}")
         return itemList.size
     }
 

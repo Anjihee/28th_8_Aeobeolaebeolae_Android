@@ -14,16 +14,19 @@ class MarketOptionSettingActivity : AppCompatActivity() {
 
         val btnDoneSetting: Button = findViewById(R.id.doneSetting)
         btnDoneSetting.setOnClickListener {
-            // 완료 버튼을 클릭하면 다른 액티비티를 열도록 인텐트 생성
-            val intent = Intent(this@MarketOptionSettingActivity, MarketPostingActivity::class.java)
-            startActivity(intent)
+            // 완료 버튼을 클릭하면 종료
+            onBackPressed()
         }
 
         val btnBack: ImageButton = findViewById(R.id.btnBack)
         btnBack.setOnClickListener {
-            // 뒤로가기 버튼을 클릭하면 다른 액티비티를 열도록 인텐트 생성
-            val intent = Intent(this@MarketOptionSettingActivity, MarketPostingActivity::class.java)
-            startActivity(intent)
+            // 뒤로가기 버튼을 클릭하면 종료
+            onBackPressed()
         }
+    }
+
+    override fun onBackPressed() { // 뒤로가기
+        super.onBackPressed()
+        finish() // 현재 액티비티 종료
     }
 }

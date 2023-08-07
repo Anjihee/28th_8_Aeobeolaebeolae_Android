@@ -36,6 +36,8 @@ class MypageActivity : AppCompatActivity() {
         binding = ActivityMypageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         var userData = UserSingleton.getInstance().getUserData()
 
 

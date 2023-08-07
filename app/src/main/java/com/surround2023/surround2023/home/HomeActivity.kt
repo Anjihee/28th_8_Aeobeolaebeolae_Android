@@ -1,6 +1,7 @@
 package com.surround2023.surround2023.home
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,6 +12,9 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -21,17 +25,23 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.SetOptions
+import com.google.firebase.firestore.core.UserData
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import com.surround2023.surround2023.R
+//import com.surround2023.surround2023.community.CommunityholderActivity
+import com.surround2023.surround2023.community_post.CommunityPostActivity
 import com.surround2023.surround2023.databinding.ActivityHomeBinding
 import com.surround2023.surround2023.databinding.HomeCommunityItemBinding
 import com.surround2023.surround2023.databinding.HomeMarketItemBinding
+import com.surround2023.surround2023.market.MarketholderActivity
+import com.surround2023.surround2023.market_post.MarketPostActivity
 import com.surround2023.surround2023.mypage.MypageActivity
 import com.surround2023.surround2023.posting.MarketPostingActivity
 import com.surround2023.surround2023.set_location.SetLocationActivity
+import com.surround2023.surround2023.user_login_join.UserSingleton
 import java.security.MessageDigest
+
 
 
 class HomeActivity : AppCompatActivity() {
@@ -53,9 +63,10 @@ class HomeActivity : AppCompatActivity() {
 
     //게시글 데이터베이스
     val db=FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
-    val storage= Firebase.storage
+//    val storage= Firebase.storage
 
-
+    //유저 데이터
+//    private lateinit var userData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +124,18 @@ class HomeActivity : AppCompatActivity() {
             showDropdownMenu(it)
         }
 
+        //공동구매 전체보기 -> 공동구매 게시판 액티비티로 이동
+        binding.goMarket.setOnClickListener {
+            val intent = Intent(this, MarketholderActivity::class.java)
+            startActivity(intent)
+        }
+
+        //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동
+//        binding.goCommunity.setOnClickListener {
+//            val intent = Intent(this, CommunityholderActivity::class.java)
+//            startActivity(intent)
+//        }
+
 
         //-------------------------------공구/커뮤니티 리사이클러뷰-------------------------
         // Initialize RecyclerView
@@ -144,32 +167,37 @@ class HomeActivity : AppCompatActivity() {
 
 
 
-        //공동구매 전체보기 -> 공동구매 게시판 액티비티로 이동
-//        binding.goMarket.setOnClickListener {
-//            val intent = Intent(this, MarketActivity::class.java)
-//            startActivity(intent)
-//        }
-//
-////        //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동
-//        binding.goCommunity.setOnClickListener {
-//            val intent = Intent(this, CommunityActivity::class.java)
-//            startActivity(intent)
-//        }
+
+        //-------------------------- 검색창 핸들 ---------------------------
+        binding.searchBar.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                // Get the search text from the EditText
+                val searchText = binding.searchBar.text.toString().trim()
+
+                // Call the searchMarketPost method to perform the search
+                searchMarketPost(searchText)
+
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
+
+        //
+        setUserLocationData()
+
     }
 
 
 
 
-
-
     //검색 동작 처리를 위한 메소드
-//    private fun handleSearchAction(searchText:String){
-//
-//        val intent = Intent(requireContext(), MarketActivity::class.java)
-//        //MarketPostActivity로 검색 텍스트를 전달
-//        intent.putExtra("searchText", searchText)
-//        startActivity(intent)
-//    }
+    private fun searchMarketPost(searchText:String){
+        val intent = Intent(this, MarketholderActivity::class.java)
+        //MarketPostActivity로 검색 텍스트 searchText를 전달
+        intent.putExtra("searchText", searchText)
+        startActivity(intent)
+
+    }
 
     //사용자 위치 Dropdown 메뉴를 보여주는 함수
     private fun showDropdownMenu(view:View){
@@ -225,6 +253,7 @@ class HomeActivity : AppCompatActivity() {
             if (!currentStreetAddress.isNullOrEmpty()) {
                 // SetLocationActivity로부터 전달받은 주소를 화면에 업데이트
                 binding.userLocationText.text = currentStreetAddress
+                setUserLocationData()
             }
         }
     }
@@ -243,8 +272,8 @@ class HomeActivity : AppCompatActivity() {
 
                 //데이터 받아오기
                 for(snapshot in querySnapshot.documents){
-                    var item=snapshot.toObject(MarketPostModel::class.java)
-                    Log.d("TAG","${item?.postImageUrl}, ${item?.postTitle}")
+                    val item=snapshot.toObject(MarketPostModel::class.java)
+                    Log.d("TAG","${item?.postId},${item?.postImageUrl}, ${item?.postTitle}")
                     marketItemList.add(item!!)
                 }
 
@@ -278,11 +307,6 @@ class HomeActivity : AppCompatActivity() {
                     communityItemList.add(item!!)
                 }
 
-                //dummy data
-                communityItemList.add(CommunityPostModel(null,"dummy"))
-                communityItemList.add(CommunityPostModel(null,"dummy"))
-                communityItemList.add(CommunityPostModel(null,"dummy"))
-                communityItemList.add(CommunityPostModel(null,"dummy"))
 
                 adapterForCommunity.setData(communityItemList)
             }
@@ -291,6 +315,7 @@ class HomeActivity : AppCompatActivity() {
 
     //공동구매 리사이클러뷰 어댑터
     class HomeMarketAdapter: RecyclerView.Adapter<HomeMarketViewHolder>(){
+        private lateinit var binding: HomeMarketItemBinding
         private val data = arrayListOf<MarketPostModel>()
 
         fun setData(newData: List<MarketPostModel>) {
@@ -299,14 +324,17 @@ class HomeActivity : AppCompatActivity() {
             notifyDataSetChanged()
         }
 
+
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeMarketViewHolder {
             val inflater = LayoutInflater.from(parent.context)
-            val binding = HomeMarketItemBinding.inflate(inflater, parent, false)
+            binding = HomeMarketItemBinding.inflate(inflater, parent, false)
             return HomeMarketViewHolder(binding)
         }
 
         override fun onBindViewHolder(holder: HomeMarketViewHolder, position: Int) {
-            holder.bind(data[position])
+            val item=data[position]
+            holder.bind(item)
+
         }
 
         override fun getItemCount(): Int = data.size
@@ -337,6 +365,15 @@ class HomeActivity : AppCompatActivity() {
                 //이미지 바인딩을 하지 않음
             }
 
+            // Set click listener on the root view of the item
+            binding.root.setOnClickListener {
+                //클릭된 게시글의 id를 MarketPostActivity로 전달하고 MarketPostActivity시작
+                val context = binding.root.context
+                val intent = Intent(context, MarketPostActivity::class.java)
+                intent.putExtra("postId", item.postId)
+                context.startActivity(intent)
+
+            }
         }
     }
 
@@ -396,7 +433,52 @@ class HomeActivity : AppCompatActivity() {
 
             }
 
+            // Set click listener on the root view of the item
+            binding.root.setOnClickListener {
+                //클릭된 게시글의 id를 CommunityPostActivity로 전달하고 CommunityPostActivity시작
+                val context = binding.root.context
+                val intent = Intent(context, CommunityPostActivity::class.java)
+                intent.putExtra("postId", item.postId)
+                context.startActivity(intent)
+
+
+            }
+
         }
+    }
+
+    //유저 데이터에 location을 설정하기 위한 메서드
+    fun setUserLocationData(){
+        val userSingleton=UserSingleton.getInstance()
+        val userData=userSingleton.getUserData()
+        val currentUserLocation=binding.userLocationText.text.toString()       //home에서 설정된 currentLocation을 받아옴
+
+        if (userData!=null){
+            userData.userLocation=currentUserLocation
+            Log.d("UserData","${userData}")
+        }
+
+        //변경된 userData 를 db에 update
+        val userCollection=db.collection("User")
+        userCollection.whereEqualTo("email",userData!!.Email)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (doc in documents){
+                    // Update the document with the new userData
+                    val documentId = doc.id
+                    val updatedData = mapOf("userLocation" to userData.userLocation)
+
+                    // Update the document with the new userData
+                    userCollection.document(documentId).set(updatedData, SetOptions.merge())
+                        .addOnSuccessListener { Log.d("UserData", "${userData}") }
+                        .addOnFailureListener { e ->
+                            Log.w("UserData", "Error updating document", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("UserData", "Error getting documents: ", e)
+            }
     }
 
 
@@ -405,6 +487,7 @@ class HomeActivity : AppCompatActivity() {
 
 // 공동구매 게시글 데이터 모델
 data class MarketPostModel(
+    var postId:String="",
     var postImageUrl: String?=null,
     var postTitle:String?=null)
 
@@ -412,6 +495,7 @@ data class MarketPostModel(
 
 // 커뮤니티 게시글 데이터 모델
 data class CommunityPostModel(
+    var postId:String="",
     var postImageUrl:String?=null,
     var postTitle:String?=null
 )

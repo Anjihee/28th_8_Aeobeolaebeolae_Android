@@ -94,6 +94,13 @@ class CommunityLogActivity : AppCompatActivity() {
         newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         window.decorView.systemUiVisibility = newUiOptions
 
+        //--------------- 뒤로가기 버튼 이벤트
+        binding.prevBtn.setOnClickListener{
+            // SetLocationActivity를 종료하여 이전 화면으로 돌아감
+            Log.d(TAG, "CommunityLogActivity is finished")
+            finish()
+        }
+
     }
 
 

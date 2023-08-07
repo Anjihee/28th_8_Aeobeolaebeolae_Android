@@ -15,16 +15,21 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.surround2023.surround2023.databinding.ActivityJoinBinding
+import com.google.firebase.firestore.IgnoreExtraProperties
+
+@IgnoreExtraProperties
+data class User(
+    val Email: String? = null,
+    val uid: String? = null,
+    val userName: String? = null,
+    val gender: String? = null,
+    var userLocation:String?=null
+)
 
 class JoinActivity : ComponentActivity() {
     private lateinit var binding: ActivityJoinBinding
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance() //회원가입 파이어베이스 연동
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
-    object FirebaseID { //파이어베이스 회원가입 정보
-        const val email = "email"
-        const val password = "password"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,17 +112,17 @@ class JoinActivity : ComponentActivity() {
                 val userToSave = User(email, uid, userName, gender)
 
                 // Firestore에 데이터 저장
-                val db = FirebaseFirestore.getInstance()
-                db.collection("User")
-                    .document(email!!)
-                    .set(userToSave)
-                    .addOnSuccessListener {
-                        // 저장 성공
-                        Log.d(ContentValues.TAG, "사용자 정보가 Firestore에 저장되었습니다.")
-                    }
-                    .addOnFailureListener { e ->
-                        // 저장 실패
-                        Log.w(ContentValues.TAG, "사용자 정보 저장에 실패했습니다.", e)
+                        val db = FirebaseFirestore.getInstance()
+                        db.collection("User")
+                            .document(email!!)
+                            .set(userToSave)
+                            .addOnSuccessListener {
+                                // 저장 성공
+                                Log.d(ContentValues.TAG, "사용자 정보가 Firestore에 저장되었습니다.")
+                            }
+                            .addOnFailureListener { e ->
+                                // 저장 실패
+                                Log.w(ContentValues.TAG, "사용자 정보 저장에 실패했습니다.", e)
                     }
 
                 val Login_intent = Intent(this@JoinActivity, LoginActivity::class.java)
