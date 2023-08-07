@@ -3,6 +3,8 @@ package com.surround2023.surround2023.posting
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -39,6 +41,32 @@ class MarketOptionSettingActivity : AppCompatActivity() {
         var deadlineD = ""
         var deadlineData: Date? = null
         var deadlineTimestamp = Timestamp.now()
+
+        editDeadLine.addTextChangedListener(object : TextWatcher { // date 타입으로 자동 입력 되도록
+            private val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+            private val formattedSdf = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+
+            override fun afterTextChanged(s: Editable?) {
+                s?.let {
+                    val input = s.toString()
+                    if (input.length == 8) {
+                        try {
+                            val date = sdf.parse(input)
+                            val formattedDate = formattedSdf.format(date)
+                            editDeadLine.removeTextChangedListener(this)
+                            editDeadLine.setText(formattedDate)
+                            editDeadLine.setSelection(formattedDate.length)
+                            editDeadLine.addTextChangedListener(this)
+                        } catch (e: Exception) {
+                            // 예외 처리
+                        }
+                    }
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
 
         btnSettingDeadline.setOnClickListener {
             // 눌러짐 색상 변경

@@ -64,6 +64,16 @@
             app:layout_constraintRight_toRightOf="parent"
             android:gravity="center_vertical">
 
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="검색어를 입력하세요"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:maxLines="1" />
+
+
             <ImageButton
                 android:id="@+id/searchBtn"
                 android:layout_width="40sp"
