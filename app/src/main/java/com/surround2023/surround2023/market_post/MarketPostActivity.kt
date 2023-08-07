@@ -1,5 +1,6 @@
 package com.surround2023.surround2023.market_post
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,20 +19,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 class MarketPostActivity : AppCompatActivity() {
-    private var postId = intent.getStringExtra("postId") // 게시글 Id Data 받아오기
-
-    private var goodsImageView: ImageView = findViewById(R.id.goodsImage)
-    private var userProfileView: ImageView = findViewById(R.id.userProfile)
-    private var userName: TextView = findViewById(R.id.userName)
-    private var userAddress: TextView = findViewById(R.id.userAddress)
-    private var targeting: TextView = findViewById(R.id.targeting)
-    private var postTitle: TextView = findViewById(R.id.postTitle)
-    private var postCategory: TextView = findViewById(R.id.postCategory)
-    private var postTime: TextView = findViewById(R.id.postTime)
-    private var postContent: TextView = findViewById(R.id.postText)
-    private var postDeadline : TextView = findViewById(R.id.textDeadline)
-    private var startPrice: TextView = findViewById(R.id.startPrice)
-
+    private lateinit var postId : String
     private val db = FirebaseFirestore.getInstance()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -39,7 +27,22 @@ class MarketPostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market_post)
 
-        val postInfo = db.collection("Market").document(postId.toString())
+        postId = intent.getStringExtra("postId").toString() // 게시글 Id Data 받아오기
+
+
+        val goodsImageView: ImageView = findViewById(R.id.goodsImage)
+        val userProfileView: ImageView = findViewById(R.id.userProfile)
+        val userName: TextView = findViewById(R.id.userName)
+        val userAddress: TextView = findViewById(R.id.userAddress)
+        val targeting: TextView = findViewById(R.id.targeting)
+        val postTitle: TextView = findViewById(R.id.postTitle)
+        val postCategory: TextView = findViewById(R.id.postCategory)
+        val postTime: TextView = findViewById(R.id.postTime)
+        val postContent: TextView = findViewById(R.id.postContents)
+        val postDeadline : TextView = findViewById(R.id.textDeadline)
+        val perPrice: TextView = findViewById(R.id.perPrice)
+
+        val postInfo = db.collection("Market").document(postId)
 
         postInfo.get()
             .addOnSuccessListener { document -> // 게시글 정보 로딩 성공
@@ -91,7 +94,7 @@ class MarketPostActivity : AppCompatActivity() {
                     postTime.text = time.toString()
                     postContent.text = content.toString()
 
-                    startPrice.text = "1인 " + price.toString()
+                    perPrice.text = "1인 " + price.toString()
 
                     // 마감일 타임스탬프 변환
                     val dueInstant = due?.toDate()?.toInstant()
