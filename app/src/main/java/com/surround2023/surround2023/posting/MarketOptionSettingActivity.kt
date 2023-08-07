@@ -8,8 +8,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import com.google.firebase.Timestamp
 import com.surround2023.surround2023.R
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -35,29 +38,44 @@ class MarketOptionSettingActivity : AppCompatActivity() {
 
         var deadlineD = ""
         var deadlineData: Date? = null
+        var deadlineTimestamp = Timestamp.now()
 
         btnSettingDeadline.setOnClickListener {
+            // 눌러짐 색상 변경
+            val colorStateList = ContextCompat.getColorStateList(this, R.color.subDeepGreen)
+            btnSettingDeadline.backgroundTintList = colorStateList
+
+            // 200ms(0.2초) 후에 원래 색상으로 복원
+            btnSettingDeadline.postDelayed({
+                val originalColorStateList = ContextCompat.getColorStateList(this, R.color.themeGreen)
+                btnSettingDeadline.backgroundTintList = originalColorStateList
+            }, 200)
+
             deadlineD = editDeadLine.text.toString()
 
-            val format = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+            val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
             deadlineData = try {
-                format.parse(deadlineD)
+                dateFormat.parse(deadlineD)
             } catch (e: Exception) {
                 null
             }
+
+            if (deadlineData != null) {
+                deadlineTimestamp = Timestamp(deadlineData!!)
+            }
         }
 
-        val noneSexOption : RadioButton = findViewById(R.id.noneSexOption)
-        val femaleSexOption : RadioButton = findViewById(R.id.femaleSexOption)
-        val maleSexOption : RadioButton = findViewById(R.id.maleSexOption)
+        val sexOptionGroup : RadioGroup = findViewById(R.id.sexOptionGroup)
         var sexOption = "거래 불가"
 
-        if (noneSexOption.isChecked) {
-            sexOption = "모두 거래 가능"
-        } else if (femaleSexOption.isChecked) {
-            sexOption = "여성만 거래"
-        } else if (maleSexOption.isChecked) {
-            sexOption = "남성만 거래"
+        sexOptionGroup.setOnCheckedChangeListener { radioGroup, checkedId -> // 라디오 버튼 선택시
+            val selectedSexOption: RadioButton = findViewById(checkedId)
+
+            when (selectedSexOption.id) {
+                R.id.noneSexOption -> sexOption = "모두 거래 가능"
+                R.id.femaleSexOption -> sexOption = "여성만 거래"
+                R.id.maleSexOption -> sexOption = "남성만 거래"
+            }
         }
 
         val btnDoneSetting: Button = findViewById(R.id.doneSetting)
@@ -66,7 +84,7 @@ class MarketOptionSettingActivity : AppCompatActivity() {
             if (sexOption != "거래 불가" && deadlineData != null){
                 val intent = Intent()
                 intent.putExtra("targeting", sexOption)
-                intent.putExtra("deadlineData", deadlineData)
+                intent.putExtra("deadlineData", deadlineTimestamp)
                 intent.putExtra("optionSetting", 1)
                 setResult(Activity.RESULT_OK, intent)
                 onBackPressed()

@@ -12,13 +12,18 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.surround2023.surround2023.R
 import com.surround2023.surround2023.category.BuyCategoryActivity
 import com.surround2023.surround2023.databinding.ActivityMarketholderBinding
 import com.surround2023.surround2023.databinding.ActivityMarketitemBinding
-
+import com.surround2023.surround2023.home.HomeActivity
+import com.surround2023.surround2023.market.MarketPostModel
+import com.surround2023.surround2023.market_post.MarketPostActivity
+import com.surround2023.surround2023.mypage.MypageActivity
+import com.surround2023.surround2023.posting.MarketPostingActivity
 
 
 class MarketholderActivity : AppCompatActivity() {
@@ -29,13 +34,18 @@ class MarketholderActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MarketAdapter
 
+    //하단 Nav 와 관련된 변수
+    private lateinit var bottomNavView: BottomNavigationView
+
     //게시글 데이터베이스
     val db = FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
 
     private val BUY_CATEGORY_REQUEST_CODE = 1
     override fun onCreate(savedInstanceState: Bundle?) {
 
+
         binding = ActivityMarketholderBinding.inflate(layoutInflater)
+
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -69,6 +79,7 @@ class MarketholderActivity : AppCompatActivity() {
         //populate data
         getMarketData()
 
+
         binding.categoryBtn.setOnClickListener {
             val intent = Intent(this, BuyCategoryActivity::class.java)
             startActivityForResult(intent, BUY_CATEGORY_REQUEST_CODE)
@@ -100,6 +111,43 @@ class MarketholderActivity : AppCompatActivity() {
                     }
             }
         }
+
+
+        //        ---------------------BottomNavigationView에 대한 기능 ---------------
+        bottomNavView = binding.bottomNavView
+        bottomNavView.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                //해당 액티비티로 이동
+                R.id.menu_home -> {
+                    // "menu_home" 아이템 클릭 시 HomeActivity로 이동
+                    val intent = Intent(this, HomeActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                R.id.menu_favorite ->{
+                    //즐겨찾기로 이동
+                    true
+                }
+
+                R.id.menu_addPost ->{
+                    //공동구매 글쓰기로 이동
+                    val intent=Intent(this, MarketPostingActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+
+                R.id.menu_mypage ->{
+                    //마이페이지로 이동
+                    val intent=Intent(this, MypageActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
+                // 다른 메뉴 아이템에 대한 처리 추가 (필요에 따라 다른 Activity로 이동할 수 있음)
+                else -> false
+            }
+        }
+
+
     }
 
 

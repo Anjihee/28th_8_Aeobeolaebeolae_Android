@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -13,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
 import org.w3c.dom.Text
+import java.text.NumberFormat
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
@@ -22,10 +24,22 @@ class MarketPostActivity : AppCompatActivity() {
     private lateinit var postId : String
     private val db = FirebaseFirestore.getInstance()
 
+    private lateinit var goodsPrice : String
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market_post)
+
+        // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
 
         val btnBack: ImageButton = findViewById(R.id.btnBack)
         btnBack.setOnClickListener {
@@ -73,7 +87,7 @@ class MarketPostActivity : AppCompatActivity() {
                             .addOnSuccessListener { userInfo ->
                                 val name = userInfo.getString("userName")
                                 val profileUrl = userInfo.getString("userProfileImageUrl")
-                                val address = userInfo.getString("userAddress")
+                                val address = userInfo.getString("userLocation")
 
                                 Glide.with(this)
                                     .load(profileUrl)
@@ -108,7 +122,11 @@ class MarketPostActivity : AppCompatActivity() {
                     postTime.text = "${daysPost}일 전"
 
                     postContent.text = content.toString()
-                    perPrice.text = "1인 ${price}원"
+
+                    //천 단위마다 쉼표를 포함하여 정수를 포맷팅
+                    val formattedPrice = NumberFormat.getNumberInstance().format(price)
+                    perPrice.text = "1인 ${formattedPrice}원"
+                    goodsPrice = "${formattedPrice}원"
 
                     // 마감일 타임스탬프 변환
                     val dueInstant = due?.toDate()?.toInstant()
@@ -128,12 +146,12 @@ class MarketPostActivity : AppCompatActivity() {
             // 눌러짐 색상 변경
             btnJoin.backgroundTintList = getColorStateList(R.color.subDeepGreen)
 
-            // 250ms(0.25초) 후에 원래 색상으로 복원
+            // 200ms(0.2초) 후에 원래 색상으로 복원
             btnJoin.postDelayed({
                 btnJoin.backgroundTintList = getColorStateList(R.color.themeGreen)
-            }, 250)
+            }, 200)
             // BottomSheet 보여주기
-            val joinBottomSheet = JoinMarketBottomSheetFragment()
+            val joinBottomSheet = JoinMarketBottomSheetFragment.newInstance(goodsPrice, postId)
             joinBottomSheet.show(supportFragmentManager, joinBottomSheet.tag)
         }
 

@@ -7,14 +7,23 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import com.google.firebase.Timestamp
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ServerValue
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
+import com.surround2023.surround2023.user_login_join.UserSingleton
+import java.lang.ref.Reference
 import java.util.Date
 
 data class Post(
@@ -24,8 +33,10 @@ data class Post(
     var isWomanOnly: Boolean = false,
     var price: String? = null,
     var content: String? = null,
-    var date: String? = null,
-    var due: String? = null
+    var date: Timestamp? = null,
+    var due: Timestamp? = null,
+    var userRef: DocumentReference? = null
+
 )
 class MarketPostingActivity : AppCompatActivity() {
     val postData = Post() // Post 인스턴스 생성
@@ -35,14 +46,11 @@ class MarketPostingActivity : AppCompatActivity() {
     private lateinit var photoNum: TextView
 
     private var photoCount = 0
+    var optionSetting : Int? = 0
 
     private val PICK_IMAGE_REQUEST = 1 // 이미지 선택 요청 코드
 
     private val REQUEST_CODE_B = 100
-
-    private lateinit var postTitle: EditText
-    private lateinit var postContent: EditText
-    private lateinit var price: EditText
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -55,7 +63,40 @@ class MarketPostingActivity : AppCompatActivity() {
         photoView = findViewById(R.id.photoView)
         photoNum = findViewById(R.id.photoNum)
 
+        val btnClose : ImageButton = findViewById(R.id.btnClose)
         val btnFinished : TextView = findViewById(R.id.btnFinish)
+
+        val postTitle : EditText = findViewById(R.id.postTitle)
+        val postCategory : Spinner = findViewById(R.id.postCategory)
+        val startPrice : EditText = findViewById(R.id.startPrice)
+        val postText : EditText = findViewById(R.id.postText)
+
+        postData.title = postTitle.text.toString()
+        postData.price = startPrice.text.toString()
+        postData.content = postText.text.toString()
+
+        // Spinner에서 항목 선택 시 리스너 등록
+        postCategory.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val selectedCategoty = parent?.getItemAtPosition(position).toString()
+                postData.category = selectedCategoty
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // 아무것도 선택되지 않았을 때의 처리
+                postData.category = null
+            }
+        })
+
+        var userData = UserSingleton.getInstance().getUserData() // 유저 이름 불러오기
+        userData?.let {
+            val userId = it.Email
+            val userRefPath = "User/${userId}"
+            postData.userRef = db.document(userRefPath)
+        }
+
+        btnClose.setOnClickListener{ // 종료 버튼
+            onBackPressed()
+        }
 
         btnAddPhoto.setOnClickListener {
             if (photoCount < 2) { // 사진 첨부 버튼 클릭 시 처리(2장 미만)
@@ -73,13 +114,17 @@ class MarketPostingActivity : AppCompatActivity() {
         }
 
         btnFinished.setOnClickListener {
+            val postTime: Timestamp = Timestamp(Date()) // 현재 시간 가져오기
+            postData.date = postTime // 시간 저장
 
             savePost(postData)
             onBackPressed() // 돌아가기
+
+
         }
     }
 
-    fun savePost(postInfo: Post) { // DB에 데이터 쓰기
+    fun savePost(postInfo: Post) { // DB에 데이터 쓰기 메서드
         val titleData = postInfo.title
         val categoryData = postInfo.category
         val manOnly = postInfo.isManOnly
@@ -89,16 +134,27 @@ class MarketPostingActivity : AppCompatActivity() {
         val dateData = postInfo.date
         val dueData = postInfo.due
 
-        // 데이터 쓰기
-        // db.collection("market")
-            /* .addOnSuccessListener {
-                // 저장 성공
-                Log.d(ContentValues.TAG, "사용자 정보가 Firestore에 저장되었습니다.")
+        val postMarketCollection = db.collection("Market")
+
+        val newPostMarket = hashMapOf(
+            "postTitle" to titleData,
+            "category" to categoryData,
+            "isManOnly" to manOnly,
+            "isWomanOnly" to womanOnly,
+            "price" to priceData,
+            "postContent" to contentData,
+            "postDue" to dueData,
+            "postDate" to dateData
+        )
+
+        // add() 메서드를 사용하여 데이터 추가
+        postMarketCollection.add(newPostMarket)
+            .addOnSuccessListener { documentReference ->
+                // 추가 성공 시 처리
             }
             .addOnFailureListener { e ->
-                // 저장 실패
-                Log.w(ContentValues.TAG, "사용자 정보 저장에 실패했습니다.", e)
-            } */
+                // 추가 실패 시 처리
+            }
     }
 
     private fun openGallery() { // 갤러리 열기
@@ -122,8 +178,8 @@ class MarketPostingActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_B) {
             if (resultCode == Activity.RESULT_OK) {
                 val targetting = data?.getStringExtra("targetting")
-                val deadlineData = data?.getStringExtra("deadlineData")
-                val optionSetting = data?.getStringExtra("optionSetting")
+                val deadlineData = data?.getStringExtra("deadlineData") ?: ""
+                optionSetting = data?.getStringExtra("optionSetting")?.toInt()
 
                 if (targetting == "여성만 거래") {
                     postData.isManOnly = false
@@ -136,7 +192,11 @@ class MarketPostingActivity : AppCompatActivity() {
                     postData.isWomanOnly = false
                 }
 
-                postData.due = deadlineData
+                if(deadlineData != "") {
+                    val deadlineTimestamp =
+                        Timestamp(Date(deadlineData.toLong())) // 문자열을 Long 타입으로 변환하여 생성
+                    postData.due = deadlineTimestamp
+                }
             }
         }
     }

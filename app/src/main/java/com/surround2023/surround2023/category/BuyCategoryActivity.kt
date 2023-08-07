@@ -57,6 +57,7 @@ class BuyCategoryActivity : AppCompatActivity() {
         }
     }
 
+
     private fun setResultAndFinish(category: String) {
         val intent = Intent().apply {
             putExtra("category", category)
@@ -64,4 +65,3 @@ class BuyCategoryActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
-}
