@@ -75,11 +75,11 @@ class BuyCategoryActivity : AppCompatActivity() {
                     val content = document.getString("content")
                     val timestamp = document.getTimestamp("timestamp")
                     if (title != null && content != null && timestamp != null) {
-                        val post = Post(title, content, timestamp)
-                        posts.add(post)
+//                        val post = Post(title, content, timestamp)
+//                        posts.add(post)
                     }
                 }
-                postAdapter.notifyDataSetChanged()
+//                postAdapter.notifyDataSetChanged()
             }
             .addOnFailureListener { exception ->
                 println("Error getting documents: $exception")
