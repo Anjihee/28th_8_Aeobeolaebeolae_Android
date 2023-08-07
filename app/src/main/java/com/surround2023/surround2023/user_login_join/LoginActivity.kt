@@ -40,8 +40,6 @@ class LoginActivity : ComponentActivity() {
 
         }
 
-//        val db = FirebaseFirestore.getInstance()
-//        val collectionRef = db.collection("User")
 
         binding.btnLogin.setOnClickListener {
             val email = binding.Email.text.toString()
@@ -115,17 +113,14 @@ class LoginActivity : ComponentActivity() {
         collectionRef.document(email).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
-                    Log.d("datasurround123", document.toString())
                     val email = document.getString("email")
                     val uid = document.getString("uid")
                     val userName = document.getString("userName")
                     val gender = document.getString("gender")
 
+                    val user = User(email, uid, userName, gender)
+                    UserSingleton.getInstance().setUserData(user)
                     val homeIntent = Intent(this, HomeActivity::class.java)
-                    homeIntent.putExtra("email", email)
-                    homeIntent.putExtra("uid", uid)
-                    homeIntent.putExtra("userName", userName)
-                    homeIntent.putExtra("gender", gender)
                     startActivity(homeIntent)
                 } else {
                     // 문서가 존재하지 않거나 데이터를 읽어오는 데에 실패한 경우

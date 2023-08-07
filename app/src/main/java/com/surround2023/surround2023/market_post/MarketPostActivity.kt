@@ -1,8 +1,10 @@
 package com.surround2023.surround2023.market_post
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -12,34 +14,54 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
 import org.w3c.dom.Text
+import java.text.NumberFormat
 import java.time.Duration
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
 class MarketPostActivity : AppCompatActivity() {
-    private var postId = intent.getStringExtra("postId") // 게시글 Id Data 받아오기
-
-    private var goodsImageView: ImageView = findViewById(R.id.goodsImage)
-    private var userProfileView: ImageView = findViewById(R.id.userProfile)
-    private var userName: TextView = findViewById(R.id.userName)
-    private var userAddress: TextView = findViewById(R.id.userAddress)
-    private var targeting: TextView = findViewById(R.id.targeting)
-    private var postTitle: TextView = findViewById(R.id.postTitle)
-    private var postCategory: TextView = findViewById(R.id.postCategory)
-    private var postTime: TextView = findViewById(R.id.postTime)
-    private var postContent: TextView = findViewById(R.id.postText)
-    private var postDeadline : TextView = findViewById(R.id.textDeadline)
-    private var startPrice: TextView = findViewById(R.id.startPrice)
-
+    private lateinit var postId : String
     private val db = FirebaseFirestore.getInstance()
+
+    private lateinit var goodsPrice : String
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market_post)
 
-        val postInfo = db.collection("Market").document(postId.toString())
+        // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+
+        val btnBack: ImageButton = findViewById(R.id.btnBack)
+        btnBack.setOnClickListener {
+            // 뒤로가기 버튼을 클릭하면 종료
+            onBackPressed()
+        }
+
+        postId = intent.getStringExtra("postId").toString() // 게시글 Id Data 받아오기
+
+        val goodsImageView: ImageView = findViewById(R.id.goodsImage)
+        val userProfileView: ImageView = findViewById(R.id.userProfile)
+        val userName: TextView = findViewById(R.id.userName)
+        val userAddress: TextView = findViewById(R.id.userAddress)
+        val targeting: TextView = findViewById(R.id.targeting)
+        val postTitle: TextView = findViewById(R.id.postTitle)
+        val postCategory: TextView = findViewById(R.id.postCategory)
+        val postTime: TextView = findViewById(R.id.postTime)
+        val postContent: TextView = findViewById(R.id.postContents)
+        val postDeadline : TextView = findViewById(R.id.textDeadline)
+        val perPrice: TextView = findViewById(R.id.perPrice)
+
+        val postInfo = db.collection("Market").document(postId)
 
         postInfo.get()
             .addOnSuccessListener { document -> // 게시글 정보 로딩 성공
@@ -53,7 +75,7 @@ class MarketPostActivity : AppCompatActivity() {
                     val manOnly = document.getBoolean("isManOnly")
                     val womanOnly = document.getBoolean("isWomanOnly")
                     val due = document.getTimestamp("postDue")
-                    val price = document.getString("price")
+                    val price = document.getLong("price")?.toInt()
 
                     Glide.with(this)
                         .load(goodsImageUrl) // 게시글 이미지
@@ -65,7 +87,7 @@ class MarketPostActivity : AppCompatActivity() {
                             .addOnSuccessListener { userInfo ->
                                 val name = userInfo.getString("userName")
                                 val profileUrl = userInfo.getString("userProfileImageUrl")
-                                val address = userInfo.getString("userAddress")
+                                val address = userInfo.getString("userLocation")
 
                                 Glide.with(this)
                                     .load(profileUrl)
@@ -86,20 +108,31 @@ class MarketPostActivity : AppCompatActivity() {
                         targeting.text = "모두 거래 가능"
                     }
 
+                    val currentInstant = Instant.now() // 현재 시간
+                    val currentDateTime = LocalDateTime.ofInstant(currentInstant, ZoneId.systemDefault())
+
                     postTitle.text = title.toString()
                     postCategory.text = category.toString()
                     postTime.text = time.toString()
+
+                    // 작성일 타임스탬프 변환
+                    val timeInstant = time?.toDate()?.toInstant()
+                    val durationPost = Duration.between(currentInstant, timeInstant)
+                    val daysPost = durationPost.toDays()
+                    postTime.text = "${daysPost}일 전"
+
                     postContent.text = content.toString()
 
-                    startPrice.text = "1인 " + price.toString()
+                    //천 단위마다 쉼표를 포함하여 정수를 포맷팅
+                    val formattedPrice = NumberFormat.getNumberInstance().format(price)
+                    perPrice.text = "1인 ${formattedPrice}원"
+                    goodsPrice = "${formattedPrice}원"
 
                     // 마감일 타임스탬프 변환
                     val dueInstant = due?.toDate()?.toInstant()
-                    val currentInstant = Instant.now() // 현재 시간
-                    val currentDateTime = LocalDateTime.ofInstant(currentInstant, ZoneId.systemDefault())
-                    val duration = Duration.between(currentInstant, dueInstant)
-                    val days = duration.toDays()
-                    postDeadline.text = "${days}일 전" // 마감일 보이기
+                    val durationDeadline = Duration.between(currentInstant, dueInstant)
+                    val daysDeadline = durationDeadline.toDays()
+                    postDeadline.text = "${daysDeadline}일 전" // 마감일 보이기
                 }
             }
             .addOnFailureListener { e ->
@@ -113,12 +146,12 @@ class MarketPostActivity : AppCompatActivity() {
             // 눌러짐 색상 변경
             btnJoin.backgroundTintList = getColorStateList(R.color.subDeepGreen)
 
-            // 250ms(0.25초) 후에 원래 색상으로 복원
+            // 200ms(0.2초) 후에 원래 색상으로 복원
             btnJoin.postDelayed({
                 btnJoin.backgroundTintList = getColorStateList(R.color.themeGreen)
-            }, 250)
+            }, 200)
             // BottomSheet 보여주기
-            val joinBottomSheet = JoinMarketBottomSheetFragment()
+            val joinBottomSheet = JoinMarketBottomSheetFragment.newInstance(goodsPrice, postId)
             joinBottomSheet.show(supportFragmentManager, joinBottomSheet.tag)
         }
 

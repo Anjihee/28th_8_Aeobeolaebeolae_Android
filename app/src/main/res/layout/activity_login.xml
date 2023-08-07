@@ -40,6 +40,7 @@
         android:id="@+id/Email"
         android:layout_width="300sp"
         android:layout_height="50sp"
+        android:textSize="17sp"
         android:layout_centerHorizontal="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -61,8 +62,9 @@
 
     <EditText
         android:id="@+id/PW"
-        android:layout_width="300dp"
-        android:layout_height="50dp"
+        android:layout_width="300sp"
+        android:layout_height="50sp"
+        android:textSize="17sp"
         android:layout_centerHorizontal="true"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
@@ -86,7 +88,7 @@
 
     <ImageButton
         android:id="@+id/KakaoLoginButton"
-        android:layout_width="wrap_content"
+        android:layout_width="300sp"
         android:layout_height="50sp"
         android:background="@drawable/kakao_login_btn"
         app:layout_constraintBottom_toTopOf="@+id/textJoin"

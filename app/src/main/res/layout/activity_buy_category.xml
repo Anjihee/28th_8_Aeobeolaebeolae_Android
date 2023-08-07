@@ -26,13 +26,15 @@ tools:context=".category.BuyCategoryActivity">
             android:id="@+id/prevPageBtn"
             android:layout_width="21sp"
             android:layout_height="29sp"
+            android:layout_marginStart="16dp"
             android:background="@android:color/transparent"
+            android:clickable="true"
             android:scaleType="fitXY"
             android:src="@drawable/ic_return_prev_page"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:clickable="true"/>
+            app:layout_constraintVertical_bias="0.476" />
 
         <TextView
             android:id="@+id/mainHeaderText"
