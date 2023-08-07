@@ -58,7 +58,7 @@
 
 
             <ImageButton
-                android:id="@+id/imageButton16"
+                android:id="@+id/workBtn"
                 android:layout_width="155sp"
                 android:layout_height="155sp"
                 android:background="#00ff0000"
@@ -75,7 +75,7 @@
                 app:layout_constraintVertical_bias="0.65" />
 
             <ImageButton
-                android:id="@+id/imageButton11"
+                android:id="@+id/updateBtn"
                 android:layout_width="155sp"
                 android:layout_height="155sp"
                 android:background="#00ff0000"
@@ -92,7 +92,7 @@
                 app:layout_constraintVertical_bias="0.049" />
 
             <ImageButton
-                android:id="@+id/imageButton12"
+                android:id="@+id/freeBtn"
                 android:layout_width="155sp"
                 android:layout_height="155sp"
                 android:background="#00ff0000"
@@ -109,7 +109,7 @@
                 app:layout_constraintVertical_bias="0.348" />
 
             <ImageButton
-                android:id="@+id/imageButton13"
+                android:id="@+id/AdBtn"
                 android:layout_width="155sp"
                 android:layout_height="155sp"
                 android:background="#00ff0000"
@@ -126,7 +126,7 @@
                 app:layout_constraintVertical_bias="0.348" />
 
             <ImageButton
-                android:id="@+id/imageButton15"
+                android:id="@+id/loveBtn"
                 android:layout_width="155sp"
                 android:layout_height="155sp"
                 android:background="#00ff0000"
@@ -143,7 +143,7 @@
                 app:layout_constraintVertical_bias="0.65" />
 
             <ImageButton
-                android:id="@+id/imageButton17"
+                android:id="@+id/petBtn"
                 android:layout_width="155sp"
                 android:layout_height="155sp"
                 android:background="#00ff0000"
@@ -160,7 +160,7 @@
                 app:layout_constraintVertical_bias="0.948" />
 
             <ImageButton
-                android:id="@+id/imageButton18"
+                android:id="@+id/neighborBtn"
                 android:layout_width="155sp"
                 android:layout_height="155sp"
                 android:background="#00ff0000"
@@ -177,7 +177,7 @@
                 app:layout_constraintVertical_bias="0.947" />
 
             <ImageButton
-                android:id="@+id/imageButton10"
+                android:id="@+id/popularBtn"
                 android:layout_width="155sp"
                 android:layout_height="155sp"
                 android:background="#00ff0000"
