@@ -10,6 +10,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -26,6 +29,7 @@ import com.surround2023.surround2023.community_post.CommunityPostActivity
 import com.surround2023.surround2023.databinding.ActivityCommunityholderBinding
 import com.surround2023.surround2023.databinding.ActivityCommunityitemBinding
 import com.surround2023.surround2023.home.HomeActivity
+import com.surround2023.surround2023.market.MarketPostModel
 import com.surround2023.surround2023.mypage.MypageActivity
 import com.surround2023.surround2023.posting.CommunityPostingActivity
 import com.surround2023.surround2023.posting.MarketPostingActivity
@@ -45,7 +49,12 @@ class CommunityholderActivity : AppCompatActivity() {
     //게시글 데이터베이스
     val db= FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
 
+
+    private lateinit var button: ImageButton
+    private lateinit var editText: EditText
+
     private val COM_CATEGORY_REQUEST_CODE = 1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,11 +134,20 @@ class CommunityholderActivity : AppCompatActivity() {
         //populate data
         getCommunityData()
 
+        button = findViewById(R.id.searchBtn)
+        editText = findViewById(R.id.etSearch)
+        button.setOnClickListener {
+            val searchKeyword = editText.text.toString().trim()
+            searchCommunityData(searchKeyword)
+        }
+
+
         // Set click listener for comcategoryBtn
         binding.comcategoryBtn.setOnClickListener {
             val intent = Intent(this, CommunityCategoryActivity::class.java)
             startActivity(intent)
         }
+
 
     }
 
@@ -230,7 +248,27 @@ class CommunityholderActivity : AppCompatActivity() {
         }
     }
 
-}
+    // 공동구매 게시글 데이터를 가져오는 메소드
+    private fun searchCommunityData(keyword: String) {
+        db.collection("Community")
+            .orderBy("postDate", Query.Direction.DESCENDING)
+            .whereEqualTo("postTitle", keyword) // 검색어와 게시물의 제목이 일치하는 게시물만 가져오도록 쿼리 조건 추가
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if (querySnapshot == null) return@addSnapshotListener
+
+                val communityItemList = mutableListOf<CommunityPostModel>()
+
+                for (snapshot in querySnapshot.documents) {
+                    val item = snapshot.toObject(CommunityPostModel::class.java)
+                    item?.postId = snapshot.id // 게시물의 ID를 가져옴
+                    communityItemList.add(item!!)
+                }
+
+                adapter.setData(communityItemList)
+            }
+    }
+    }
+
 
 // 커뮤니티 게시글 데이터 모델
 data class CommunityPostModel(

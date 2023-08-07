@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +26,7 @@ import com.surround2023.surround2023.home.HomeActivity
 import com.surround2023.surround2023.market.MarketPostModel
 import com.surround2023.surround2023.market_post.MarketPostActivity
 import com.surround2023.surround2023.mypage.MypageActivity
+import com.surround2023.surround2023.posting.CommunityPostingActivity
 import com.surround2023.surround2023.posting.MarketPostingActivity
 
 
@@ -42,7 +44,7 @@ class MarketholderActivity : AppCompatActivity() {
     //게시글 데이터베이스
     val db = FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
 
-    private lateinit var button: Button
+    private lateinit var button: ImageButton
     private lateinit var editText: EditText
 
 
@@ -55,6 +57,13 @@ class MarketholderActivity : AppCompatActivity() {
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+        val intent = Intent(this, CommunityPostingActivity::class.java)
+        binding.writeBtn.setOnClickListener{startActivity(intent)}
+
+        val mintent = Intent(this, BuyCategoryActivity::class.java)
+        binding.categoryBtn.setOnClickListener{startActivity(mintent)}
+
 
         // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -97,6 +106,11 @@ class MarketholderActivity : AppCompatActivity() {
         button.setOnClickListener {
             val searchKeyword = editText.text.toString().trim()
             searchMarketData(searchKeyword)
+        }
+
+        val searchText = intent.getStringExtra("searchText")
+        if (!searchText.isNullOrBlank()) {
+            searchCommunityData(searchText)
         }
 
     }
@@ -254,6 +268,26 @@ class MarketholderActivity : AppCompatActivity() {
 
         }
     }
+
+    private fun searchCommunityData(keyword: String) {
+        db.collection("Market")
+            .orderBy("postDate", Query.Direction.DESCENDING)
+            .whereArrayContains("postTitleKeywords", keyword)
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if (querySnapshot == null) return@addSnapshotListener
+
+                val marketItemList = mutableListOf<MarketPostModel>()
+
+                for (snapshot in querySnapshot.documents) {
+                    val item = snapshot.toObject(MarketPostModel::class.java)
+                    item?.postId = snapshot.id
+                    marketItemList.add(item!!)
+                }
+
+                adapter.setData(marketItemList)
+            }
+    }
+
 
     private fun searchMarketData(keyword: String) {
         db.collection("Market")
