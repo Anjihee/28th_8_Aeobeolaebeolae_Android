@@ -1,5 +1,6 @@
 package com.surround2023.surround2023.community_post
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -19,26 +20,27 @@ import com.surround2023.surround2023.R
 data class CommentData(val userName: String?, val time: Timestamp, val comment: String?, val profileId: String?)
 
 class CommunityPostActivity : AppCompatActivity() {
-    private var postId = intent.getStringExtra("postId") // 게시글 Id Data 받아오기
-
-    private var goodsImageView: ImageView = findViewById(R.id.goodsImage)
-    private var userProfileView: ImageView = findViewById(R.id.userProfile)
-    private var userName: TextView = findViewById(R.id.userName)
-    private var userAddress: TextView = findViewById(R.id.userAddress)
-    private var postTitle: TextView = findViewById(R.id.postTitle)
-    private var postCategory: TextView = findViewById(R.id.postCategory)
-    private var postTime: TextView = findViewById(R.id.postTime)
-    private var postContent: TextView = findViewById(R.id.postText)
-    private var likeNum: TextView = findViewById(R.id.likeNum)
-    private var commentNum: TextView = findViewById(R.id.commentsNum)
-
+    private lateinit var postId : String
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_post)
 
-        val postInfo = db.collection("Community").document(postId.toString())
+        postId = intent.getStringExtra("postId").toString() // 게시글 Id Data 받아오기
+
+        val goodsImageView: ImageView = findViewById(R.id.goodsImage)
+        val userProfileView: ImageView = findViewById(R.id.userProfile)
+        val userName: TextView = findViewById(R.id.userName)
+        val userAddress: TextView = findViewById(R.id.userAddress)
+        val postTitle: TextView = findViewById(R.id.postTitle)
+        val postCategory: TextView = findViewById(R.id.postCategory)
+        val postTime: TextView = findViewById(R.id.postTime)
+        val postContent: TextView = findViewById(R.id.postContents)
+        val likeNum: TextView = findViewById(R.id.likeNum)
+        val commentNum: TextView = findViewById(R.id.commentsNum)
+
+        val postInfo = db.collection("Community").document(postId)
 
             postInfo.get()
                 .addOnSuccessListener { document -> // 게시글 정보 로딩 성공
@@ -104,7 +106,7 @@ class CommunityPostActivity : AppCompatActivity() {
     fun createCommentList(): List<CommentData> { // 댓글 DB 받아와 리스트 생성하는 메서드
         val commentDataList = mutableListOf<CommentData>()
 
-        val commentsCollection = db.collection("Community").document(postId.toString()).collection("comments")
+        val commentsCollection = db.collection("Community").document(postId).collection("comments")
 
         commentsCollection
             .orderBy("timestamp", Query.Direction.DESCENDING) // 댓글 달린 순으로 정렬
