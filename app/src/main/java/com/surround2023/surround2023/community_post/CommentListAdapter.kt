@@ -29,7 +29,6 @@ class CommentListAdapter(private val context: Context, private val itemList: Lis
     }
 
     override fun getItemCount(): Int {
-        Log.d("RecyclerView", "itemList size: ${itemList.size}")
         return itemList.size
     }
 

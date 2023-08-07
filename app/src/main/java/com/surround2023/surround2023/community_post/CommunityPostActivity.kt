@@ -5,8 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -15,7 +19,18 @@ import com.surround2023.surround2023.R
 data class CommentData(val userName: String?, val time: Timestamp, val comment: String?, val profileId: String?)
 
 class CommunityPostActivity : AppCompatActivity() {
-    private val postId: String = "" // 불러 오려는 댓글의 소속 글
+    private var postId = intent.getStringExtra("postId") // 게시글 Id Data 받아오기
+
+    private var goodsImageView: ImageView = findViewById(R.id.goodsImage)
+    private var userProfileView: ImageView = findViewById(R.id.userProfile)
+    private var userName: TextView = findViewById(R.id.userName)
+    private var userAddress: TextView = findViewById(R.id.userAddress)
+    private var postTitle: TextView = findViewById(R.id.postTitle)
+    private var postCategory: TextView = findViewById(R.id.postCategory)
+    private var postTime: TextView = findViewById(R.id.postTime)
+    private var postContent: TextView = findViewById(R.id.postText)
+    private var likeNum: TextView = findViewById(R.id.likeNum)
+    private var commentNum: TextView = findViewById(R.id.commentsNum)
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -23,8 +38,57 @@ class CommunityPostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_post)
 
+        val postInfo = db.collection("Community").document(postId.toString())
+
+            postInfo.get()
+                .addOnSuccessListener { document -> // 게시글 정보 로딩 성공
+                    if (document != null) {
+                        val goodsImageUrl = document.getString("postImageUrl")
+                        val userRef = document.getDocumentReference("userRef")
+                        val title = document.getString("postTitle")
+                        val category = document.getString("category")
+                        val time = document.getTimestamp("postDate")
+                        val content = document.getString("postContent")
+
+                        Glide.with(this)
+                            .load(goodsImageUrl) // 게시글 이미지
+                            .placeholder(R.drawable.ic_logo) // 로딩 중이나 에러 시 보여줄 기본 이미지
+                            .into(goodsImageView) // 표시할 ImageView
+
+                        if (userRef != null) {
+                            userRef.get()
+                                .addOnSuccessListener { userInfo ->
+                                    val name = userInfo.getString("userName")
+                                    val profileUrl = userInfo.getString("userProfileImageUrl")
+                                    val address = userInfo.getString("userAddress")
+
+                                    Glide.with(this)
+                                        .load(profileUrl)
+                                        .placeholder(R.drawable.icon) // 로딩 중이나 에러 시 보여줄 기본 이미지
+                                        .into(userProfileView) // 표시할 ImageView
+
+                                    userName.text = name.toString()
+                                }
+                        } else {
+                            // 사용자 정보를 불러올 수 없습니다.
+                        }
+
+                        postTitle.text = title.toString()
+                        postCategory.text = category.toString()
+                        postTime.text = time.toString()
+                        postContent.text = content.toString()
+
+                        likeNum.text = document.getLong("likeNum")?.toString()
+                        commentNum.text = document.getLong("commentNum")?.toString()
+                    }
+                }
+                .addOnFailureListener { e ->
+                    // 게시글 정보 로딩 실패
+                }
+
+
         val btnLike: ImageButton = findViewById(R.id.btnLike)
-        btnLike.setOnClickListener{// 좋아요 버튼 기능 구현
+        btnLike.setOnClickListener{ // 좋아요 버튼 기능 구현
             btnLike.isSelected = !btnLike.isSelected
         }
 
@@ -40,7 +104,7 @@ class CommunityPostActivity : AppCompatActivity() {
     fun createCommentList(): List<CommentData> { // 댓글 DB 받아와 리스트 생성하는 메서드
         val commentDataList = mutableListOf<CommentData>()
 
-        val commentsCollection = db.collection("Community").document(postId).collection("comments")
+        val commentsCollection = db.collection("Community").document(postId.toString()).collection("comments")
 
         commentsCollection
             .orderBy("timestamp", Query.Direction.DESCENDING) // 댓글 달린 순으로 정렬
