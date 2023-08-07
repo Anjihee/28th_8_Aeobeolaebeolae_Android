@@ -19,6 +19,7 @@ import com.google.firebase.Timestamp
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ServerValue
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
 import com.surround2023.surround2023.user_login_join.UserSingleton
@@ -34,7 +35,8 @@ data class Post(
     var content: String? = null,
     var date: Timestamp? = null,
     var due: Timestamp? = null,
-    var userRef: DatabaseReference? = null
+    var userRef: DocumentReference? = null
+
 )
 class MarketPostingActivity : AppCompatActivity() {
     val postData = Post() // Post 인스턴스 생성
@@ -89,7 +91,7 @@ class MarketPostingActivity : AppCompatActivity() {
         userData?.let {
             val userId = it.Email
             val userRefPath = "User/${userId}"
-            postData.userRef = FirebaseDatabase.getInstance().getReference(userRefPath)
+            postData.userRef = db.document(userRefPath)
         }
 
         btnClose.setOnClickListener{ // 종료 버튼
