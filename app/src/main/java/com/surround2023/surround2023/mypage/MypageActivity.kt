@@ -37,10 +37,7 @@ class MypageActivity : AppCompatActivity() {
         binding = ActivityMypageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         var userData = UserSingleton.getInstance().getUserData()
-
 
         val mypageUsernameTextView: TextView = findViewById(R.id.mypageusername)
         userData?.let {
