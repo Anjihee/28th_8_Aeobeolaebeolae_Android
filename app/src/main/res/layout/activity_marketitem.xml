@@ -8,21 +8,21 @@
 
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/postImageContainer"
-        android:layout_width="114sp"
-        android:layout_height="114sp"
+        android:id="@+id/postImgContainer"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
         app:cardCornerRadius="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/postImage"
+            android:id="@+id/postImg"
             android:layout_width="114dp"
             android:layout_height="114dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:background="@drawable/strawberry" />
+            android:background="@color/white" />
     </androidx.cardview.widget.CardView>
 
 
@@ -30,7 +30,7 @@
         android:layout_width="250sp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintStart_toEndOf="@+id/postImageContainer"
+        app:layout_constraintStart_toEndOf="@+id/postImgContainer"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginLeft="15sp">
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:text="딸기 1키로 공구하실분 구합니다"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="21sp"
             android:maxLines="1"
             android:ellipsize="end"/>
 
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="이태원 2동"
-            android:textSize="18sp" />
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -63,7 +63,7 @@
                 android:text="1인"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="25sp"
+                android:textSize="22sp"
                 android:layout_marginRight="10sp"/>
 
             <TextView
@@ -73,7 +73,7 @@
                 android:text="5900"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="25sp"/>
+                android:textSize="22sp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
                 android:text="원"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="25sp"/>
+                android:textSize="22sp"/>
 
 
         </LinearLayout>
