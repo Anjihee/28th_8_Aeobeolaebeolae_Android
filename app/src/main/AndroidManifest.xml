@@ -21,23 +21,23 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".favorite.FavoritemarketlistActivity"
-            android:exported="false" />
+            android:name=".FavoritemarketlistActivity"
+            android:exported="true" />
         <activity
-            android:name=".favorite.FavoritemarketActivity"
-            android:exported="false" />
+            android:name=".FavoritemarketActivity"
+            android:exported="true" />
         <activity
             android:name=".market.MarketholderActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".market.MarketitemActivity"
-            android:exported="false" />
-        <activity
-            android:name=".community.CommunityitemActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".community.CommunityholderActivity"
-            android:exported="false" /> <!-- 앱이 시작될 때 실행 -->
+            android:exported="true" />
+
+
+
         <!-- 앱이 시작될 때 실행 -->
         <activity
             android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
@@ -129,6 +129,9 @@
             android:label="CommunityLogActivity"
             android:parentActivityName=".mypage.MypageActivity"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".category.BuyCategoryActivity"
+            android:label = "BuyCategoryActivity"/>
     </application>
 
 </manifest>
