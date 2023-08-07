@@ -136,8 +136,20 @@ class CommunityPostActivity : AppCompatActivity() {
 
 
         val btnLike: ImageButton = findViewById(R.id.btnLike)
+        var pressedLike = 0
         btnLike.setOnClickListener{ // 좋아요 버튼 기능 구현
             btnLike.isSelected = !btnLike.isSelected
+            if (pressedLike == 0 && btnLike.isSelected == true) {
+                val likeP = likeNum.text.toString().toInt()
+                val likeN = likeP + 1
+                likeNum.text = likeN.toString()
+                pressedLike = 1
+            } else if (pressedLike == 1 && btnLike.isSelected == false) {
+                val likeP = likeNum.text.toString().toInt()
+                val likeN = likeP - 1
+                likeNum.text = likeN.toString()
+                pressedLike = 0
+            }
         }
 
         val commentList = createCommentList() // 댓글 데이터 -> 리스트 생성

@@ -1,11 +1,14 @@
 package com.surround2023.surround2023.category
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.surround2023.surround2023.databinding.ActivityBuyCategoryBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.surround2023.surround2023.market.MarketholderActivity
 
 class BuyCategoryActivity : AppCompatActivity() {
 
@@ -15,74 +18,50 @@ class BuyCategoryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        binding=ActivityBuyCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.latestBtn.setOnClickListener {
+        val intent = Intent(this, MarketholderActivity::class.java)
 
+        binding.latestBtn.setOnClickListener {
+            startActivity(intent)
         }
 
         binding.foodBtn.setOnClickListener {
-            onCategoryButtonClick("Food")
+            setResultAndFinish("음식")
         }
 
         binding.onlyWomanBtn.setOnClickListener {
-            onCategoryButtonClick("isWomanOnly")
+            setResultAndFinish("isWomanOnly")
         }
 
         binding.onlyManBtn.setOnClickListener {
-            onCategoryButtonClick("isManOnly")
+            setResultAndFinish("isManOnly")
         }
 
         binding.clothingBtn.setOnClickListener {
-            onCategoryButtonClick("Clothing")
+            setResultAndFinish("의류")
         }
 
         binding.hobbyBtn.setOnClickListener {
-            onCategoryButtonClick("Hobby")
+            setResultAndFinish("취미")
         }
 
         binding.petBtn.setOnClickListener {
-            onCategoryButtonClick("Pet")
+            setResultAndFinish("반려동물")
         }
 
         binding.interiorBtn.setOnClickListener {
-            onCategoryButtonClick("Interior")
+            setResultAndFinish("인테리어")
         }
     }
 
-    fun onCategoryButtonClick(category:String) {
-        postsCollection.whereEqualTo("category", category)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot) {
-                    // 각 게시글의 데이터 출력 (원하는 동작 수행)
-                    val title = document.getString("postTitle")
-                    val content = document.getString("postContent")
-                    Log.d("Post","Title: $title, Content: $content")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.e("Post","Error getting documents: $exception")
-            }
-    }
 
-    fun latestButtonClick(){
-        postsCollection.orderBy("postDate", Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                for (document in querySnapshot) {
-                    val title = document.getString("title")
-                    val content = document.getString("content")
-                    val timestamp = document.getTimestamp("timestamp")
-                    if (title != null && content != null && timestamp != null) {
-//                        val post = Post(title, content, timestamp)
-//                        posts.add(post)
-                    }
-                }
-//                postAdapter.notifyDataSetChanged()
-            }
-            .addOnFailureListener { exception ->
-                println("Error getting documents: $exception")
-            }
+    private fun setResultAndFinish(category: String) {
+        val intent = Intent().apply {
+            putExtra("category", category)
+        }
+        setResult(Activity.RESULT_OK, intent)
+        finish()
     }
-}
