@@ -87,7 +87,7 @@ class CommunityPostActivity : AppCompatActivity() {
                             .addOnSuccessListener { userInfo ->
                                 val name = userInfo.getString("userName")
                                 val profileUrl = userInfo.getString("userProfileImageUrl")
-                                val address = userInfo.getString("userAddress")
+                                val address = userInfo.getString("userLocation")
 
                                 Glide.with(this)
                                     .load(profileUrl)
@@ -95,6 +95,7 @@ class CommunityPostActivity : AppCompatActivity() {
                                     .into(userProfileView) // 표시할 ImageView
 
                                 userName.text = name.toString()
+                                userAddress.text = address.toString()
                             }
                     } else {
                         // 사용자 정보를 불러올 수 없습니다.

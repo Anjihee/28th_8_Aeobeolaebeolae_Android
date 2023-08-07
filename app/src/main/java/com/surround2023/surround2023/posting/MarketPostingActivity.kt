@@ -16,12 +16,10 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.Timestamp
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ServerValue
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
+import com.surround2023.surround2023.market_post.MarketPostActivity
 import com.surround2023.surround2023.user_login_join.UserSingleton
 import java.lang.ref.Reference
 import java.util.Date
@@ -35,7 +33,8 @@ data class Post(
     var content: String? = null,
     var date: Timestamp? = null,
     var due: Timestamp? = null,
-    var userRef: DocumentReference? = null
+    var userRef: DocumentReference? = null,
+    var postId: String? = null
 
 )
 class MarketPostingActivity : AppCompatActivity() {
@@ -70,10 +69,6 @@ class MarketPostingActivity : AppCompatActivity() {
         val postCategory : Spinner = findViewById(R.id.postCategory)
         val startPrice : EditText = findViewById(R.id.marketPostingPrice)
         val postText : EditText = findViewById(R.id.marketPostingContent)
-
-        postData.title = postTitle.text.toString()
-        postData.price = startPrice.text.toString().toInt()
-        postData.content = postText.text.toString()
 
         // Spinner에서 항목 선택 시 리스너 등록
         postCategory.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
@@ -117,10 +112,14 @@ class MarketPostingActivity : AppCompatActivity() {
             val postTime: Timestamp = Timestamp(Date()) // 현재 시간 가져오기
             postData.date = postTime // 시간 저장
 
+            postData.title = postTitle.text.toString()
+            val stringPrice = startPrice.text.toString()
+            if (stringPrice != "" && stringPrice != null) {
+                postData.price = stringPrice.toInt()
+            }
+            postData.content = postText.text.toString()
             savePost(postData)
             onBackPressed() // 돌아가기
-
-
         }
     }
 
@@ -133,6 +132,7 @@ class MarketPostingActivity : AppCompatActivity() {
         val contentData = postInfo.content
         val dateData = postInfo.date
         val dueData = postInfo.due
+        val userRef = postInfo.userRef
 
         val postMarketCollection = db.collection("Market")
 
@@ -144,13 +144,20 @@ class MarketPostingActivity : AppCompatActivity() {
             "price" to priceData,
             "postContent" to contentData,
             "postDue" to dueData,
-            "postDate" to dateData
+            "postDate" to dateData,
+            "userRef" to userRef
         )
 
         // add() 메서드를 사용하여 데이터 추가
         postMarketCollection.add(newPostMarket)
             .addOnSuccessListener { documentReference ->
-                // 추가 성공 시 처리
+                // 문서를 추가하고 자동으로 생성된 ID를 받아옴
+                val documentId = documentReference.id
+                postData.postId = documentId
+
+                val newPostIntent = Intent(this, MarketPostActivity::class.java)
+                newPostIntent.putExtra("postId", postData.postId)
+                startActivity(newPostIntent)
             }
             .addOnFailureListener { e ->
                 // 추가 실패 시 처리

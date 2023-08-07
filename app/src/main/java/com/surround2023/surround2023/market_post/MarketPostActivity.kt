@@ -95,6 +95,7 @@ class MarketPostActivity : AppCompatActivity() {
                                     .into(userProfileView) // 표시할 ImageView
 
                                 userName.text = name.toString()
+                                userAddress.text = address.toString()
                             }
                     } else {
                         // 사용자 정보를 불러올 수 없습니다.
@@ -130,9 +131,11 @@ class MarketPostActivity : AppCompatActivity() {
 
                     // 마감일 타임스탬프 변환
                     val dueInstant = due?.toDate()?.toInstant()
-                    val durationDeadline = Duration.between(currentInstant, dueInstant)
-                    val daysDeadline = durationDeadline.toDays()
-                    postDeadline.text = "${daysDeadline}일 전" // 마감일 보이기
+                    if (dueInstant != null) {
+                        val durationDeadline = Duration.between(currentInstant, dueInstant)
+                        val daysDeadline = durationDeadline.toDays()
+                        postDeadline.text = "${daysDeadline}일 전" // 마감일 보이기
+                    }
                 }
             }
             .addOnFailureListener { e ->
