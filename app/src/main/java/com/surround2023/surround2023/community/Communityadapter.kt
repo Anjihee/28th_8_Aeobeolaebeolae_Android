@@ -1,41 +1,40 @@
 package com.surround2023.surround2023.community
 
-import android.content.Context
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.firebase.firestore.auth.User
 import com.surround2023.surround2023.R
+import com.surround2023.surround2023.community.Communitymemo
 
-class Communityadapter (
-    private val mContext : Context,
-    private val mList : MutableList<Communitymemo>
-): RecyclerView.Adapter<Communityadapter.ViewHolder>() {
+class Communityadapter : RecyclerView.Adapter<Communityadapter.PostViewHolder>() {
 
-    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        private val userImage: ImageView = itemView.findViewById(R.id.strawberry)
-        private val userNameText : TextView = itemView.findViewById(R.id.title)
+    private var postList: List<Communitymemo> = emptyList()
 
-        fun bind (communitymemo: Communitymemo) {
-            userNameText.text = communitymemo.name
+    fun setData(posts: List<Communitymemo>) {
+        postList = posts
+        notifyDataSetChanged()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_communityitem, parent, false)
+        return PostViewHolder(view)
+    }
+
+    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+        val binding = ItemCommunitymemoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return PostViewHolder(binding)
+    }
+
+    override fun getItemCount(): Int = postList.size
+
+    class PostViewHolder(itemView: View) : RecyclerView.ViewHolder() {
+        fun bind(post: Communitymemo) {
+            binding.ivImage.setImageResource(post.image)
+            binding.tvCategory.text = post.category
+            binding.tvTitle.text = post.title
+            binding.tvDetail.text = post.detail
+            binding.tvComment.text = post.comment
         }
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(mContext).inflate(R.layout.activity_communityitem, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val user = mList[position]
-        holder.bind(user)
-    }
-
-    override fun getItemCount() = mList.size
-
 }
-

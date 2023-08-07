@@ -1,12 +1,10 @@
 package com.surround2023.surround2023.community
 
+import com.surround2023.surround2023.community.Communityadapter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Adapter
-import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.firestore.auth.User
 import com.surround2023.surround2023.R
 import com.surround2023.surround2023.databinding.ActivityCommunityholderBinding
 
