@@ -63,10 +63,7 @@ class CommunityholderActivity : AppCompatActivity() {
 
 
         val intent = Intent(this, CommunityPostingActivity::class.java)
-        binding.writeBtn.setOnClickListener{startActivity(intent)}
-
-        val intent = Intent(this, BuyCategoryActivity::class.java)
-        binding.categoryBtn.setOnClickListener{startActivity(mintent)}
+        binding.comcategoryBtn.setOnClickListener{startActivity(intent)}
 
         // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
