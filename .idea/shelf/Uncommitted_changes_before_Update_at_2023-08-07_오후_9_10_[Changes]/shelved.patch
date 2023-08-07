@@ -1,0 +1,25 @@
+Index: .idea/deploymentTargetDropDown.xml
+===================================================================
+diff --git a/.idea/deploymentTargetDropDown.xml b/.idea/deploymentTargetDropDown.xml
+deleted file mode 100644
+--- a/.idea/deploymentTargetDropDown.xml	(revision 5f9e776ae90b87cff9a7cce138d052b02a89392b)
++++ /dev/null	(revision 5f9e776ae90b87cff9a7cce138d052b02a89392b)
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="deploymentTargetDropDown">
+-    <targetSelectedWithDropDown>
+-      <Target>
+-        <type value="QUICK_BOOT_TARGET" />
+-        <deviceKey>
+-          <Key>
+-            <type value="VIRTUAL_DEVICE_PATH" />
+-            <value value="C:\Users\u9378\.android\avd\Pixel_4_API_33_2.avd" />
+-          </Key>
+-        </deviceKey>
+-      </Target>
+-    </targetSelectedWithDropDown>
+-    <timeTargetWasSelectedWithDropDown value="2023-08-07T11:15:58.519788200Z" />
+-  </component>
+-</project>
+\ No newline at end of file
