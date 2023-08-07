@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Timestamp
@@ -53,17 +54,17 @@ class MarketOptionSettingActivity : AppCompatActivity() {
             }
         }
 
-        val noneSexOption : RadioButton = findViewById(R.id.noneSexOption)
-        val femaleSexOption : RadioButton = findViewById(R.id.femaleSexOption)
-        val maleSexOption : RadioButton = findViewById(R.id.maleSexOption)
+        val sexOptionGroup : RadioGroup = findViewById(R.id.sexOptionGroup)
         var sexOption = "거래 불가"
 
-        if (noneSexOption.isChecked) {
-            sexOption = "모두 거래 가능"
-        } else if (femaleSexOption.isChecked) {
-            sexOption = "여성만 거래"
-        } else if (maleSexOption.isChecked) {
-            sexOption = "남성만 거래"
+        sexOptionGroup.setOnCheckedChangeListener { radioGroup, checkedId -> // 라디오 버튼 선택시
+            val selectedSexOption: RadioButton = findViewById(checkedId)
+
+            when (selectedSexOption.id) {
+                R.id.noneSexOption -> sexOption = "모두 거래 가능"
+                R.id.femaleSexOption -> sexOption = "여성만 거래"
+                R.id.maleSexOption -> sexOption = "남성만 거래"
+            }
         }
 
         val btnDoneSetting: Button = findViewById(R.id.doneSetting)
