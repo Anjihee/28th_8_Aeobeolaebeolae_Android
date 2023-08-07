@@ -36,25 +36,14 @@ class MypageActivity : AppCompatActivity() {
         binding = ActivityMypageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         var userData = UserSingleton.getInstance().getUserData()
         val mypageUsernameTextView: TextView = findViewById(R.id.mypageusername)
         userData?.let {
             val userName = it.userName
             mypageUsernameTextView.text = userName
         }
-
-        val mypageLocationTextView: TextView = findViewById(R.id.mypagelocation)
-        userData?.let {
-            val userLocation = it.userLocation
-            mypageLocationTextView.text = userLocation
-        }
-
-//        val mypageLevelTextView: TextView = findViewById(R.id.mypageleveltext)
-//        userData?.let {
-//            val userLevelText = it.userLevelText
-//            mypageLevelTextView.text = userLevelText
-//        }
-
 
         // mypagebtn1 버튼 클릭시 내가 진행한 공구
         val mypagebtn1: Button = findViewById(R.id.mypagebtn1)
