@@ -14,7 +14,7 @@ class CommunityCategoryActivity : AppCompatActivity() {
 
         }
 
-        binding.updateBtn.setOnClickListener {
+        binding.latestBtn.setOnClickListener {
 
         }
 
