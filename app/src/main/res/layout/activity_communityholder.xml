@@ -70,7 +70,7 @@
                 android:layout_height="40sp"
                 android:background="@android:color/transparent"
                 android:scaleType="fitXY"
-                android:src="@drawable/baseline_search_24" />
+                android:src="@drawable/ic_search" />
 
             <ImageButton
                 android:id="@+id/categoryBtn"
@@ -132,9 +132,7 @@
         android:layout_marginRight="28sp"
         android:background="@drawable/solid_button"
         android:text="글쓰기"
-        android:textSize="15sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="#fff"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavView"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,11 +17,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.surround2023.surround2023.R
+import com.surround2023.surround2023.category.BuyCategoryActivity
 import com.surround2023.surround2023.community_post.CommunityPostActivity
 import com.surround2023.surround2023.databinding.ActivityCommunityholderBinding
 import com.surround2023.surround2023.databinding.ActivityCommunityitemBinding
 import com.surround2023.surround2023.home.HomeActivity
 import com.surround2023.surround2023.mypage.MypageActivity
+import com.surround2023.surround2023.posting.CommunityPostingActivity
 import com.surround2023.surround2023.posting.MarketPostingActivity
 
 
@@ -42,6 +45,12 @@ class CommunityholderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCommunityholderBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val intent = Intent(this, CommunityPostingActivity::class.java)
+        binding.writeBtn.setOnClickListener{startActivity(intent)}
+
+        val mintent = Intent(this, BuyCategoryActivity::class.java)
+        binding.categoryBtn.setOnClickListener{startActivity(mintent)}
 
         // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -108,6 +117,7 @@ class CommunityholderActivity : AppCompatActivity() {
         //populate data
         getCommunityData()
 
+
     }
 
     //커뮤니티 게시글 데이터를 가져오기 위한 메소드
@@ -132,6 +142,8 @@ class CommunityholderActivity : AppCompatActivity() {
                 adapter.setData(communityItemList)
             }
     }
+
+
 
     //커뮤니티 리사이클러뷰 어댑터
     class CommunityAdapter(): RecyclerView.Adapter<CommunityViewHolder>(){
