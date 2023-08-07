@@ -6,6 +6,13 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
 import com.surround2023.surround2023.community_log.CommunityLogActivity
 import com.surround2023.surround2023.databinding.ActivityMypageBinding
@@ -17,6 +24,10 @@ import com.surround2023.surround2023.set_location.SetLocationActivity
 import com.surround2023.surround2023.user_login_join.LogoutActivity
 
 class MypageActivity : AppCompatActivity() {
+
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
+    private lateinit var userNameTextView: TextView
 
     private lateinit var binding: ActivityMypageBinding
 
@@ -44,7 +55,6 @@ class MypageActivity : AppCompatActivity() {
         }
 
 
-
         //커뮤니티 활동관리로 이동
         val communitylogtext: TextView = findViewById(R.id.communitylogtext)
         communitylogtext.setOnClickListener {
@@ -61,16 +71,12 @@ class MypageActivity : AppCompatActivity() {
         }
 
 
-//        //로그아웃으로 이동
-//        val logouttext: TextView = findViewById(R.id.logouttext)
-//        logouttext.setOnClickListener {
-//            val intent = Intent(this, LogoutActivity::class.java)
-//            startActivity(intent)
-//        }
-
-
-
-
+        //로그아웃으로 이동
+        val logouttext: TextView = findViewById(R.id.logouttext)
+        logouttext.setOnClickListener {
+            val intent = Intent(this, LogoutActivity::class.java)
+            startActivity(intent)
+        }
 
 
         //하단바 기능
@@ -105,4 +111,6 @@ class MypageActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
