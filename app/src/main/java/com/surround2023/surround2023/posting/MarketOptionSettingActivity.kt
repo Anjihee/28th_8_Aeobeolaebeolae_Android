@@ -11,6 +11,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.firebase.Timestamp
 import com.surround2023.surround2023.R
 import java.text.SimpleDateFormat
@@ -40,6 +41,16 @@ class MarketOptionSettingActivity : AppCompatActivity() {
         var deadlineTimestamp = Timestamp.now()
 
         btnSettingDeadline.setOnClickListener {
+            // 눌러짐 색상 변경
+            val colorStateList = ContextCompat.getColorStateList(this, R.color.subDeepGreen)
+            btnSettingDeadline.backgroundTintList = colorStateList
+
+            // 200ms(0.2초) 후에 원래 색상으로 복원
+            btnSettingDeadline.postDelayed({
+                val originalColorStateList = ContextCompat.getColorStateList(this, R.color.themeGreen)
+                btnSettingDeadline.backgroundTintList = originalColorStateList
+            }, 200)
+
             deadlineD = editDeadLine.text.toString()
 
             val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
@@ -70,7 +81,7 @@ class MarketOptionSettingActivity : AppCompatActivity() {
         val btnDoneSetting: Button = findViewById(R.id.doneSetting)
         btnDoneSetting.setOnClickListener {
             // 완료 버튼을 클릭하면 정보를 넘기며 종료
-            if (sexOption != "거래 불가"){
+            if (sexOption != "거래 불가" && deadlineData != null){
                 val intent = Intent()
                 intent.putExtra("targeting", sexOption)
                 intent.putExtra("deadlineData", deadlineTimestamp)
