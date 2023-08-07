@@ -19,13 +19,7 @@ import com.surround2023.surround2023.databinding.ActivityMarketitemBinding
 import com.surround2023.surround2023.market.MarketPostModel
 import com.surround2023.surround2023.market_post.MarketPostActivity
 
-/* import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.firestore.FirebaseFirestore
-import com.surround2023.surround2023.databinding.ActivityMarketholderBinding
-import com.surround2023.surround2023.market.Marketmemo
+
 
 class MarketholderActivity : AppCompatActivity() {
 
