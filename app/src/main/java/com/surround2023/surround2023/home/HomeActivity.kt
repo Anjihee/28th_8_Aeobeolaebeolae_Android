@@ -28,8 +28,6 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.core.UserData
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.ktx.storage
 import com.surround2023.surround2023.R
 //import com.surround2023.surround2023.community.CommunityholderActivity
 import com.surround2023.surround2023.community_post.CommunityPostActivity
@@ -65,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
 
     //게시글 데이터베이스
     val db=FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
-    val storage= Firebase.storage
+//    val storage= Firebase.storage
 
     //유저 데이터
 //    private lateinit var userData
