@@ -194,7 +194,7 @@ tools:context=".category.BuyCategoryActivity">
             app:layout_constraintVertical_bias="0.948" />
 
         <ImageButton
-            android:id="@+id/updateBtn"
+            android:id="@+id/latestBtn"
             android:layout_width="155sp"
             android:layout_height="155sp"
             android:background="#00ff0000"
