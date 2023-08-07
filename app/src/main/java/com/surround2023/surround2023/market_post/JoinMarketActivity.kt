@@ -81,8 +81,11 @@ class JoinMarketActivity : AppCompatActivity() {
 
                     // 마감일 날짜만 추출해서 보이기
                     val dueDate = due?.toDate()
-                    val dateFormat = SimpleDateFormat("yyyy.MM.dd")
-                    deadline.text = dateFormat.format(dueDate)
+                    if (dueDate != null) {
+                        val dateFormat = SimpleDateFormat("yyyy.MM.dd")
+                        deadline.text = dateFormat.format(dueDate)
+                    }
+
 
                     if (userRef != null) {
                         userRef.get()
