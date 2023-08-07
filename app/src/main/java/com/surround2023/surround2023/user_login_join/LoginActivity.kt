@@ -113,7 +113,6 @@ class LoginActivity : ComponentActivity() {
         collectionRef.document(email).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
-                    Log.d("datasurround123", document.toString())
                     val email = document.getString("email")
                     val uid = document.getString("uid")
                     val userName = document.getString("userName")
