@@ -2,9 +2,7 @@
 <resources>
     <string-array name="market_category">
         <item>카테고리 선택</item>
-        <item>키즈</item>
         <item>식료품</item>
-        <item>뷰티/미용</item>
         <item>의류</item>
         <item>취미</item>
         <item>반려동물</item>

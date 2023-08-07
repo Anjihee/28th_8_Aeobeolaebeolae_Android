@@ -317,6 +317,25 @@
                     android:textColor="#000000"
                     android:textSize="17sp" />
 
+
+                <Button
+                    android:id="@+id/btnUse"
+                    android:layout_width="136sp"
+                    android:layout_height="42sp"
+                    android:layout_marginEnd="64sp"
+                    android:alpha="0.5"
+                    android:background="@drawable/btn_edit"
+                    android:text="공구메이트"
+                    android:textColor="#465902"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.64"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.9" />
+
                 <TextView
                     android:id="@+id/textView5"
                     android:layout_width="match_parent"
@@ -325,6 +344,7 @@
                     android:text="회원 정보 수정"
                     android:textColor="#000000"
                     android:textSize="17sp" />
+
 
                 <TextView
                     android:id="@+id/textView6"
