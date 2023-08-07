@@ -31,7 +31,7 @@ data class Post(
     var category: String? = null,
     var isManOnly: Boolean = false,
     var isWomanOnly: Boolean = false,
-    var price: String? = null,
+    var price: Int? = null,
     var content: String? = null,
     var date: Timestamp? = null,
     var due: Timestamp? = null,
@@ -66,13 +66,13 @@ class MarketPostingActivity : AppCompatActivity() {
         val btnClose : ImageButton = findViewById(R.id.btnClose)
         val btnFinished : TextView = findViewById(R.id.btnFinish)
 
-        val postTitle : EditText = findViewById(R.id.postTitle)
+        val postTitle : EditText = findViewById(R.id.marketPostingTitle)
         val postCategory : Spinner = findViewById(R.id.postCategory)
-        val startPrice : EditText = findViewById(R.id.startPrice)
-        val postText : EditText = findViewById(R.id.postText)
+        val startPrice : EditText = findViewById(R.id.marketPostingPrice)
+        val postText : EditText = findViewById(R.id.marketPostingContent)
 
         postData.title = postTitle.text.toString()
-        postData.price = startPrice.text.toString()
+        postData.price = startPrice.text.toString().toInt()
         postData.content = postText.text.toString()
 
         // Spinner에서 항목 선택 시 리스너 등록
