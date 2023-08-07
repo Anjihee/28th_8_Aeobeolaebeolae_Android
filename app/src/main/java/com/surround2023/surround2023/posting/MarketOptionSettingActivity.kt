@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.Timestamp
 import com.surround2023.surround2023.R
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -35,15 +36,20 @@ class MarketOptionSettingActivity : AppCompatActivity() {
 
         var deadlineD = ""
         var deadlineData: Date? = null
+        var deadlineTimestamp = Timestamp.now()
 
         btnSettingDeadline.setOnClickListener {
             deadlineD = editDeadLine.text.toString()
 
-            val format = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
+            val dateFormat = SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
             deadlineData = try {
-                format.parse(deadlineD)
+                dateFormat.parse(deadlineD)
             } catch (e: Exception) {
                 null
+            }
+
+            if (deadlineData != null) {
+                deadlineTimestamp = Timestamp(deadlineData!!)
             }
         }
 
@@ -63,10 +69,10 @@ class MarketOptionSettingActivity : AppCompatActivity() {
         val btnDoneSetting: Button = findViewById(R.id.doneSetting)
         btnDoneSetting.setOnClickListener {
             // 완료 버튼을 클릭하면 정보를 넘기며 종료
-            if (sexOption != "거래 불가" && deadlineData != null){
+            if (sexOption != "거래 불가"){
                 val intent = Intent()
                 intent.putExtra("targeting", sexOption)
-                intent.putExtra("deadlineData", deadlineData)
+                intent.putExtra("deadlineData", deadlineTimestamp)
                 intent.putExtra("optionSetting", 1)
                 setResult(Activity.RESULT_OK, intent)
                 onBackPressed()
