@@ -126,6 +126,9 @@
             android:label="CommunityLogActivity"
             android:parentActivityName=".mypage.MypageActivity"
             android:theme="@style/AppTheme" />
+        <activity
+            android:name=".category.BuyCategoryActivity"
+            android:label = "BuyCategoryActivity"/>
     </application>
 
 </manifest>

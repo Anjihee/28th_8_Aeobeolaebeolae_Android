@@ -1,5 +1,6 @@
 package com.surround2023.surround2023.market
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,41 +15,51 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.surround2023.surround2023.R
+import com.surround2023.surround2023.category.BuyCategoryActivity
 import com.surround2023.surround2023.databinding.ActivityMarketholderBinding
 import com.surround2023.surround2023.databinding.ActivityMarketitemBinding
-import com.surround2023.surround2023.market.MarketPostModel
-import com.surround2023.surround2023.market_post.MarketPostActivity
 
 
 
 class MarketholderActivity : AppCompatActivity() {
 
-    private lateinit var binding:ActivityMarketholderBinding
+    private lateinit var binding: ActivityMarketholderBinding
 
     //리사이클러뷰
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MarketAdapter
 
     //게시글 데이터베이스
-    val db= FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
+    val db = FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
 
+    private val BUY_CATEGORY_REQUEST_CODE = 1
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        binding=ActivityMarketholderBinding.inflate(layoutInflater)
+        binding = ActivityMarketholderBinding.inflate(layoutInflater)
 
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
+        // 소프트키(네비게이션 바), 상태바를 숨기기 위한 플래그 설정
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+
         // Initialize RecyclerView
-        recyclerView=binding.recyclerView
+        recyclerView = binding.recyclerView
 
         //리사이클러뷰 레이아웃매니저
-        val recyclerLayoutManager= LinearLayoutManager(this)
-        recyclerView.layoutManager=recyclerLayoutManager
+        val recyclerLayoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = recyclerLayoutManager
 
         // Initialize Adapter
-        adapter=MarketAdapter()
-        recyclerView.adapter=adapter
+        adapter = MarketAdapter()
+        recyclerView.adapter = adapter
 
         // item 사이 밑줄 추가
         val dividerItemDecoration =
@@ -58,25 +69,57 @@ class MarketholderActivity : AppCompatActivity() {
         //populate data
         getMarketData()
 
+        binding.categoryBtn.setOnClickListener {
+            val intent = Intent(this, BuyCategoryActivity::class.java)
+            startActivityForResult(intent, BUY_CATEGORY_REQUEST_CODE)
+            onActivityResult(BUY_CATEGORY_REQUEST_CODE, Activity.RESULT_OK, intent)
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == BUY_CATEGORY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+            val category = data?.getStringExtra("category")
+            if (category != null) {
+                db.collection("Market").whereEqualTo("category", category)
+                    .orderBy("postDate", Query.Direction.DESCENDING)
+                    .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                        if (querySnapshot == null) return@addSnapshotListener
+
+                        val marketItemList = mutableListOf<MarketPostModel>()
+
+                        //데이터 받아오기
+                        for (snapshot in querySnapshot.documents) {
+                            val item = snapshot.toObject(MarketPostModel::class.java)
+                            marketItemList.add(item!!)
+                        }
+
+                        //어답터에 데이터 넘겨줌
+                        adapter.setData(marketItemList)
+                    }
+            }
+        }
     }
 
 
 
+
     //공동구매 게시글 데이터를 가져오기 위한 메소드
-    private fun getMarketData(){
+    private fun getMarketData() {
 //         retrieve data for the RecyclerView
 //         This method should return a list of YourData objects
         db.collection("Market")   //작업할 컬렉션
             //게시일 최근순 기준으로 정렬
             .orderBy("postDate", Query.Direction.DESCENDING)
-            .addSnapshotListener{querySnapshot, firebaseFirestoreException ->
-                if(querySnapshot==null) return@addSnapshotListener
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if (querySnapshot == null) return@addSnapshotListener
 
                 val marketItemList = mutableListOf<MarketPostModel>()
 
                 //데이터 받아오기
-                for(snapshot in querySnapshot.documents){
-                    val item=snapshot.toObject(MarketPostModel::class.java)
+                for (snapshot in querySnapshot.documents) {
+                    val item = snapshot.toObject(MarketPostModel::class.java)
                     marketItemList.add(item!!)
                 }
 
@@ -86,7 +129,7 @@ class MarketholderActivity : AppCompatActivity() {
     }
 
     //리사이클러뷰 어댑터
-    class MarketAdapter: RecyclerView.Adapter<MarketViewHolder>(){
+    class MarketAdapter : RecyclerView.Adapter<MarketViewHolder>() {
         private lateinit var binding: ActivityMarketitemBinding
         private val data = arrayListOf<MarketPostModel>()
 
@@ -104,7 +147,7 @@ class MarketholderActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MarketViewHolder, position: Int) {
-            val item=data[position]
+            val item = data[position]
             holder.bind(item)
 
         }
@@ -120,10 +163,10 @@ class MarketholderActivity : AppCompatActivity() {
 
         fun bind(item: MarketPostModel) {
             // //PostModel에 담긴 postTitle, postImg 데이터를 아이템 레이아웃에 binding
-            binding.postTitle.text=item.postTitle
-            binding.userLocationText.text=item.userLocation
-            val price=item.price?.toInt()
-            binding.price.text="${price}"
+            binding.postTitle.text = item.postTitle
+            binding.userLocationText.text = item.userLocation
+            val price = item.price?.toInt()
+            binding.price.text = "${price}"
 
 
             //이미지가 있는 글이라면
@@ -152,11 +195,11 @@ class MarketholderActivity : AppCompatActivity() {
     }
 }
 
-// 공동구매 게시글 데이터 모델
-data class MarketPostModel(
-    var postId:String="",
-    var postImageUrl: String?=null,
-    var postTitle:String?=null,
-    var userLocation:String?=null,
-    var price:Long?=null
-)
+    // 공동구매 게시글 데이터 모델
+    data class MarketPostModel(
+        var postId: String = "",
+        var postImageUrl: String? = null,
+        var postTitle: String? = null,
+        var userLocation: String? = null,
+        var price: Long? = null
+    )
