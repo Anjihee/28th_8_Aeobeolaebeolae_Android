@@ -117,12 +117,9 @@ class MarketPostingActivity : AppCompatActivity() {
             val postTime: Timestamp = Timestamp(Date()) // 현재 시간 가져오기
             postData.date = postTime // 시간 저장
 
-            if (optionSetting == 1) { // option setting이 완료된 경우
-                savePost(postData)
-                onBackPressed() // 돌아가기
-            } else {
-                Toast.makeText(this, "\'공동구매 설정\'을 완료해주세요.", Toast.LENGTH_SHORT).show()
-            }
+            savePost(postData)
+            onBackPressed() // 돌아가기
+
 
         }
     }
@@ -132,7 +129,7 @@ class MarketPostingActivity : AppCompatActivity() {
         val categoryData = postInfo.category
         val manOnly = postInfo.isManOnly
         val womanOnly = postInfo.isWomanOnly
-        val priceData = postInfo.price?.toLong()
+        val priceData = postInfo.price
         val contentData = postInfo.content
         val dateData = postInfo.date
         val dueData = postInfo.due
@@ -195,8 +192,11 @@ class MarketPostingActivity : AppCompatActivity() {
                     postData.isWomanOnly = false
                 }
 
-                val deadlineTimestamp = Timestamp(Date(deadlineData.toLong())) // 문자열을 Long 타입으로 변환하여 생성
-                postData.due = deadlineTimestamp
+                if(deadlineData != "") {
+                    val deadlineTimestamp =
+                        Timestamp(Date(deadlineData.toLong())) // 문자열을 Long 타입으로 변환하여 생성
+                    postData.due = deadlineTimestamp
+                }
             }
         }
     }
