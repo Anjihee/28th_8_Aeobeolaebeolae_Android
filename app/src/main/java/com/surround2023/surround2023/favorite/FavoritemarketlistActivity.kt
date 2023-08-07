@@ -1,12 +1,12 @@
-package com.surround2023.surround2023
+package com.surround2023.surround2023.favorite
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.surround2023.surround2023.R
 
-class FavoritemarketActivity : AppCompatActivity() {
+class FavoritemarketlistActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_favoritemarket)
+        setContentView(R.layout.activity_favoritemarketlist)
     }
 }

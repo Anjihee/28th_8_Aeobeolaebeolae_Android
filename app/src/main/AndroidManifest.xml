@@ -21,10 +21,10 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name=".FavoritemarketlistActivity"
+            android:name=".favorite.FavoritemarketlistActivity"
             android:exported="false" />
         <activity
-            android:name=".FavoritemarketActivity"
+            android:name=".favorite.FavoritemarketActivity"
             android:exported="false" />
         <activity
             android:name=".market.MarketholderActivity"
