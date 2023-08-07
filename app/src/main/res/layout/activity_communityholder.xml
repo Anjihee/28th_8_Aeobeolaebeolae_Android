@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <RelativeLayout
         android:id="@+id/upbar"
         android:layout_width="match_parent"
@@ -69,6 +68,7 @@
             android:src="@drawable/ic_notifications_none_24"/>
     </RelativeLayout>
 
+<layout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
@@ -102,6 +102,6 @@
         android:textColor="#fff"
         app:layout_constraintBottom_toTopOf="@+id/nav_view"
         app:layout_constraintEnd_toEndOf="parent" />
-
+</layout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

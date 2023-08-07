@@ -4,6 +4,4 @@ class Communitymemo (
     val id: Int,
     val name: String
 
-) {
-
-}
+) {}
