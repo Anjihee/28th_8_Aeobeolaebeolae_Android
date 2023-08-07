@@ -131,9 +131,11 @@ class MarketPostActivity : AppCompatActivity() {
 
                     // 마감일 타임스탬프 변환
                     val dueInstant = due?.toDate()?.toInstant()
-                    val durationDeadline = Duration.between(currentInstant, dueInstant)
-                    val daysDeadline = durationDeadline.toDays()
-                    postDeadline.text = "${daysDeadline}일 전" // 마감일 보이기
+                    if (dueInstant != null) {
+                        val durationDeadline = Duration.between(currentInstant, dueInstant)
+                        val daysDeadline = durationDeadline.toDays()
+                        postDeadline.text = "${daysDeadline}일 전" // 마감일 보이기
+                    }
                 }
             }
             .addOnFailureListener { e ->
