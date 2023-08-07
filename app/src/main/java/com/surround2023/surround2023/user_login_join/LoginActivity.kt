@@ -122,6 +122,7 @@ class LoginActivity : ComponentActivity() {
                     UserSingleton.getInstance().setUserData(user)
                     val homeIntent = Intent(this, HomeActivity::class.java)
                     startActivity(homeIntent)
+                    finish()
                 } else {
                     // 문서가 존재하지 않거나 데이터를 읽어오는 데에 실패한 경우
                     Toast.makeText(

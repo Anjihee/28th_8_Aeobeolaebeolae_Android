@@ -58,6 +58,7 @@
             android:textColor="@color/themeGreen"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:onClick="savePost"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -138,7 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="40sp"
-                    android:text="0/10"
+                    android:text="0/2"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="@+id/btnAddPhoto"
