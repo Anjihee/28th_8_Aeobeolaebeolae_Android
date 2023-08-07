@@ -22,21 +22,16 @@ data class User(
     val Email: String? = null,
     val uid: String? = null,
     val userName: String? = null,
-    val gender: String? = null
+    val gender: String? = null,
+    val userLevel: String? = null,
+    val userProfileImageUrl: String? = null,
+    val userImageUrl: String? = null
 )
 
 class JoinActivity : ComponentActivity() {
     private lateinit var binding: ActivityJoinBinding
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance() //회원가입 파이어베이스 연동
     private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-
-    object FirebaseID { //파이어베이스 회원가입 정보
-        const val email = "email"
-        const val password = "password"
-        const val nickname = "nickname"
-        const val gender = "gender"
-        // 여기에 다른 필드 이름들을 추가할 수 있습니다.
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
