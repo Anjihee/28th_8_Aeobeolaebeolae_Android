@@ -25,11 +25,11 @@ import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.SetOptions
-import com.google.firebase.firestore.core.UserData
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import com.surround2023.surround2023.R
-//import com.surround2023.surround2023.community.CommunityholderActivity
+import com.surround2023.surround2023.community.CommunityholderActivity
 import com.surround2023.surround2023.community_post.CommunityPostActivity
 import com.surround2023.surround2023.databinding.ActivityHomeBinding
 import com.surround2023.surround2023.databinding.HomeCommunityItemBinding
@@ -39,7 +39,6 @@ import com.surround2023.surround2023.market_post.MarketPostActivity
 import com.surround2023.surround2023.mypage.MypageActivity
 import com.surround2023.surround2023.posting.MarketPostingActivity
 import com.surround2023.surround2023.set_location.SetLocationActivity
-import com.surround2023.surround2023.user_login_join.UserSingleton
 import java.security.MessageDigest
 
 
@@ -63,10 +62,9 @@ class HomeActivity : AppCompatActivity() {
 
     //게시글 데이터베이스
     val db=FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
-//    val storage= Firebase.storage
+    val storage= Firebase.storage
 
-    //유저 데이터
-//    private lateinit var userData
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,10 +129,10 @@ class HomeActivity : AppCompatActivity() {
         }
 
         //공동구매 전체보기 -> 커뮤니티 게시판 액티비티로 이동
-//        binding.goCommunity.setOnClickListener {
-//            val intent = Intent(this, CommunityholderActivity::class.java)
-//            startActivity(intent)
-//        }
+        binding.goCommunity.setOnClickListener {
+            val intent = Intent(this, CommunityholderActivity::class.java)
+            startActivity(intent)
+        }
 
 
         //-------------------------------공구/커뮤니티 리사이클러뷰-------------------------
@@ -182,11 +180,7 @@ class HomeActivity : AppCompatActivity() {
             return@setOnEditorActionListener false
         }
 
-        //
-        setUserLocationData()
-
     }
-
 
 
 
@@ -253,7 +247,6 @@ class HomeActivity : AppCompatActivity() {
             if (!currentStreetAddress.isNullOrEmpty()) {
                 // SetLocationActivity로부터 전달받은 주소를 화면에 업데이트
                 binding.userLocationText.text = currentStreetAddress
-                setUserLocationData()
             }
         }
     }
@@ -445,40 +438,6 @@ class HomeActivity : AppCompatActivity() {
             }
 
         }
-    }
-
-    //유저 데이터에 location을 설정하기 위한 메서드
-    fun setUserLocationData(){
-        val userSingleton=UserSingleton.getInstance()
-        val userData=userSingleton.getUserData()
-        val currentUserLocation=binding.userLocationText.text.toString()       //home에서 설정된 currentLocation을 받아옴
-
-        if (userData!=null){
-            userData.userLocation=currentUserLocation
-            Log.d("UserData","${userData}")
-        }
-
-        //변경된 userData 를 db에 update
-        val userCollection=db.collection("User")
-        userCollection.whereEqualTo("email",userData!!.Email)
-            .get()
-            .addOnSuccessListener { documents ->
-                for (doc in documents){
-                    // Update the document with the new userData
-                    val documentId = doc.id
-                    val updatedData = mapOf("userLocation" to userData.userLocation)
-
-                    // Update the document with the new userData
-                    userCollection.document(documentId).set(updatedData, SetOptions.merge())
-                        .addOnSuccessListener { Log.d("UserData", "${userData}") }
-                        .addOnFailureListener { e ->
-                            Log.w("UserData", "Error updating document", e)
-                        }
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.w("UserData", "Error getting documents: ", e)
-            }
     }
 
 

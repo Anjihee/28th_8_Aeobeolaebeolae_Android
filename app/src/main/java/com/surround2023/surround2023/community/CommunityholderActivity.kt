@@ -1,48 +1,56 @@
+package com.surround2023.surround2023.community
+
 import android.os.Bundle
+import android.widget.SearchView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.surround2023.surround2023.R
 import com.surround2023.surround2023.community.Communitymemo
-import com.surround2023.surround2023.databinding.ActivityCommunityholderBinding
 
 class CommunityholderActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityCommunityholderBinding
+    private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: Communityadapter
     private val db = FirebaseFirestore.getInstance()
-    private val postRef = db.collection("Community").document("Post01")
+    private val postsCollectionRef = db.collection("posts")
+    private lateinit var searchView: SearchView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityCommunityholderBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_communityholder)
 
-        // RecyclerView 초기화
-        binding.recyclerview.layoutManager = LinearLayoutManager(this)
+        recyclerView = findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = Communityadapter()
-        binding.recyclerview.adapter = adapter
+        recyclerView.adapter = adapter
 
-        // Firestore에서 데이터 가져오기
-        fetchPostFromFirestore()
+        fetchPostsFromFirestore()
     }
 
-    private fun fetchPostFromFirestore() {
-        postRef.get()
-            .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()) {
-                    val image = documentSnapshot.getLong("image")?.toInt() ?: 0
-                    val category = documentSnapshot.getString("category") ?: ""
-                    val title = documentSnapshot.getString("title") ?: ""
-                    val detail = documentSnapshot.getString("detail") ?: ""
-                    val comment = documentSnapshot.getString("comment") ?: ""
+    private fun fetchPostsFromFirestore() {
+        postsCollectionRef.orderBy("timestamp", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { result ->
+                val postList = mutableListOf<Communitymemo>()
+                for (document in result) {
+                    val image = document.getLong("image")?.toInt() ?: 0
+                    val category = document.getString("category") ?: ""
+                    val title = document.getString("title") ?: ""
+                    val detail = document.getString("detail") ?: ""
+                    val comment = document.getString("comment") ?: ""
 
                     val post = Communitymemo(image, category, title, detail, comment)
-                    adapter.setData(listOf(post))
+                    postList.add(post)
                 }
+                adapter.setData(postList)
             }
             .addOnFailureListener { exception ->
                 // 에러 처리
-                // 예: Toast.makeText(this, "데이터를 가져오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "데이터를 가져오는데 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
     }
 }

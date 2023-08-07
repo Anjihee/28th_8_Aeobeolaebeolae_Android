@@ -4,30 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <!--    상단-->
-
-    <LinearLayout
-        android:id="@+id/homeTopBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rectangle_bottom_radius"
-        android:orientation="vertical"
-        android:paddingStart="20sp"
-        android:paddingTop="10sp"
-        android:paddingEnd="20sp"
-        android:paddingBottom="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15sp"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:paddingLeft="15sp"
+        android:paddingRight="10sp">
 
         <LinearLayout
             android:id="@+id/userLocationArea"
@@ -45,8 +37,10 @@
                 android:layout_height="wrap_content"
                 android:text="청파동 "
                 android:textColor="@color/black"
-                android:textSize="19sp"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+
+
 
             <ImageButton
                 android:id="@+id/userLocationDropdown"
@@ -60,74 +54,58 @@
         </LinearLayout>
 
 
-        <ImageButton
-            android:id="@+id/notificationBtn"
-            android:layout_width="40sp"
-            android:layout_height="40sp"
-            android:background="@android:color/transparent"
-            android:scaleType="fitXY"
-            android:src="@drawable/ic_notifications_none_24"
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/searchBtn"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_search" />
+
+            <ImageButton
+                android:id="@+id/categoryBtn"
+                android:layout_width="30sp"
+                android:layout_height="30sp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_menu"
+                android:layout_marginLeft="5sp"
+                android:layout_marginRight="5sp"/>
+
+            <ImageButton
+                android:id="@+id/notificationBtn"
+                android:layout_width="40sp"
+                android:layout_height="40sp"
+                android:background="@android:color/transparent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_notifications_none_24" />
+
+
+        </LinearLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-    <com.surround2023.surround2023.home.EditTextAsSearchBar
-        android:id="@+id/searchBar"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/search_rectangle"
-        android:drawableRight="@drawable/ic_search"
-        android:hint="진행중인 공구 검색하기"
-        android:paddingLeft="20sp"
-        android:paddingTop="10sp"
-        android:paddingRight="15sp"
-        android:paddingBottom="10sp"
-
-        android:inputType="text"
-        android:maxLines="1"
-        android:imeOptions="actionSearch"/>
-    </LinearLayout>
-
-    <layout>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/nav_view"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/upbar"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="0dp"
-            android:layout_marginEnd="0dp"
-            android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar" />
 
 
-        <Button
-            android:id="@+id/noteaddbtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="28dp"
-            android:layout_marginRight="28dp"
-            android:background="@drawable/solid_button"
-            android:text="글쓰기"
-            android:textColor="#fff"
-            app:layout_constraintBottom_toTopOf="@+id/nav_view"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </layout>
-
-        <!--    하단바-->
+    <!--    하단바-->
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavView"
@@ -144,4 +122,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_nav_menu" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Button
+        android:id="@+id/writeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28sp"
+        android:layout_marginRight="28sp"
+        android:background="@drawable/solid_button"
+        android:text="글쓰기"
+        android:textColor="#fff"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavView"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

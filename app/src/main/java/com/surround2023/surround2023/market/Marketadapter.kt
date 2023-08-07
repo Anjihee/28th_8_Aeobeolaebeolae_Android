@@ -1,34 +1,47 @@
+package com.surround2023.surround2023.market
+
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.surround2023.surround2023.databinding.ItemMarketBinding
-import com.surround2023.surround2023.market.Marketmemo
+import com.surround2023.surround2023.R
+import com.surround2023.surround2023.community.Communitymemo
 
-class Marketadapter : RecyclerView.Adapter<Marketadapter.MarketViewHolder>() {
+class Marketadapter : RecyclerView.Adapter<Marketadapter.PostViewHolder>() {
 
-    private var marketList: List<Marketmemo> = emptyList()
+    private var postList: List<Communitymemo> = emptyList()
 
-    fun setData(markets: List<Marketmemo>) {
-        marketList = markets
+    fun setData(posts: List<Communitymemo>) {
+        postList = posts
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarketViewHolder {
-        val binding = ItemMarketBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return MarketViewHolder(binding)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.activity_communityitem, parent, false)
+        return PostViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: MarketViewHolder, position: Int) {
-        holder.bind(marketList[position])
+    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+        holder.bind(postList[position])
     }
 
-    override fun getItemCount(): Int = marketList.size
+    override fun getItemCount(): Int = postList.size
 
-    class MarketViewHolder(private val binding: ItemMarketBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(market: Marketmemo) {
-            binding.ivImage.setImageResource(market.image)
-            binding.tvPostTitle.text = market.postTitle
-            binding.tvPostContent.text = market.postContent
+    class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val ivImage: ImageView = itemView.findViewById(R.id.strawberry)
+        private val tvCategory: TextView = itemView.findViewById(R.id.category)
+        private val tvTitle: TextView = itemView.findViewById(R.id.title)
+        private val tvDetail: TextView = itemView.findViewById(R.id.detail)
+        private val tvComment: TextView = itemView.findViewById(R.id.comment)
+
+        fun bind(post: Communitymemo) {
+            ivImage.setImageResource(post.image)
+            tvCategory.text = post.category
+            tvTitle.text = post.postTitle
+            tvDetail.text = post.postContent
+            tvComment.text = post.comment
         }
     }
 }
