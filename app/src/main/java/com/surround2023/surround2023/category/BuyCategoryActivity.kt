@@ -19,7 +19,7 @@ class BuyCategoryActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding=ActivityBuyCategoryBinding.inflate(layoutInflater)
+        binding = ActivityBuyCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val intent = Intent(this, MarketholderActivity::class.java)
@@ -65,3 +65,4 @@ class BuyCategoryActivity : AppCompatActivity() {
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
+}

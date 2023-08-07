@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +41,10 @@ class MarketholderActivity : AppCompatActivity() {
 
     //게시글 데이터베이스
     val db = FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
+
+    private lateinit var button: Button
+    private lateinit var editText: EditText
+
 
     private val BUY_CATEGORY_REQUEST_CODE = 1
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +90,13 @@ class MarketholderActivity : AppCompatActivity() {
             val intent = Intent(this, BuyCategoryActivity::class.java)
             startActivityForResult(intent, BUY_CATEGORY_REQUEST_CODE)
             onActivityResult(BUY_CATEGORY_REQUEST_CODE, Activity.RESULT_OK, intent)
+        }
+
+        button = findViewById(R.id.searchBtn)
+        editText = findViewById(R.id.etSearch)
+        button.setOnClickListener {
+            val searchKeyword = editText.text.toString().trim()
+            searchMarketData(searchKeyword)
         }
 
     }
@@ -240,6 +253,25 @@ class MarketholderActivity : AppCompatActivity() {
 //            }
 
         }
+    }
+
+    private fun searchMarketData(keyword: String) {
+        db.collection("Market")
+            .orderBy("postDate", Query.Direction.DESCENDING)
+            .whereEqualTo("postTitle", keyword) // 검색어와 게시물의 제목이 일치하는 게시물만 가져오도록 쿼리 조건 추가
+            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
+                if (querySnapshot == null) return@addSnapshotListener
+
+                val marketItemList = mutableListOf<MarketPostModel>()
+
+                for (snapshot in querySnapshot.documents) {
+                    val item = snapshot.toObject(MarketPostModel::class.java)
+                    item?.postId = snapshot.id // 게시물의 ID를 가져옴
+                    marketItemList.add(item!!)
+                }
+
+                adapter.setData(marketItemList)
+            }
     }
 }
 
