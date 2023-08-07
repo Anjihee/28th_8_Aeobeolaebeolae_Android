@@ -152,7 +152,10 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+
+                  
                         android:id="@+id/TextView4"
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="252sp"
@@ -185,13 +188,13 @@
                         app:layout_constraintVertical_bias="0.97" />
 
                     <Button
-                        android:id="@+id/button"
+                        android:id="@+id/mypageleveltext"
                         android:layout_width="136sp"
                         android:layout_height="42sp"
                         android:layout_marginEnd="64sp"
                         android:alpha="0.5"
                         android:background="@drawable/btn_edit"
-                        android:text="공구메이트"
+                        android:text="공구챔피언"
                         android:textColor="#465902"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -204,18 +207,18 @@
 
                     <ImageView
                         android:id="@+id/imageView3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="16sp"
+                        android:layout_width="40dp"
+                        android:layout_height="60dp"
+                        android:layout_marginEnd="16dp"
                         android:layout_marginBottom="16sp"
-                        android:src="@drawable/group_4"
+                        android:src="@drawable/group_5"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.64"
                         app:layout_constraintLeft_toLeftOf="parent"
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.966" />
+                        app:layout_constraintVertical_bias="1.0" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
