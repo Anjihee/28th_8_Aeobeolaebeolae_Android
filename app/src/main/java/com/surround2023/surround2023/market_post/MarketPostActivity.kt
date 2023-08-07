@@ -27,8 +27,13 @@ class MarketPostActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_market_post)
 
-        postId = intent.getStringExtra("postId").toString() // 게시글 Id Data 받아오기
+        val btnBack: ImageButton = findViewById(R.id.btnBack)
+        btnBack.setOnClickListener {
+            // 뒤로가기 버튼을 클릭하면 종료
+            onBackPressed()
+        }
 
+        postId = intent.getStringExtra("postId").toString() // 게시글 Id Data 받아오기
 
         val goodsImageView: ImageView = findViewById(R.id.goodsImage)
         val userProfileView: ImageView = findViewById(R.id.userProfile)

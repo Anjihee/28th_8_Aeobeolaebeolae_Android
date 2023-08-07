@@ -29,10 +29,17 @@ class CommunityPostActivity : AppCompatActivity() {
     private lateinit var postId : String
     private val db = FirebaseFirestore.getInstance()
 
+    @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_community_post)
+
+        val btnBack: ImageButton = findViewById(R.id.btnBack)
+        btnBack.setOnClickListener {
+            // 뒤로가기 버튼을 클릭하면 종료
+            onBackPressed()
+        }
 
         postId = intent.getStringExtra("postId").toString() // 게시글 Id Data 받아오기
 
@@ -49,61 +56,72 @@ class CommunityPostActivity : AppCompatActivity() {
 
         val postInfo = db.collection("Community").document(postId)
 
-            postInfo.get()
-                .addOnSuccessListener { document -> // 게시글 정보 로딩 성공
-                    if (document != null) {
-                        val goodsImageUrl = document.getString("postImageUrl")
-                        val userRef = document.getDocumentReference("userRef")
-                        val title = document.getString("postTitle")
-                        val category = document.getString("category")
-                        val time = document.getTimestamp("postDate")
-                        val content = document.getString("postContent")
+        postInfo.get()
+            .addOnSuccessListener { document -> // 게시글 정보 로딩 성공
+                if (document != null) {
+                    val goodsImageUrl = document.getString("postImageUrl")
+                    val userRef = document.getDocumentReference("userRef")
+                    val title = document.getString("postTitle")
+                    val category = document.getString("category")
+                    val time = document.getTimestamp("postDate")
+                    val content = document.getString("postContent")
 
-                        Glide.with(this)
-                            .load(goodsImageUrl) // 게시글 이미지
-                            .placeholder(R.drawable.ic_logo) // 로딩 중이나 에러 시 보여줄 기본 이미지
-                            .into(goodsImageView) // 표시할 ImageView
+                    Glide.with(this)
+                        .load(goodsImageUrl) // 게시글 이미지
+                        .placeholder(R.drawable.ic_logo) // 로딩 중이나 에러 시 보여줄 기본 이미지
+                        .into(goodsImageView) // 표시할 ImageView
 
-                        if (userRef != null) {
-                            userRef.get()
-                                .addOnSuccessListener { userInfo ->
-                                    val name = userInfo.getString("userName")
-                                    val profileUrl = userInfo.getString("userProfileImageUrl")
-                                    val address = userInfo.getString("userAddress")
+                    if (userRef != null) {
+                        userRef.get()
+                            .addOnSuccessListener { userInfo ->
+                                val name = userInfo.getString("userName")
+                                val profileUrl = userInfo.getString("userProfileImageUrl")
+                                val address = userInfo.getString("userAddress")
 
-                                    Glide.with(this)
-                                        .load(profileUrl)
-                                        .placeholder(R.drawable.icon) // 로딩 중이나 에러 시 보여줄 기본 이미지
-                                        .into(userProfileView) // 표시할 ImageView
+                                Glide.with(this)
+                                    .load(profileUrl)
+                                    .placeholder(R.drawable.icon) // 로딩 중이나 에러 시 보여줄 기본 이미지
+                                    .into(userProfileView) // 표시할 ImageView
 
-                                    userName.text = name.toString()
-                                }
-                        } else {
-                            // 사용자 정보를 불러올 수 없습니다.
-                        }
-
-                        val currentInstant = Instant.now() // 현재 시간
-                        val currentDateTime = LocalDateTime.ofInstant(currentInstant, ZoneId.systemDefault())
-
-                        postTitle.text = title.toString()
-                        postCategory.text = category.toString()
-
-                        // 작성일 타임스탬프 변환
-                        val timeInstant = time?.toDate()?.toInstant()
-                        val durationPost = Duration.between(currentInstant, timeInstant)
-                        val daysPost = durationPost.toDays()
-                        postTime.text = "${daysPost}일 전"
-
-
-                        postContent.text = content.toString()
-
-                        likeNum.text = document.getLong("likeNum")?.toString()
-                        commentNum.text = document.getLong("commentNum")?.toString()
+                                userName.text = name.toString()
+                            }
+                    } else {
+                        // 사용자 정보를 불러올 수 없습니다.
                     }
+
+                    val currentInstant = Instant.now() // 현재 시간
+                    val currentDateTime = LocalDateTime.ofInstant(currentInstant, ZoneId.systemDefault())
+
+                    postTitle.text = title.toString()
+                    postCategory.text = category.toString()
+
+                    // 작성일 타임스탬프 변환
+                    val timeInstant = time?.toDate()?.toInstant()
+                    val durationPost = Duration.between(currentInstant, timeInstant)
+                    val daysPost = durationPost.toDays()
+                    postTime.text = "${daysPost}일 전"
+
+                    postContent.text = content.toString()
+
+                    val like = document.getLong("likeNum").toString()
+                    val coms = document.getLong("commentNum")?.toString()
+
+                    if (like != null) {
+                        likeNum.text = like
+                    } else {
+                        likeNum.text = "0"
+                    }
+                    if (coms != null) {
+                        commentNum.text = coms
+                    } else {
+                        commentNum.text = "0"
+                    }
+
                 }
-                .addOnFailureListener { e ->
-                    // 게시글 정보 로딩 실패
-                }
+            }
+            .addOnFailureListener { e ->
+                // 게시글 정보 로딩 실패
+            }
 
 
         val btnLike: ImageButton = findViewById(R.id.btnLike)
