@@ -313,7 +313,7 @@ android:contentDescription="스크롤"
                     app:layout_constraintVertical_bias="0.97" />
 
                 <Button
-                    android:id="@+id/btnUse"
+                    android:id="@+id/button"
                     android:layout_width="136sp"
                     android:layout_height="42sp"
                     android:layout_marginEnd="64sp"
