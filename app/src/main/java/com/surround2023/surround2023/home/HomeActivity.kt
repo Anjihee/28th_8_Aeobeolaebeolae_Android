@@ -39,6 +39,7 @@ import com.surround2023.surround2023.market_post.MarketPostActivity
 import com.surround2023.surround2023.mypage.MypageActivity
 import com.surround2023.surround2023.posting.MarketPostingActivity
 import com.surround2023.surround2023.set_location.SetLocationActivity
+import com.surround2023.surround2023.user_login_join.UserSingleton
 import java.security.MessageDigest
 
 
@@ -64,7 +65,8 @@ class HomeActivity : AppCompatActivity() {
     val db=FirebaseFirestore.getInstance()  //Firestore 인스턴스 선언
     val storage= Firebase.storage
 
-
+    //유저 데이터
+//    private lateinit var userData
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -180,7 +182,11 @@ class HomeActivity : AppCompatActivity() {
             return@setOnEditorActionListener false
         }
 
+        //
+        setUserLocationData()
+
     }
+
 
 
 
@@ -247,6 +253,7 @@ class HomeActivity : AppCompatActivity() {
             if (!currentStreetAddress.isNullOrEmpty()) {
                 // SetLocationActivity로부터 전달받은 주소를 화면에 업데이트
                 binding.userLocationText.text = currentStreetAddress
+                setUserLocationData()
             }
         }
     }
@@ -438,6 +445,36 @@ class HomeActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    //유저 데이터에 location을 설정하기 위한 메서드
+    fun setUserLocationData(){
+        val userSingleton=UserSingleton.getInstance()
+        val userData=userSingleton.getUserData()
+        val currentUserLocation=binding.userLocationText.text.toString()       //home에서 설정된 currentLocation을 받아옴
+
+        if (userData!=null){
+            userData.userLocation=currentUserLocation
+            Log.d("UserData","${userData}")
+        }
+
+        //변경된 userData 를 db에 update
+        val userCollection=db.collection("User")
+        userCollection.whereEqualTo("email",userData!!.Email)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (doc in documents){
+                    // Update the document with the new userData
+                    userCollection.document(doc.id).set(userData)
+                        .addOnSuccessListener { Log.d("UserData", "${userData}") }
+                        .addOnFailureListener { e ->
+                            Log.w("UserData", "Error updating document", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("UserData", "Error getting documents: ", e)
+            }
     }
 
 

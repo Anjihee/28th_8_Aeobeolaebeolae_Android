@@ -22,7 +22,8 @@ data class User(
     val Email: String? = null,
     val uid: String? = null,
     val userName: String? = null,
-    val gender: String? = null
+    val gender: String? = null,
+    var userLocation:String?=null
 )
 
 class JoinActivity : ComponentActivity() {
@@ -119,17 +120,17 @@ class JoinActivity : ComponentActivity() {
                 val userToSave = User(email, uid, userName, gender)
 
                 // Firestore에 데이터 저장
-                val db = FirebaseFirestore.getInstance()
-                db.collection("User")
-                    .document(email!!)
-                    .set(userToSave)
-                    .addOnSuccessListener {
-                        // 저장 성공
-                        Log.d(ContentValues.TAG, "사용자 정보가 Firestore에 저장되었습니다.")
-                    }
-                    .addOnFailureListener { e ->
-                        // 저장 실패
-                        Log.w(ContentValues.TAG, "사용자 정보 저장에 실패했습니다.", e)
+                        val db = FirebaseFirestore.getInstance()
+                        db.collection("User")
+                            .document(email!!)
+                            .set(userToSave)
+                            .addOnSuccessListener {
+                                // 저장 성공
+                                Log.d(ContentValues.TAG, "사용자 정보가 Firestore에 저장되었습니다.")
+                            }
+                            .addOnFailureListener { e ->
+                                // 저장 실패
+                                Log.w(ContentValues.TAG, "사용자 정보 저장에 실패했습니다.", e)
                     }
 
                 val Login_intent = Intent(this@JoinActivity, LoginActivity::class.java)
