@@ -22,15 +22,12 @@ import com.surround2023.surround2023.market_log.MarketLogOpenActivity
 import com.surround2023.surround2023.posting.MarketPostingActivity
 import com.surround2023.surround2023.set_location.SetLocationActivity
 import com.surround2023.surround2023.user_login_join.LogoutActivity
+import com.surround2023.surround2023.user_login_join.UserSingleton
 
 class MypageActivity : AppCompatActivity() {
 
-    private lateinit var firebaseAuth: FirebaseAuth
-    private lateinit var firestore: FirebaseFirestore
-    private lateinit var userNameTextView: TextView
 
     private lateinit var binding: ActivityMypageBinding
-
     //하단 Nav 와 관련된 변수
     private lateinit var bottomNavView: BottomNavigationView
 
@@ -39,6 +36,14 @@ class MypageActivity : AppCompatActivity() {
         binding = ActivityMypageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
+        var userData = UserSingleton.getInstance().getUserData()
+        val mypageUsernameTextView: TextView = findViewById(R.id.mypageusername)
+        userData?.let {
+            val userName = it.userName
+            mypageUsernameTextView.text = userName
+        }
 
         // mypagebtn1 버튼 클릭시 내가 진행한 공구
         val mypagebtn1: Button = findViewById(R.id.mypagebtn1)
