@@ -1,89 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="5dp"
-    android:weightSum="100">
+    android:layout_height="wrap_content"
+    android:padding="15sp">
 
-    <RelativeLayout
-        android:id="@+id/frame_18"
-        android:layout_width="match_parent"
-        android:layout_height="130dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:clipToOutline="true">
+    <LinearLayout
+        android:layout_width="250sp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/category"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="11dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="9dp"
             android:text="카테고리"
-            android:textAppearance="@style/some_id2"
-            android:gravity="top"
-            />
+            android:textSize="16sp" />
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+            android:id="@+id/postTitle"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="11dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="30dp"
-            android:text="커뮤니티 글 제목"
-            android:textAppearance="@style/some_id"
-            android:gravity="top"
-            />
+            android:text="강아지 구경하쉐이"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
         <TextView
-            android:id="@+id/detail"
-            android:layout_width="wrap_content"
+            android:id="@+id/postContent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="10dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="66dp"
-            android:text="세부설명"
-            android:textAppearance="@style/some_id2"
-            android:gravity="top"
-            />
+            android:text="강아지 강쥐 강아지 강쥐 강쥐강아지 강쥐 강아지 강쥐강아지 강쥐 강아지 강쥐강아지 강쥐 강아지 강쥐"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:maxLines="1"
+            android:ellipsize="end"/>
 
-        <TextView
-            android:id="@+id/comment"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/likeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="공감"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/likeNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textSize="18sp"
+                android:layout_marginLeft="5sp"/>
+
+            <TextView
+                android:id="@+id/commentText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="댓글"
+                android:textSize="18sp"
+                android:layout_marginLeft="10sp"/>
+
+            <TextView
+                android:id="@+id/commentsNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3"
+                android:textSize="18sp"
+                android:layout_marginLeft="5sp"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/postImgContainer"
+        android:layout_width="100sp"
+        android:layout_height="100sp"
+        app:cardCornerRadius="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/postImg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="9dp"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="90dp"
-            android:text="공감 8 댓글 3"
-            android:textAppearance="@style/some_id2"
-            android:gravity="top"
-            />
-
-
-        <View
-            android:id="@+id/rectangle_1"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_alignParentLeft="true"
-            android:layout_marginLeft="245dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/ic_chat"
-            />
-
-
-    </RelativeLayout>
+            android:background="@color/white"
+            android:scaleType="fitXY" />
+    </androidx.cardview.widget.CardView>
 
 
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
