@@ -76,6 +76,11 @@ class MypageActivity : AppCompatActivity() {
         val communitylogtext: TextView = findViewById(R.id.communitylogtext)
         communitylogtext.setOnClickListener {
             val intent = Intent(this, CommunityLogActivity::class.java)
+            userData?.let { user ->
+                val userId = user.uid
+                intent.putExtra("USER_ID", userId)
+                startActivity(intent)
+            }
             startActivity(intent)
         }
 
