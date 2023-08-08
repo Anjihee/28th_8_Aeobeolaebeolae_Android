@@ -9,9 +9,16 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.firestore.FirebaseFirestore
 import com.surround2023.surround2023.R
 import com.surround2023.surround2023.databinding.ActivityCommunityLogBinding
 import com.surround2023.surround2023.home.HomeActivity
+import com.surround2023.surround2023.mypage.MypageActivity
+import com.surround2023.surround2023.posting.MarketPostingActivity
+import com.surround2023.surround2023.user_login_join.UserSingleton
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CommunityLogActivity : AppCompatActivity() {
     private val TAG = "로그"
@@ -20,6 +27,7 @@ class CommunityLogActivity : AppCompatActivity() {
 
     //하단 Nav 와 관련된 변수
     private lateinit var bottomNavView: BottomNavigationView
+    val db= FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -28,17 +36,56 @@ class CommunityLogActivity : AppCompatActivity() {
         binding = ActivityCommunityLogBinding.inflate(layoutInflater)
         setContentView(binding.root)
         Log.d(TAG, "MainActivity - onCreate() called")
-//        getAppKeyHash()   //카카오맵 api 사용을 위한 해시키 얻기
+
+        //userData
+        // Retrieve the userData.uid from the intent
+        val userId = intent.getStringExtra("USER_ID")
+        Log.d("CommunityLogActivity", "User ID: $userId")
+
+        // viewPager 변수 선언
+        val viewPager: ViewPager2 = binding.viewPager
+
+        db.collection("Community")
+            .whereEqualTo("uid",userId)
+            .get()
+            .addOnSuccessListener {
+                val itemList = mutableListOf<MyPostModel>()
+                for(doc in it){
+                    val postTitle=doc.getString("postTitle")
+                    val postImageUrl=doc.getString("postImageUrl")
+                    val likeNum=doc.getLong("likeNum")
+                    val commentsNum=doc.getLong("commentsNum")
+                    val timestamp = doc.getTimestamp("postDate")
+                    val postDate = timestamp?.toDate()?.let { formatDate(it) }
+
+                    val item = MyPostModel(
+                        postTitle = postTitle,
+                        postImageUrl = postImageUrl,
+                        likeNum = likeNum?.toInt() ?: 0,
+                        commentsNum = commentsNum?.toInt() ?: 0,
+                        postDate = postDate
+
+                    )
+                    itemList.add(item)
+                }
+                Log.d("CommunityLogActivity","$itemList")
+
+                // itemList을 어댑터에 설정합니다.
+                val viewPagerFragmentAdapter = CommunityLogViewPager2FragmentAdapter(this)
+                viewPagerFragmentAdapter.submitList(ArrayList(itemList))
+                viewPager.adapter = viewPagerFragmentAdapter
+            }
+
 
 //        ------------------게시글/댓글 탭에 대한 기능 구현 ---------------------------
-        val viewPager: ViewPager2 = binding.viewPager
+
 
         val tabLayout: TabLayout = binding.tabLayout
         Log.d(TAG, "CommunityLogActivity - viewBinding: viewPager, tabLayout")
 
         // 어댑터 설정
         val viewPagerFragmentAdapter =
-            com.surround2023.surround2023.community_log.CommunityLogViewPager2FragmentAdapter(this)
+            CommunityLogViewPager2FragmentAdapter(this)
         viewPager.adapter = viewPagerFragmentAdapter
 
         // tabLayout, viewPager 연결
@@ -60,18 +107,22 @@ class CommunityLogActivity : AppCompatActivity() {
                     startActivity(intent)
                     true
                 }
-                R.id.menu_favorite->{
+                R.id.menu_favorite ->{
                     //즐겨찾기로 이동
                     true
                 }
 
-                R.id.menu_addPost->{
+                R.id.menu_addPost ->{
                     //공동구매 글쓰기로 이동
+                    val intent=Intent(this, MarketPostingActivity::class.java)
+                    startActivity(intent)
                     true
                 }
 
-                R.id.menu_mypage->{
+                R.id.menu_mypage ->{
                     //마이페이지로 이동
+                    val intent=Intent(this, MypageActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 // 다른 메뉴 아이템에 대한 처리 추가 (필요에 따라 다른 Activity로 이동할 수 있음)
@@ -104,7 +155,11 @@ class CommunityLogActivity : AppCompatActivity() {
     }
 
 
-
+    // 날짜 포맷팅 함수
+    private fun formatDate(date: Date): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return sdf.format(date)
+    }
 
 
 

@@ -137,16 +137,7 @@ class MarketholderActivity : AppCompatActivity() {
                     .into(binding.postImg)
             }
 
-            // Set click listener on the root view of the item
-//            binding.root.setOnClickListener {
-//                //클릭된 게시글의 id를 MarketPostActivity로 전달하고 MarketPostActivity시작
-//                val context = binding.root.context
-//                val intent = Intent(context, MarketPostActivity::class.java)
-//                intent.putExtra("postId", item.postId)
-//                context.startActivity(intent)
-//
-//
-//            }
+    
 
         }
     }

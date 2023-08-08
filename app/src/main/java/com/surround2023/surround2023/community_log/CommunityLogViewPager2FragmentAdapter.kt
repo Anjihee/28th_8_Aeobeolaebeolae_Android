@@ -4,19 +4,31 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
-class CommunityLogViewPager2FragmentAdapter(fragmentActivity: FragmentActivity): FragmentStateAdapter(fragmentActivity) {
+class CommunityLogViewPager2FragmentAdapter(fragmentActivity: FragmentActivity) :
+    FragmentStateAdapter(fragmentActivity) {
 
-    //참고: https://curryyou.tistory.com/415
+    private val fragmentList = mutableListOf<Fragment>()
+    private val fragmentTitleList = mutableListOf<String>()
 
-    // 1. ViewPager2에 연결할 Fragment들을 생성
-    private val fragmentList = listOf(CommunityLogPostsFragment(), CommunityLogCommentsFragment())
+    // itemList을 받아서 각각의 Fragment에 전달하는 함수를 추가합니다.
+    fun submitList(itemList: ArrayList<MyPostModel>) {
+        fragmentList.clear()
+        fragmentTitleList.clear()
 
-    // 2. ViewPager2에서 노출시킬 Fragment의 개수 설정
-    override fun getItemCount(): Int {
-        return fragmentList.size
+        // 각 Fragment에 itemList을 전달합니다.
+        val fragment1 = CommunityLogPostsFragment.newInstance(itemList)
+//        val fragment2 = CommunityLogCommentsFragment.newInstance(itemList)
+
+        fragmentList.add(fragment1)
+//        fragmentList.add(fragment2)
+
+        fragmentTitleList.add("게시글")
+        fragmentTitleList.add("댓글")
+        notifyDataSetChanged()
     }
 
-    // 3. ViewPager2의 각 페이지에서 노출할 Fragment 설정
+    override fun getItemCount(): Int = fragmentList.size
+
     override fun createFragment(position: Int): Fragment {
         return fragmentList[position]
     }
