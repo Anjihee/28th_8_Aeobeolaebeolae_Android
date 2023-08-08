@@ -22,6 +22,7 @@ import com.surround2023.surround2023.R
 import com.surround2023.surround2023.category.BuyCategoryActivity
 import com.surround2023.surround2023.databinding.ActivityMarketholderBinding
 import com.surround2023.surround2023.databinding.ActivityMarketitemBinding
+import com.surround2023.surround2023.favorite.FavoritemarketActivity
 import com.surround2023.surround2023.home.HomeActivity
 import com.surround2023.surround2023.market.MarketPostModel
 import com.surround2023.surround2023.market_post.MarketPostActivity
@@ -58,7 +59,7 @@ class MarketholderActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        val intent = Intent(this, CommunityPostingActivity::class.java)
+        val intent = Intent(this, MarketPostingActivity::class.java)
         binding.writeBtn.setOnClickListener{startActivity(intent)}
 
         val mintent = Intent(this, BuyCategoryActivity::class.java)
@@ -153,6 +154,8 @@ class MarketholderActivity : AppCompatActivity() {
                 }
                 R.id.menu_favorite ->{
                     //즐겨찾기로 이동
+                    val intent=Intent(this, FavoritemarketActivity::class.java)
+                    startActivity(intent)
                     true
                 }
 
