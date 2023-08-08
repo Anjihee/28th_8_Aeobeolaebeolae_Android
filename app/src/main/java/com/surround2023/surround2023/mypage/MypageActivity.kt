@@ -45,11 +45,11 @@ class MypageActivity : AppCompatActivity() {
             mypageUsernameTextView.text = userName
         }
 
-        val mypageLocationTextView: TextView = findViewById(R.id.mypagelocation)
-        userData?.let {
-            val userLocation = it.userLocation
-            mypageLocationTextView.text = userLocation
-        }
+//        val mypageLocationTextView: TextView = findViewById(R.id.mypagelocation)
+//        userData?.let {
+//            val userLocation = it.userLocation
+//            mypageLocationTextView.text = userLocation
+//        }
 
 //        val mypageLevelTextButton: Button = findViewById(R.id.mypageleveltext)
 //        userData?.let {
