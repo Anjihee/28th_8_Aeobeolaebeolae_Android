@@ -1,8 +1,9 @@
 # SURROUND
-숙명여자대학교 2023 SOLUX 안드로이드 프로젝트 SURROUND 
+숙명여자대학교 2023 SOLUX 안드로이드 프로젝트 SURROUND
 
-![003](https://github.com/user-attachments/assets/64abb8f0-8455-4cbe-ab5b-58d75c4e2a7e)
+
 ![004](https://github.com/user-attachments/assets/1e0fd5e2-4ce1-477b-87b9-2630cf69a8fc)
+![003](https://github.com/user-attachments/assets/64abb8f0-8455-4cbe-ab5b-58d75c4e2a7e)
 ![005](https://github.com/user-attachments/assets/f1eafbdf-6777-47e7-8165-dc9706c798b1)
 ![006](https://github.com/user-attachments/assets/7e0cd961-e607-4004-8b56-defd6954c53f)
 ![007](https://github.com/user-attachments/assets/fd78359b-961c-4672-ab00-a3627014f975)
